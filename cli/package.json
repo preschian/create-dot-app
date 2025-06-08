@@ -11,13 +11,21 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch"
   },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "fs-extra": "^11.2.0",
+    "picocolors": "^1.1.1"
+  },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.15.30",
     "tsdown": "latest"
   }
 }
