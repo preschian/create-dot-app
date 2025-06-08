@@ -1,0 +1,30 @@
+{
+  "name": "create-dot-app",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://github.com/preschian/create-dot-app#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/preschian/create-dot-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/preschian/create-dot-app/issues"
+  },
+  "keywords": [],
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.14.1",
+    "@eslint-react/eslint-plugin": "^1.51.1",
+    "eslint": "^9.28.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20"
+  }
+}
