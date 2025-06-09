@@ -4,3 +4,4 @@ globs:
 alwaysApply: true
 ---
 - use bun as a package manager
+- use minimalist, elegant, and timeless design
