@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
 import NFTCollection from './components/NFTCollection.vue'
 </script>
@@ -11,5 +12,7 @@ import NFTCollection from './components/NFTCollection.vue'
     <main>
       <NFTCollection />
     </main>
+
+    <Footer />
   </div>
 </template>
