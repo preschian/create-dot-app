@@ -18,10 +18,16 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "bun run build && changeset publish",
+    "build": "bun --cwd cli run build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.14.1",
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.1",
     "@eslint-react/eslint-plugin": "^1.51.1",
     "eslint": "^9.28.0",
     "eslint-plugin-react-hooks": "^5.2.0",

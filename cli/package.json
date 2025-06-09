@@ -2,7 +2,7 @@
   "name": "create-dot-app",
   "type": "module",
   "version": "0.0.0",
-  "description": "A simple example library built by tsdown",
+  "description": "A CLI tool to bootstrap Polkadot-based decentralized applications with multiple frontend frameworks",
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
@@ -10,10 +10,16 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "create-dot-app": "./dist/index.js"
+  },
   "files": [
     "dist",
     "templates"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch"
