@@ -80,9 +80,3 @@ const nftItems = ref<NFTItem[]>(nftData)
     </div>
   </div>
 </template>
-
-<style scoped>
-.container {
-  max-width: 1200px;
-}
-</style>
