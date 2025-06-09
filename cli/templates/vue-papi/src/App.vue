@@ -1,28 +1,36 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import NFTCollection from './components/NFTCollection.vue'
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
-    <div class="flex space-x-8 mb-8">
-      <a href="https://vite.dev" target="_blank" class="block group">
-        <img src="/vite.svg" class="h-24 w-24 transition-transform duration-300 group-hover:scale-110 drop-shadow-lg" alt="Vite logo">
-      </a>
-      <a href="https://vuejs.org/" target="_blank" class="block group">
-        <img src="./assets/vue.svg" class="h-24 w-24 transition-transform duration-300 group-hover:scale-110 drop-shadow-lg" alt="Vue logo">
-      </a>
-    </div>
-    <HelloWorld msg="Vite + Vue + Tailwind CSS v4" />
-
-    <!-- Tailwind CSS v4 Demo -->
-    <div class="mt-8 p-6 bg-white rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">🎉 Tailwind CSS v4 is working!</h2>
-      <p class="text-gray-600 mb-4">Here are some example utility classes:</p>
-      <div class="space-y-2">
-        <div class="bg-blue-500 text-white px-4 py-2 rounded-md">Blue background</div>
-        <div class="bg-green-500 text-white px-4 py-2 rounded-md">Green background</div>
-        <div class="bg-purple-500 text-white px-4 py-2 rounded-md">Purple background</div>
+  <div class="min-h-screen bg-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="flex space-x-4">
+              <a href="https://vite.dev" target="_blank" class="block group">
+                <img src="/vite.svg" class="h-10 w-10 transition-transform duration-300 group-hover:scale-110" alt="Vite logo">
+              </a>
+              <a href="https://vuejs.org/" target="_blank" class="block group">
+                <img src="./assets/vue.svg" class="h-10 w-10 transition-transform duration-300 group-hover:scale-110" alt="Vue logo">
+              </a>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800">
+              Polkadot NFT Marketplace
+            </h1>
+          </div>
+          <div class="text-sm text-gray-600">
+            Built with Vue + Vite + Tailwind CSS v4
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <NFTCollection />
+    </main>
   </div>
 </template>
