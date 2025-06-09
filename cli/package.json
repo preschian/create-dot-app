@@ -22,7 +22,8 @@
   },
   "scripts": {
     "build": "tsdown",
-    "dev": "tsdown --watch"
+    "dev": "tsdown --watch",
+    "prepack": "tsdown"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
