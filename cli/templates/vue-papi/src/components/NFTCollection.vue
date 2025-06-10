@@ -10,7 +10,12 @@ const listed = ref<number>(0)
 const { api } = sdk('asset_hub')
 
 onMounted(async () => {
-  const queryMetadata = await api.query.Nfts.ItemMetadataOf.getEntries(486)
+  const [queryMetadata, queryOwner, queryPrice] = await Promise.all([
+    api.query.Nfts.ItemMetadataOf.getEntries(486),
+    api.query.Nfts.Item.getEntries(486),
+    api.query.Nfts.ItemPriceOf.getEntries(486),
+  ])
+
   items.value = queryMetadata
     .sort((a, b) => a.keyArgs[1] - b.keyArgs[1])
     .map(item => ({
@@ -19,10 +24,7 @@ onMounted(async () => {
       metadata: item.value.data.asText(),
     }))
 
-  const queryOwner = await api.query.Nfts.Item.getEntries(486)
   owners.value = new Set(queryOwner.map(item => item.value.owner))
-
-  const queryPrice = await api.query.Nfts.ItemPriceOf.getEntries(486)
   listed.value = queryPrice.length
 })
 </script>

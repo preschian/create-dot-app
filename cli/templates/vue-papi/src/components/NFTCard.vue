@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FixedSizeBinary } from 'polkadot-api'
 import { onMounted, ref } from 'vue'
 import sdk from '../utils/sdk'
 
@@ -14,24 +15,32 @@ const metadata = ref<{
 }>()
 
 const { api, client } = sdk('asset_hub')
+const { api: peopleApi } = sdk('people')
 
 const price = ref<string>()
 const owner = ref<string>()
 
 onMounted(async () => {
-  const getMetadata = await fetch(props.metadata).then(res => res.json())
+  const [getMetadata, queryOwner, queryPrice] = await Promise.all([
+    fetch(props.metadata).then(res => res.json()),
+    api.query.Nfts.Item.getValue(props.collection, props.token),
+    api.query.Nfts.ItemPriceOf.getValue(props.collection, props.token),
+  ])
+
   metadata.value = getMetadata
-
-  const queryOwner = await api.query.Nfts.Item.getValue(props.collection, props.token)
-  owner.value = queryOwner?.owner
-
-  const queryPrice = await api.query.Nfts.ItemPriceOf.getValue(props.collection, props.token)
   price.value = queryPrice?.[0].toString()
 
   if (price.value) {
     const chainSpec = await client.getChainSpecData()
     const tokenDecimals = chainSpec.properties.tokenDecimals
     price.value = (Number(price.value) / 10 ** tokenDecimals).toFixed()
+  }
+
+  if (queryOwner?.owner) {
+    const queryIdentity = await peopleApi.query.Identity.IdentityOf.getValue(queryOwner.owner)
+    owner.value = queryIdentity?.info.display.value instanceof FixedSizeBinary
+      ? queryIdentity.info.display.value.asText()
+      : `${queryOwner?.owner.slice(0, 4)}...${queryOwner?.owner.slice(-4)}`
   }
 })
 </script>
@@ -81,7 +90,7 @@ onMounted(async () => {
                 Owner
               </div>
               <div class="text-xs text-black font-medium">
-                {{ owner?.slice(0, 4) }}...{{ owner?.slice(-4) }}
+                {{ owner }}
               </div>
             </div>
           </div>
