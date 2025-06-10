@@ -1,9 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { nftItems as nftData, type NFTItem } from '../data/nftItems'
+import { onMounted, ref } from 'vue'
+import sdk from '../utils/sdk'
 import NFTCard from './NFTCard.vue'
 
-const nftItems = ref<NFTItem[]>(nftData)
+const items = ref<{ collection: number, token: number, metadata: string }[]>([])
+const owners = ref<Set<string>>(new Set())
+const listed = ref<number>(0)
+
+const { api } = sdk('asset_hub')
+
+onMounted(async () => {
+  const queryMetadata = await api.query.Nfts.ItemMetadataOf.getEntries(486)
+  items.value = queryMetadata
+    .sort((a, b) => a.keyArgs[1] - b.keyArgs[1])
+    .map(item => ({
+      collection: item.keyArgs[0],
+      token: item.keyArgs[1],
+      metadata: item.value.data.asText(),
+    }))
+
+  const queryOwner = await api.query.Nfts.Item.getEntries(486)
+  owners.value = new Set(queryOwner.map(item => item.value.owner))
+
+  const queryPrice = await api.query.Nfts.ItemPriceOf.getEntries(486)
+  listed.value = queryPrice.length
+})
 </script>
 
 <template>
@@ -27,7 +48,7 @@ const nftItems = ref<NFTItem[]>(nftData)
         <div class="flex gap-6 text-right">
           <div>
             <div class="text-2xl font-light">
-              {{ nftItems.length }}
+              {{ items.length }}
             </div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">
               Items
@@ -35,7 +56,7 @@ const nftItems = ref<NFTItem[]>(nftData)
           </div>
           <div>
             <div class="text-2xl font-light">
-              {{ nftItems.length }}
+              {{ listed }}
             </div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">
               Listed
@@ -43,7 +64,7 @@ const nftItems = ref<NFTItem[]>(nftData)
           </div>
           <div>
             <div class="text-2xl font-light">
-              {{ new Set(nftItems.map(n => n.creator)).size }}
+              {{ owners.size }}
             </div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">
               Owners
@@ -55,9 +76,11 @@ const nftItems = ref<NFTItem[]>(nftData)
       <!-- Minimalist NFT Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         <NFTCard
-          v-for="nft in nftItems"
-          :key="nft.id"
-          :nft="nft"
+          v-for="metadata in items"
+          :key="`${metadata.collection}-${metadata.token}`"
+          :metadata="metadata.metadata"
+          :collection="metadata.collection"
+          :token="metadata.token"
         />
       </div>
     </div>

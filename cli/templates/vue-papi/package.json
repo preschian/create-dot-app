@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@polkadot-api/descriptors": "file:.papi/descriptors",
+    "polkadot-api": "^1.13.1",
     "vue": "^3.5.13"
   },
   "devDependencies": {
