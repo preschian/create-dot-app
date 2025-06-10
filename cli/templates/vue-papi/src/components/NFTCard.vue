@@ -94,9 +94,9 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-          <button class="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer">
+          <a :href="`https://koda.art/ahp/gallery/${collection}-${token}`" target="_blank" class="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer">
             View
-          </button>
+          </a>
         </div>
       </div>
     </div>
