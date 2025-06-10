@@ -1,19 +1,25 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import sdk from '../utils/sdk'
 import NFTCard from './NFTCard.vue'
+
+const { api } = sdk('asset_hub')
+const COLLECTION = 486
 
 const items = ref<{ collection: number, token: number, metadata: string }[]>([])
 const owners = ref<Set<string>>(new Set())
 const listed = ref<number>(0)
-
-const { api } = sdk('asset_hub')
+const collection = reactive({
+  name: 'Loading...',
+  description: 'Loading...',
+})
 
 onMounted(async () => {
-  const [queryMetadata, queryOwner, queryPrice] = await Promise.all([
-    api.query.Nfts.ItemMetadataOf.getEntries(486),
-    api.query.Nfts.Item.getEntries(486),
-    api.query.Nfts.ItemPriceOf.getEntries(486),
+  const [queryMetadata, queryOwner, queryPrice, queryCollectionMetadata] = await Promise.all([
+    api.query.Nfts.ItemMetadataOf.getEntries(COLLECTION),
+    api.query.Nfts.Item.getEntries(COLLECTION),
+    api.query.Nfts.ItemPriceOf.getEntries(COLLECTION),
+    api.query.Nfts.CollectionMetadataOf.getValue(COLLECTION),
   ])
 
   items.value = queryMetadata
@@ -26,6 +32,17 @@ onMounted(async () => {
 
   owners.value = new Set(queryOwner.map(item => item.value.owner))
   listed.value = queryPrice.length
+
+  const metadataUrl = queryCollectionMetadata?.data.asText().replace('ipfs://', 'https://ipfs.io/ipfs/')
+
+  if (!metadataUrl) {
+    return
+  }
+
+  const metadata = await fetch(metadataUrl)
+  const metadataJson = await metadata.json()
+  collection.name = metadataJson.name
+  collection.description = metadataJson.description
 })
 </script>
 
@@ -41,10 +58,10 @@ onMounted(async () => {
       <div class="flex items-end justify-between mb-12 pb-8 border-b border-gray-200">
         <div>
           <h1 class="text-5xl font-light text-black tracking-tight mb-2">
-            NFT Collection
+            {{ collection.name }}
           </h1>
-          <p class="text-gray-600 font-light">
-            Curated digital masterpieces on the Polkadot ecosystem
+          <p class="text-gray-600 font-light line-clamp-1">
+            {{ collection.description }}
           </p>
         </div>
         <div class="flex gap-6 text-right">
@@ -76,13 +93,20 @@ onMounted(async () => {
       </div>
 
       <!-- Minimalist NFT Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div v-if="items.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         <NFTCard
           v-for="metadata in items"
           :key="`${metadata.collection}-${metadata.token}`"
           :metadata="metadata.metadata"
           :collection="metadata.collection"
           :token="metadata.token"
+        />
+      </div>
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <NFTCard
+          v-for="n in 32"
+          :key="n"
+          :collection="COLLECTION"
         />
       </div>
     </div>
