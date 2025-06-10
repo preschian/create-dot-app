@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import sdk from '../utils/sdk'
 
 const props = defineProps<{
   metadata: string
@@ -12,9 +13,26 @@ const metadata = ref<{
   image: string
 }>()
 
+const { api, client } = sdk('asset_hub')
+
+const price = ref<string>()
+const owner = ref<string>()
+
 onMounted(async () => {
   const getMetadata = await fetch(props.metadata).then(res => res.json())
   metadata.value = getMetadata
+
+  const queryOwner = await api.query.Nfts.Item.getValue(props.collection, props.token)
+  owner.value = queryOwner?.owner
+
+  const queryPrice = await api.query.Nfts.ItemPriceOf.getValue(props.collection, props.token)
+  price.value = queryPrice?.[0].toString()
+
+  if (price.value) {
+    const chainSpec = await client.getChainSpecData()
+    const tokenDecimals = chainSpec.properties.tokenDecimals
+    price.value = (Number(price.value) / 10 ** tokenDecimals).toFixed()
+  }
 })
 </script>
 
@@ -38,13 +56,13 @@ onMounted(async () => {
             <h3 class="text-white text-lg font-light tracking-wide leading-tight">
               {{ metadata?.name }}
             </h3>
-            <div>
+            <div v-if="price">
               <div class="text-xs text-white/80 uppercase tracking-wider">
                 Price
               </div>
-              <!-- <div class="text-base font-medium text-white">
-                {{ nft.price }}
-              </div> -->
+              <div class="text-base font-medium text-white">
+                {{ price }} DOT
+              </div>
             </div>
           </div>
         </div>
@@ -56,15 +74,15 @@ onMounted(async () => {
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
-              <!-- <span class="text-xs font-medium">{{ nft.creator.charAt(0) }}</span> -->
+              <span class="text-xs font-medium uppercase">{{ owner?.charAt(owner.length - 1) }}</span>
             </div>
             <div>
               <div class="text-xs text-gray-500 uppercase tracking-wider">
                 Owner
               </div>
-              <!-- <div class="text-xs text-black font-medium">
-                {{ nft.creator }}
-              </div> -->
+              <div class="text-xs text-black font-medium">
+                {{ owner?.slice(0, 4) }}...{{ owner?.slice(-4) }}
+              </div>
             </div>
           </div>
           <button class="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer">
