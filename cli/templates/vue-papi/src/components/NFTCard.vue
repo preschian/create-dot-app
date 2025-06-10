@@ -52,7 +52,8 @@ onMounted(async () => {
       <!-- NFT Image -->
       <div class="relative overflow-hidden">
         <img
-          :src="metadata?.image"
+          v-if="metadata?.image"
+          :src="`https://wsrv.nl/?url=${metadata?.image}&w=256&h=256`"
           :alt="metadata?.name"
           class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
         >
