@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { nftItems as nftData, type NFTItem } from '../data/nftItems'
 import sdk from '../utils/sdk'
 import NFTCard from './NFTCard.vue'
 
-const nftItems = ref<NFTItem[]>(nftData)
 const items = ref<{ collection: number, token: number, metadata: string }[]>([])
+const owners = ref<Set<string>>(new Set())
+const listed = ref<number>(0)
 
 const { api } = sdk('asset_hub')
 
@@ -18,6 +18,12 @@ onMounted(async () => {
       token: item.keyArgs[1],
       metadata: item.value.data.asText(),
     }))
+
+  const queryOwner = await api.query.Nfts.Item.getEntries(486)
+  owners.value = new Set(queryOwner.map(item => item.value.owner))
+
+  const queryPrice = await api.query.Nfts.ItemPriceOf.getEntries(486)
+  listed.value = queryPrice.length
 })
 </script>
 
@@ -50,7 +56,7 @@ onMounted(async () => {
           </div>
           <div>
             <div class="text-2xl font-light">
-              {{ nftItems.length }}
+              {{ listed }}
             </div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">
               Listed
@@ -58,7 +64,7 @@ onMounted(async () => {
           </div>
           <div>
             <div class="text-2xl font-light">
-              {{ new Set(nftItems.map(n => n.creator)).size }}
+              {{ owners.size }}
             </div>
             <div class="text-xs text-gray-500 uppercase tracking-wider">
               Owners
