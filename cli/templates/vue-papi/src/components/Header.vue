@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Header component logic can be added here later
+import WalletConnect from './WalletConnect.vue'
 </script>
 
 <template>
@@ -16,10 +16,33 @@
             NFT Showcase
           </h1>
         </div>
-        <button class="bg-black hover:bg-gray-800 text-white px-6 py-2.5 font-medium transition-colors duration-200 uppercase tracking-wider text-sm">
-          Connect Wallet
-        </button>
+        <WalletConnect />
       </div>
     </div>
   </header>
 </template>
+
+<style scoped>
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
