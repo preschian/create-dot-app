@@ -18,7 +18,6 @@ const availableExtensions = ref<WalletExtension[]>([])
 const showWalletMenu = ref(false)
 const showAccountMenu = ref(false)
 const isLoading = ref(false)
-const isSwitching = ref(false)
 const error = ref('')
 
 // Computed
@@ -84,10 +83,10 @@ function handleDisconnect() {
 }
 
 async function handleSwitchExtension(extensionName: string) {
-  if (isLoading.value || isSwitching.value)
+  if (isLoading.value)
     return
 
-  isSwitching.value = true
+  isLoading.value = true
   error.value = ''
   showWalletMenu.value = false
   showAccountMenu.value = false
@@ -100,7 +99,7 @@ async function handleSwitchExtension(extensionName: string) {
     console.error('Switch error:', err)
   }
   finally {
-    isSwitching.value = false
+    isLoading.value = false
   }
 }
 
@@ -161,11 +160,11 @@ onUnmounted(() => {
     </div>
 
     <!-- Connect Wallet Button -->
-    <div v-if="(!isConnected && hasExtensions) || isSwitching" class="relative">
+    <div v-if="!isConnected && hasExtensions" class="relative">
       <button
-        :disabled="isLoading || isSwitching"
+        :disabled="isLoading"
         class="bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white px-6 py-3 font-medium transition-colors duration-200 uppercase tracking-wider text-sm relative h-12"
-        @click.stop="!isSwitching && (showWalletMenu = !showWalletMenu)"
+        @click.stop="showWalletMenu = !showWalletMenu"
       >
         <span v-if="isLoading" class="flex items-center space-x-2">
           <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
@@ -174,13 +173,7 @@ onUnmounted(() => {
           </svg>
           <span>Connecting...</span>
         </span>
-        <span v-else-if="isSwitching" class="flex items-center space-x-2">
-          <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-          </svg>
-          <span>Switching...</span>
-        </span>
+
         <span v-else>Connect Wallet</span>
       </button>
 
@@ -227,7 +220,7 @@ onUnmounted(() => {
     </div>
 
     <!-- Connected Wallet Display -->
-    <div v-if="isConnected && !isSwitching" class="flex items-center space-x-3">
+    <div v-if="isConnected" class="flex items-center space-x-3">
       <div class="relative">
         <button
           class="flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors border border-gray-200 h-12"
