@@ -1,30 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
 import NFTCollection from './components/NFTCollection.vue'
 import SignTransaction from './components/SignTransaction.vue'
-import { walletManager } from './utils/wallet'
-
-// Wallet state for the transaction component
-const walletState = ref(walletManager.getState())
-const selectedAccount = computed(() => walletState.value.selectedAccount)
-
-function updateState() {
-  walletState.value = walletManager.getState()
-}
-
-onMounted(() => {
-  walletManager.on('wallet:connected', updateState)
-  walletManager.on('wallet:disconnected', updateState)
-  walletManager.on('wallet:accountChanged', updateState)
-})
-
-onUnmounted(() => {
-  walletManager.off('wallet:connected', updateState)
-  walletManager.off('wallet:disconnected', updateState)
-  walletManager.off('wallet:accountChanged', updateState)
-})
 </script>
 
 <template>
@@ -53,7 +31,7 @@ onUnmounted(() => {
           <!-- Transaction Card with NFTCard styling -->
           <div class="group">
             <div class="bg-white border border-gray-200 overflow-hidden hover:border-black transition-all duration-300 hover:shadow-lg">
-              <SignTransaction :selected-account="selectedAccount" />
+              <SignTransaction />
             </div>
           </div>
         </div>
