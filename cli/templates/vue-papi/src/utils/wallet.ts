@@ -26,29 +26,22 @@ export const walletSelectedAccount = persistentAtom('wallet:selectedAccount', ''
 })
 export const walletError = atom<string | null>(null)
 
-// Extension configuration with sources and display names
-function getExtensionConfig(): Record<string, { sources: string[], displayName: string }> {
-  return {
-    'polkadot-js': { sources: ['polkadot-js'], displayName: 'Polkadot.js' },
-    'talisman': { sources: ['talisman', 'Talisman'], displayName: 'Talisman' },
-    'subwallet-js': { sources: ['subwallet-js', 'SubWallet'], displayName: 'SubWallet' },
-  }
-}
-
-// Get source mappings for extension filtering
-function getSourceMapping(): Record<string, string[]> {
-  const config = getExtensionConfig()
-  const mapping: Record<string, string[]> = {}
-  for (const [key, value] of Object.entries(config)) {
-    mapping[key] = value.sources
-  }
-  return mapping
-}
+// Comprehensive extension configuration
+const EXTENSION_CONFIG = {
+  'polkadot-js': {
+    displayName: 'Polkadot.js',
+  },
+  'talisman': {
+    displayName: 'Talisman',
+  },
+  'subwallet-js': {
+    displayName: 'SubWallet',
+  },
+} as const
 
 // Get user-friendly extension name
 export function getExtensionDisplayName(extensionName: string): string {
-  const config = getExtensionConfig()
-  return config[extensionName]?.displayName || extensionName
+  return EXTENSION_CONFIG[extensionName as keyof typeof EXTENSION_CONFIG]?.displayName || extensionName
 }
 
 // Get available wallet extensions with details
@@ -104,11 +97,11 @@ export async function connectWallet(extensionName?: string): Promise<void> {
     // Filter accounts by extension if specified
     let accounts = allAccounts
     const targetExtension = extensionName || 'wallet'
-    const sourceMapping = getSourceMapping()
-    const possibleSources = extensionName ? (sourceMapping[extensionName] || [extensionName]) : []
 
     if (extensionName) {
-      accounts = allAccounts.filter(account => possibleSources.includes(account.meta.source))
+      accounts = allAccounts.filter((account) => {
+        return account.meta.source === extensionName
+      })
 
       if (accounts.length === 0) {
         throw new Error(`No accounts found for ${extensionName}`)
@@ -154,12 +147,8 @@ export function selectAccount(account: InjectedAccountWithMeta): void {
     throw new Error('No extension connected')
   }
 
-  // Get possible source identifiers for the connected extension
-  const sourceMapping = getSourceMapping()
-  const possibleSources = sourceMapping[connectedExtension] || [connectedExtension]
-
   // Ensure account belongs to the connected extension
-  if (!possibleSources.includes(account.meta.source)) {
+  if (account.meta.source !== connectedExtension) {
     throw new Error(`Account belongs to ${account.meta.source}, but ${connectedExtension} is connected`)
   }
 
@@ -199,14 +188,7 @@ export async function getSigner(address?: string): Promise<any> {
     // For PAPI, we need to use the proper signer format
     const { connectInjectedExtension } = await import('polkadot-api/pjs-signer')
 
-    // Map our internal extension names to the names expected by PAPI
-    const extensionNameMap: Record<string, string> = {
-      'polkadot-js': 'polkadot-js',
-      'talisman': 'talisman',
-      'subwallet-js': 'subwallet-js',
-    }
-
-    const papiExtensionName = extensionNameMap[connectedExtension] || connectedExtension
+    const papiExtensionName = connectedExtension
     const extension = await connectInjectedExtension(papiExtensionName)
     const accounts = extension.getAccounts()
 
