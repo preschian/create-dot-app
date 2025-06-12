@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { type HexString, hexToString } from 'dedot/utils'
 import { onMounted, reactive, ref } from 'vue'
 import sdk from '../utils/sdk'
 import NFTCard from './NFTCard.vue'
 
-const { api } = sdk('asset_hub')
+const { api: assetHubApi } = sdk('asset_hub')
 const COLLECTION = 486
 
 const items = ref<{ collection: number, token: number, metadata: string }[]>([])
@@ -15,25 +16,27 @@ const collection = reactive({
 })
 
 onMounted(async () => {
+  const api = await assetHubApi
+
   const [queryMetadata, queryOwner, queryPrice, queryCollectionMetadata] = await Promise.all([
-    api.query.Nfts.ItemMetadataOf.getEntries(COLLECTION),
-    api.query.Nfts.Item.getEntries(COLLECTION),
-    api.query.Nfts.ItemPriceOf.getEntries(COLLECTION),
-    api.query.Nfts.CollectionMetadataOf.getValue(COLLECTION),
+    api.query.nfts.itemMetadataOf.entries(COLLECTION),
+    api.query.nfts.item.entries(COLLECTION),
+    api.query.nfts.itemPriceOf.entries(COLLECTION),
+    api.query.nfts.collectionMetadataOf(COLLECTION),
   ])
 
   items.value = queryMetadata
-    .sort((a, b) => a.keyArgs[1] - b.keyArgs[1])
-    .map(item => ({
-      collection: item.keyArgs[0],
-      token: item.keyArgs[1],
-      metadata: item.value.data.asText(),
+    .sort((a, b) => a[0][1] - b[0][1])
+    .map(([key, value]) => ({
+      collection: key[0],
+      token: key[1],
+      metadata: hexToString(value.data as HexString),
     }))
 
-  owners.value = new Set(queryOwner.map(item => item.value.owner))
+  owners.value = new Set(queryOwner.map(([, value]) => value.owner.address()))
   listed.value = queryPrice.length
 
-  const metadataUrl = queryCollectionMetadata?.data.asText().replace('ipfs://', 'https://ipfs.io/ipfs/')
+  const metadataUrl = queryCollectionMetadata?.data ? hexToString(queryCollectionMetadata.data as HexString).replace('ipfs://', 'https://ipfs.io/ipfs/') : null
 
   if (!metadataUrl) {
     return

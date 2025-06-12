@@ -185,21 +185,16 @@ export async function getSigner(address?: string): Promise<any> {
   }
 
   try {
-    // For PAPI, we need to use the proper signer format
-    const { connectInjectedExtension } = await import('polkadot-api/pjs-signer')
+    // Get signer directly from extension
+    const { web3FromSource } = await import('@polkadot/extension-dapp')
 
-    const papiExtensionName = connectedExtension
-    const extension = await connectInjectedExtension(papiExtensionName)
-    const accounts = extension.getAccounts()
-
-    // Find the account that matches our target address
-    const account = accounts.find(acc => acc.address === targetAddress)
-    if (!account) {
-      throw new Error(`Account ${targetAddress} not found in extension`)
+    const injector = await web3FromSource(connectedExtension)
+    if (!injector?.signer) {
+      throw new Error(`No signer found for extension ${connectedExtension}`)
     }
 
-    // Return the PAPI-compatible signer
-    return account.polkadotSigner
+    // Return the extension's signer directly
+    return injector.signer
   }
   catch (error) {
     console.error('Failed to get signer:', error)

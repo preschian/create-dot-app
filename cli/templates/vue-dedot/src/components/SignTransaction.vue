@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { stringToHex } from 'dedot/utils'
 import { ref } from 'vue'
 import { useWallet } from '../composables/useWallet'
 import sdk from '../utils/sdk'
@@ -18,38 +19,28 @@ async function handleTestSign() {
   }
 
   // Starting transaction signing
-
   isSigning.value = true
   error.value = ''
   signResult.value = ''
 
   try {
-    // Get PAPI client and signer
-    const { api } = sdk('asset_hub')
+    // Get dedot API client and signer
+    const { api: assetHubApi } = sdk('asset_hub')
+    const api = await assetHubApi
     const signer = await getSigner()
 
-    // Create a test transaction - a simple remark transaction using Binary
-    const { Binary } = await import('polkadot-api')
-    const testRemark = Binary.fromText(`Test transaction from ${selectedAccount.value.address} at ${Date.now()}`)
+    // Create a test transaction - a simple remark transaction
+    const testRemark = stringToHex(`Test transaction from ${selectedAccount.value.address} at ${Date.now()}`)
 
-    // Build the transaction using PAPI
-    const tx = api.tx.System.remark({
-      remark: testRemark,
-    })
+    // Build the transaction using dedot
+    const tx = api.tx.system.remark(testRemark)
 
-    // Sign and submit the transaction with the correct signer format
-    const result = await tx.signAndSubmit(signer)
+    // Sign and submit the transaction
+    const txHash = await tx.signAndSend(selectedAccount.value.address, { signer })
 
-    // Check transaction result
-    if (result.ok) {
-      const successMsg = `✅ Transaction successful! Hash: ${result.txHash.slice(0, 10)}...Block: ${result.block.number}`
-      signResult.value = successMsg
-    }
-    else {
-      error.value = 'Transaction failed - result not ok'
-      signResult.value = `❌ Transaction failed`
-      console.error('❌ Transaction failed - result not ok:', result)
-    }
+    // Display success with transaction hash
+    const successMsg = `✅ Transaction successful! Hash: ${txHash.slice(0, 10)}...`
+    signResult.value = successMsg
   }
   catch (err) {
     const errorMsg = err instanceof Error ? err.message : 'Failed to create transaction'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FixedSizeBinary } from 'polkadot-api'
+import { formatBalance, type HexString, hexToString } from 'dedot/utils'
 import { onMounted, ref } from 'vue'
 import sdk from '../utils/sdk'
 
@@ -14,7 +14,7 @@ const metadata = ref<{
   image: string
 }>()
 
-const { api, client } = sdk('asset_hub')
+const { api: assetHubApi } = sdk('asset_hub')
 const { api: peopleApi } = sdk('people')
 
 const price = ref<string>()
@@ -26,26 +26,38 @@ onMounted(async () => {
     return
   }
 
+  const [api, peopleApiInstance] = await Promise.all([
+    assetHubApi,
+    peopleApi,
+  ])
+
   const [getMetadata, queryOwner, queryPrice] = await Promise.all([
     fetch(props.metadata).then(res => res.json()),
-    api.query.Nfts.Item.getValue(props.collection, props.token),
-    api.query.Nfts.ItemPriceOf.getValue(props.collection, props.token),
+    api.query.nfts.item([props.collection, props.token]),
+    api.query.nfts.itemPriceOf([props.collection, props.token]),
   ])
 
   metadata.value = getMetadata
-  price.value = queryPrice?.[0].toString()
 
-  if (price.value) {
-    const chainSpec = await client.getChainSpecData()
-    const tokenDecimals = chainSpec.properties.tokenDecimals
-    price.value = (Number(price.value) / 10 ** tokenDecimals).toFixed()
+  if (queryPrice && Array.isArray(queryPrice) && queryPrice[0]) {
+    const chainSpec = await api.chainSpec.properties()
+    const options = { decimals: Number(chainSpec.tokenDecimals), symbol: String(chainSpec.tokenSymbol) }
+    price.value = formatBalance(queryPrice[0], options)
   }
 
   if (queryOwner?.owner) {
-    const queryIdentity = await peopleApi.query.Identity.IdentityOf.getValue(queryOwner.owner)
-    owner.value = queryIdentity?.info.display.value instanceof FixedSizeBinary
-      ? queryIdentity.info.display.value.asText()
-      : `${queryOwner?.owner.slice(0, 4)}...${queryOwner?.owner.slice(-4)}`
+    const ownerAddress = queryOwner.owner.address()
+    const queryIdentity = await peopleApiInstance.query.identity.identityOf(queryOwner.owner)
+
+    if (queryIdentity?.info.display && queryIdentity.info.display.type === 'Raw') {
+      const displayValue = queryIdentity.info.display.value
+      owner.value = typeof displayValue === 'string'
+        ? displayValue
+        : hexToString(displayValue as HexString)
+    }
+    else {
+      owner.value = `${ownerAddress.slice(0, 4)}...${ownerAddress.slice(-4)}`
+    }
   }
 
   loading.value = false

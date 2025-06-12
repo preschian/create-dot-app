@@ -1,43 +1,35 @@
-import { asset_hub, people } from '@polkadot-api/descriptors'
-import { createClient, type PolkadotClient, type TypedApi } from 'polkadot-api'
-import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
-import { getWsProvider } from 'polkadot-api/ws-provider/web'
+import type { PolkadotAssetHubApi, PolkadotPeopleApi } from '@dedot/chaintypes'
+import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
+
+const assetHubProvider = new WsProvider('wss://polkadot-asset-hub-rpc.polkadot.io')
+const peopleProvider = new WsProvider('wss://polkadot-people-rpc.polkadot.io')
 
 const config = {
   asset_hub: {
-    descriptor: asset_hub,
-    providers: ['wss://polkadot-asset-hub-rpc.polkadot.io'],
+    client: DedotClient.new<PolkadotAssetHubApi>(assetHubProvider),
   },
   people: {
-    descriptor: people,
-    providers: ['wss://polkadot-people-rpc.polkadot.io'],
+    client: DedotClient.new<PolkadotPeopleApi>(peopleProvider),
   },
 }
 
 type Prefix = keyof typeof config
-type AssetHubAPI = TypedApi<typeof asset_hub>
-type PeopleAPI = TypedApi<typeof people>
 
-const client = ref<Record<Prefix, PolkadotClient | undefined>>({
+const client = ref<Record<Prefix, Promise<DedotClient<any>> | undefined>>({
   asset_hub: undefined,
   people: undefined,
 })
 
-function sdk(chain: 'asset_hub'): { api: AssetHubAPI, client: PolkadotClient }
-function sdk(chain: 'people'): { api: PeopleAPI, client: PolkadotClient }
+function sdk(chain: 'asset_hub'): { api: Promise<DedotClient<PolkadotAssetHubApi>> }
+function sdk(chain: 'people'): { api: Promise<DedotClient<PolkadotPeopleApi>> }
 function sdk(chain: Prefix) {
   if (!client.value[chain]) {
-    client.value[chain] = createClient(
-      withPolkadotSdkCompat(
-        getWsProvider(config[chain].providers[0]),
-      ),
-    )
+    client.value[chain] = config[chain].client
   }
 
   return {
-    api: client.value[chain].getTypedApi(config[chain].descriptor),
-    client: client.value[chain],
+    api: client.value[chain],
   }
 }
 
