@@ -56,7 +56,7 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
     }
 
     loadNFTData()
-  }, [metadata, collection, token])
+  }, [metadata, collection, token, api, client, peopleApi])
 
   return (
     <div className="group">
@@ -65,18 +65,22 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
         {/* NFT Image */}
         <div className="relative overflow-hidden">
           {/* Loading Skeleton */}
-          {loading ? (
-            <div className="w-full h-64 bg-gray-100">
-              <div className="w-full h-full animate-pulse bg-gray-200" />
-            </div>
-          ) : nftMetadata?.image ? (
-            /* NFT Image */
-            <img
-              src={`https://wsrv.nl/?url=${nftMetadata.image}&w=256&h=256`}
-              alt={nftMetadata.name}
-              className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : null}
+          {loading
+            ? (
+                <div className="w-full h-64 bg-gray-100">
+                  <div className="w-full h-full animate-pulse bg-gray-200" />
+                </div>
+              )
+            : nftMetadata?.image
+              ? (
+                  /* NFT Image */
+                  <img
+                    src={`https://wsrv.nl/?url=${nftMetadata.image}&w=256&h=256`}
+                    alt={nftMetadata.name}
+                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                )
+              : null}
 
           {/* Dark Overlay */}
           {!loading && (
@@ -110,44 +114,46 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
         {/* Card Content */}
         <div className="p-4">
           {/* Loading Skeleton for Card Content */}
-          {loading ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gray-200 animate-pulse rounded-full" />
-                <div className="space-y-1">
-                  <div className="h-3 w-12 bg-gray-200 animate-pulse" />
-                  <div className="h-3 w-20 bg-gray-200 animate-pulse" />
-                </div>
-              </div>
-              <div className="h-7 w-14 bg-gray-200 animate-pulse" />
-            </div>
-          ) : (
-            /* Owner & Action */
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
-                  <span className="text-xs font-medium uppercase">
-                    {owner?.charAt(owner.length - 1)}
-                  </span>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wider">
-                    Owner
+          {loading
+            ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gray-200 animate-pulse rounded-full" />
+                    <div className="space-y-1">
+                      <div className="h-3 w-12 bg-gray-200 animate-pulse" />
+                      <div className="h-3 w-20 bg-gray-200 animate-pulse" />
+                    </div>
                   </div>
-                  <div className="text-xs text-black font-medium">
-                    {owner}
-                  </div>
+                  <div className="h-7 w-14 bg-gray-200 animate-pulse" />
                 </div>
-              </div>
-              <a
-                href={`https://koda.art/ahp/gallery/${collection}-${token}`}
-                target="_blank"
-                className="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer"
-              >
-                View
-              </a>
-            </div>
-          )}
+              )
+            : (
+                /* Owner & Action */
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
+                      <span className="text-xs font-medium uppercase">
+                        {owner?.charAt(owner.length - 1)}
+                      </span>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wider">
+                        Owner
+                      </div>
+                      <div className="text-xs text-black font-medium">
+                        {owner}
+                      </div>
+                    </div>
+                  </div>
+                  <a
+                    href={`https://koda.art/ahp/gallery/${collection}-${token}`}
+                    target="_blank"
+                    className="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer"
+                  >
+                    View
+                  </a>
+                </div>
+              )}
         </div>
       </div>
     </div>

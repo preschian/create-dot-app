@@ -177,6 +177,7 @@ export default function WalletConnect() {
       {!isConnected && !hasExtensions && !isLoading && (
         <div>
           <button
+            type="button"
             className="bg-gray-400 text-white px-6 py-3 font-medium uppercase tracking-wider text-sm cursor-not-allowed h-12"
             disabled
             onClick={() => loadExtensions()}
@@ -191,47 +192,49 @@ export default function WalletConnect() {
         <div className="flex items-center space-x-3">
           <div className="relative">
             {/* Select Account Button (when no account selected) */}
-            {!selectedAccount ? (
-              <button
-                type="button"
-                className="flex items-center space-x-3 px-4 py-3 hover:bg-yellow-50 transition-colors border-2 border-yellow-300 bg-yellow-50 h-12 animate-pulse"
-                onClick={(e: React.MouseEvent) => {
-                  e.stopPropagation()
-                  setShowAccountMenu(!showAccountMenu)
-                }}
-              >
-                <div className="flex flex-col items-end">
-                  <div className="text-sm font-medium text-yellow-800">
-                    Select Account
+            {!selectedAccount
+              ? (
+                  <button
+                    type="button"
+                    className="flex items-center space-x-3 px-4 py-3 hover:bg-yellow-50 transition-colors border-2 border-yellow-300 bg-yellow-50 h-12 animate-pulse"
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation()
+                      setShowAccountMenu(!showAccountMenu)
+                    }}
+                  >
+                    <div className="flex flex-col items-end">
+                      <div className="text-sm font-medium text-yellow-800">
+                        Select Account
+                      </div>
+                      <div className="text-xs text-yellow-600">
+                        Choose wallet account
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                  </button>
+                )
+              : (
+            /* Selected Account Display (when account is selected) */
+                  <div className="flex items-center space-x-3 px-4 py-3 border border-gray-200 h-12 bg-gray-50">
+                    <div className="flex flex-col items-end">
+                      <div className="text-sm font-medium text-gray-900">
+                        {getAccountDisplay(selectedAccount)}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {formatAddress(selectedAccount.address, 6)}
+                      </div>
+                    </div>
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">
+                        {selectedAccount.address.slice(0, 2).toUpperCase()}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-xs text-yellow-600">
-                    Choose wallet account
-                  </div>
-                </div>
-                <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-              </button>
-            ) : (
-              /* Selected Account Display (when account is selected) */
-              <div className="flex items-center space-x-3 px-4 py-3 border border-gray-200 h-12 bg-gray-50">
-                <div className="flex flex-col items-end">
-                  <div className="text-sm font-medium text-gray-900">
-                    {getAccountDisplay(selectedAccount)}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {formatAddress(selectedAccount.address, 6)}
-                  </div>
-                </div>
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">
-                    {selectedAccount.address.slice(0, 2).toUpperCase()}
-                  </span>
-                </div>
-              </div>
-            )}
+                )}
 
             {/* Account Selection Menu (only when no account selected) */}
             {showAccountMenu && !selectedAccount && (
@@ -244,7 +247,7 @@ export default function WalletConnect() {
                     <button
                       type="button"
                       className="text-xs text-gray-500 hover:text-gray-700"
-                      onClick={(e: React.MouseEvent) => setShowAccountMenu(false)}
+                      onClick={() => setShowAccountMenu(false)}
                     >
                       ✕
                     </button>

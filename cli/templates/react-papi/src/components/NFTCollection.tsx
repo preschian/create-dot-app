@@ -18,7 +18,7 @@ interface CollectionInfo {
 
 export default function NFTCollection() {
   const [items, setItems] = useState<NFTItem[]>([])
-  const [owners, setOwners] = useState<Set<string>>(new Set())
+  const [owners, setOwners] = useState<Set<string>>(() => new Set())
   const [listed, setListed] = useState<number>(0)
   const [collection, setCollection] = useState<CollectionInfo>({
     name: 'Loading...',
