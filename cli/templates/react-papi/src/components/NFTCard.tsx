@@ -13,14 +13,14 @@ interface NFTMetadata {
   image: string
 }
 
+const { api, client } = sdk('asset_hub')
+const { api: peopleApi } = sdk('people')
+
 export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
   const [nftMetadata, setNftMetadata] = useState<NFTMetadata>()
   const [price, setPrice] = useState<string>()
   const [owner, setOwner] = useState<string>()
   const [loading, setLoading] = useState(true)
-
-  const { api, client } = sdk('asset_hub')
-  const { api: peopleApi } = sdk('people')
 
   useEffect(() => {
     async function loadNFTData() {
@@ -36,7 +36,7 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
 
       setNftMetadata(getMetadata)
 
-      let priceValue = queryPrice?.[0].toString()
+      let priceValue = queryPrice?.[0]?.toString()
       if (priceValue) {
         const chainSpec = await client.getChainSpecData()
         const tokenDecimals = chainSpec.properties.tokenDecimals
@@ -56,7 +56,7 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
     }
 
     loadNFTData()
-  }, [metadata, collection, token, api, client, peopleApi])
+  }, [metadata, collection, token])
 
   return (
     <div className="group">
