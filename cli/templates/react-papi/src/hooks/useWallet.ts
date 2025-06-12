@@ -32,7 +32,7 @@ export function useWallet() {
       $connectedExtension.listen((extension: string) => {
         setConnectedExtension(extension)
       }),
-      $accounts.listen((accs: InjectedAccountWithMeta[]) => {
+      $accounts.listen((accs: readonly InjectedAccountWithMeta[]) => {
         setAccounts([...accs])
       }),
       $selectedAccount.listen((account: string) => {
