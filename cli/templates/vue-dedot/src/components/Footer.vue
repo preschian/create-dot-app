@@ -64,7 +64,7 @@
             Polkadot
           </span>
           <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-            PAPI
+            DEDOT
           </span>
           <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
             Vue.js
