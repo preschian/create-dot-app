@@ -31,8 +31,10 @@ export default function WalletConnect() {
 
   // Utility functions
   function formatAddress(address: string, length: number = 8): string {
-    if (!address) return ''
-    if (address.length <= length * 2) return address
+    if (!address)
+      return ''
+    if (address.length <= length * 2)
+      return address
     return `${address.slice(0, length)}...${address.slice(-length)}`
   }
 
@@ -45,20 +47,23 @@ export default function WalletConnect() {
     try {
       const extensions = await getAvailableExtensions()
       setAvailableExtensions(extensions)
-    } catch (err) {
+    }
+    catch (err) {
       console.error('Failed to load extensions:', err)
     }
   }
 
   async function handleConnectWallet(extensionName?: string) {
-    if (isLoading) return
+    if (isLoading)
+      return
 
     setShowWalletMenu(false)
 
     try {
       await connectWallet(extensionName)
       setShowAccountMenu(true)
-    } catch (err) {
+    }
+    catch (err) {
       console.error('Connection error:', err)
     }
   }
@@ -73,7 +78,8 @@ export default function WalletConnect() {
     try {
       selectAccount(account)
       setShowAccountMenu(false)
-    } catch (err) {
+    }
+    catch (err) {
       console.error('Account selection error:', err)
     }
   }
@@ -110,6 +116,7 @@ export default function WalletConnect() {
       {!isConnected && hasExtensions && (
         <div className="relative">
           <button
+            type="button"
             disabled={isLoading}
             className="bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white px-6 py-3 font-medium transition-colors duration-200 uppercase tracking-wider text-sm relative h-12"
             onClick={(e: React.MouseEvent) => {
@@ -117,17 +124,19 @@ export default function WalletConnect() {
               setShowWalletMenu(!showWalletMenu)
             }}
           >
-            {isLoading ? (
-              <span className="flex items-center space-x-2">
-                <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                <span>Connecting...</span>
-              </span>
-            ) : (
-              <span>Connect Wallet</span>
-            )}
+            {isLoading
+              ? (
+                  <span className="flex items-center space-x-2">
+                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>Connecting...</span>
+                  </span>
+                )
+              : (
+                  <span>Connect Wallet</span>
+                )}
           </button>
 
           {/* Wallet Selection Menu */}
@@ -138,8 +147,9 @@ export default function WalletConnect() {
                   Select Wallet
                 </h3>
                 <div className="space-y-2">
-                  {availableExtensions.map((extension) => (
+                  {availableExtensions.map(extension => (
                     <button
+                      type="button"
                       key={extension.name}
                       className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 border border-gray-100 transition-colors"
                       onClick={() => handleConnectWallet(extension.name)}
@@ -149,7 +159,8 @@ export default function WalletConnect() {
                           {getExtensionDisplayName(extension.name)}
                         </div>
                         <div className="text-xs text-gray-500">
-                          v{extension.version}
+                          v
+                          {extension.version}
                         </div>
                       </div>
                       <div className="w-2 h-2 bg-green-400 rounded-full" />
@@ -182,6 +193,7 @@ export default function WalletConnect() {
             {/* Select Account Button (when no account selected) */}
             {!selectedAccount ? (
               <button
+                type="button"
                 className="flex items-center space-x-3 px-4 py-3 hover:bg-yellow-50 transition-colors border-2 border-yellow-300 bg-yellow-50 h-12 animate-pulse"
                 onClick={(e: React.MouseEvent) => {
                   e.stopPropagation()
@@ -230,6 +242,7 @@ export default function WalletConnect() {
                       Select Account
                     </h3>
                     <button
+                      type="button"
                       className="text-xs text-gray-500 hover:text-gray-700"
                       onClick={(e: React.MouseEvent) => setShowAccountMenu(false)}
                     >
@@ -243,7 +256,9 @@ export default function WalletConnect() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-sm text-green-800 font-medium">
-                        {connectedExtension ? getExtensionDisplayName(connectedExtension) : 'Wallet'} Connected
+                        {connectedExtension ? getExtensionDisplayName(connectedExtension) : 'Wallet'}
+                        {' '}
+                        Connected
                       </span>
                     </div>
                     <p className="text-xs text-green-700 mt-1">
@@ -253,8 +268,9 @@ export default function WalletConnect() {
 
                   {/* Account List */}
                   <div className="space-y-1">
-                    {accounts.map((account) => (
+                    {accounts.map(account => (
                       <button
+                        type="button"
                         key={account.address}
                         className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 border border-gray-100 transition-colors"
                         onClick={() => handleSelectAccount(account)}
@@ -290,7 +306,8 @@ export default function WalletConnect() {
               />
               <span className={`text-xs hidden sm:inline ${
                 selectedAccount ? 'text-gray-500' : 'text-yellow-600'
-              }`}>
+              }`}
+              >
                 {selectedAccount ? 'Connected' : 'Select Account'}
               </span>
             </div>
@@ -298,6 +315,7 @@ export default function WalletConnect() {
             {/* Disconnect Button */}
             {selectedAccount && (
               <button
+                type="button"
                 className="text-xs text-red-600 hover:text-red-800 font-medium px-2 py-1 hover:bg-red-50 rounded transition-colors"
                 onClick={handleDisconnect}
               >

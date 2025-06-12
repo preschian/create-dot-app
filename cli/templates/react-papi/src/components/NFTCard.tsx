@@ -35,7 +35,7 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
       ])
 
       setNftMetadata(getMetadata)
-      
+
       let priceValue = queryPrice?.[0].toString()
       if (priceValue) {
         const chainSpec = await client.getChainSpecData()
@@ -96,7 +96,9 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
                       Price
                     </div>
                     <div className="text-base font-medium text-white">
-                      {price} DOT
+                      {price}
+                      {' '}
+                      DOT
                     </div>
                   </div>
                 )}
@@ -137,9 +139,9 @@ export default function NFTCard({ metadata, collection, token }: NFTCardProps) {
                   </div>
                 </div>
               </div>
-              <a 
-                href={`https://koda.art/ahp/gallery/${collection}-${token}`} 
-                target="_blank" 
+              <a
+                href={`https://koda.art/ahp/gallery/${collection}-${token}`}
+                target="_blank"
                 className="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer"
               >
                 View

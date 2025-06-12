@@ -43,12 +43,14 @@ export default function SignTransaction() {
       if (result.ok) {
         const successMsg = `✅ Transaction successful! Hash: ${result.txHash.slice(0, 10)}...Block: ${result.block.number}`
         setSignResult(successMsg)
-      } else {
+      }
+      else {
         setError('Transaction failed - result not ok')
         setSignResult(`❌ Transaction failed`)
         console.error('❌ Transaction failed - result not ok:', result)
       }
-    } catch (err) {
+    }
+    catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to create transaction'
       setError(errorMsg)
       setSignResult(`❌ ${errorMsg}`)
@@ -59,7 +61,8 @@ export default function SignTransaction() {
         console.error('Error name:', err.name)
         console.error('Error stack:', err.stack)
       }
-    } finally {
+    }
+    finally {
       setIsSigning(false)
     }
   }
@@ -81,28 +84,32 @@ export default function SignTransaction() {
 
       {/* Account Status */}
       <div className="mb-6">
-        {!selectedAccount ? (
-          <div className="flex items-center p-4 bg-gray-50 border border-gray-100">
-            <svg className="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-            <span className="text-gray-600 text-sm font-light">Please connect your wallet first</span>
-          </div>
-        ) : (
-          <div className="flex items-center p-4 bg-gray-50 border border-gray-100">
-            <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mr-3">
-              <span className="text-xs font-medium uppercase">{selectedAccount.address.slice(-1)}</span>
-            </div>
-            <div>
-              <div className="text-sm font-medium text-black">
-                {selectedAccount.meta?.name || 'Account'}
+        {!selectedAccount
+          ? (
+              <div className="flex items-center p-4 bg-gray-50 border border-gray-100">
+                <svg className="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                <span className="text-gray-600 text-sm font-light">Please connect your wallet first</span>
               </div>
-              <div className="text-xs text-gray-500">
-                {selectedAccount.address.slice(0, 8)}...{selectedAccount.address.slice(-8)}
+            )
+          : (
+              <div className="flex items-center p-4 bg-gray-50 border border-gray-100">
+                <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center mr-3">
+                  <span className="text-xs font-medium uppercase">{selectedAccount.address.slice(-1)}</span>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-black">
+                    {selectedAccount.meta?.name || 'Account'}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {selectedAccount.address.slice(0, 8)}
+                    ...
+                    {selectedAccount.address.slice(-8)}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
       </div>
 
       {/* Status Messages */}
@@ -165,20 +172,23 @@ export default function SignTransaction() {
       <div className="flex justify-end">
         {selectedAccount && (
           <button
+            type="button"
             disabled={isSigning}
             className="bg-black hover:bg-gray-800 text-white px-6 py-3 text-sm font-medium transition-colors duration-200 uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleTestSign}
           >
-            {isSigning ? (
-              <span className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                  <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2a10 10 0 0 1 7.38 16.75M12 6v6l4 2M2.5 8.875a10 10 0 0 0-.5 3M2.83 16a10 10 0 0 0 2.43 3.4M4.636 5.235a10 10 0 0 1 .891-.857M8.644 21.42a10 10 0 0 0 7.631-.38" />
-                </svg>
-                Signing...
-              </span>
-            ) : (
-              <span>Sign Transaction</span>
-            )}
+            {isSigning
+              ? (
+                  <span className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                      <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2a10 10 0 0 1 7.38 16.75M12 6v6l4 2M2.5 8.875a10 10 0 0 0-.5 3M2.83 16a10 10 0 0 0 2.43 3.4M4.636 5.235a10 10 0 0 1 .891-.857M8.644 21.42a10 10 0 0 0 7.631-.38" />
+                    </svg>
+                    Signing...
+                  </span>
+                )
+              : (
+                  <span>Sign Transaction</span>
+                )}
           </button>
         )}
       </div>

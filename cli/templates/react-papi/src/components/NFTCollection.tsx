@@ -67,12 +67,12 @@ export default function NFTCollection() {
     <div className="min-h-screen bg-white">
       {/* Subtle Background Pattern */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute inset-0" 
-          style={{ 
-            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.05) 1px, transparent 0)', 
-            backgroundSize: '20px 20px' 
-          }} 
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.05) 1px, transparent 0)',
+            backgroundSize: '20px 20px',
+          }}
         />
       </div>
 
@@ -116,27 +116,29 @@ export default function NFTCollection() {
         </div>
 
         {/* Minimalist NFT Grid */}
-        {items.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {items.map((metadata) => (
-              <NFTCard
-                key={`${metadata.collection}-${metadata.token}`}
-                metadata={metadata.metadata}
-                collection={metadata.collection}
-                token={metadata.token}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {Array.from({ length: 32 }, (_, i) => (
-              <NFTCard
-                key={i}
-                collection={COLLECTION}
-              />
-            ))}
-          </div>
-        )}
+        {items.length
+          ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {items.map(metadata => (
+                  <NFTCard
+                    key={`${metadata.collection}-${metadata.token}`}
+                    metadata={metadata.metadata}
+                    collection={metadata.collection}
+                    token={metadata.token}
+                  />
+                ))}
+              </div>
+            )
+          : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {Array.from({ length: 32 }, (_, i) => (
+                  <NFTCard
+                    key={i}
+                    collection={COLLECTION}
+                  />
+                ))}
+              </div>
+            )}
       </div>
     </div>
   )

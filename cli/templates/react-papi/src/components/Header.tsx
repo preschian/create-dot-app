@@ -6,7 +6,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <a href="https://polkadot.network" target="_blank" className="block group">
+            <a href="https://polkadot.network" target="_blank" className="block group" rel="noopener noreferrer">
               <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center group-hover:bg-gray-800 transition-colors">
                 <span className="text-white font-bold text-sm">DOT</span>
               </div>
