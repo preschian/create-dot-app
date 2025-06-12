@@ -10,6 +10,7 @@ const { selectedAccount } = useWallet()
 const isSigning = ref(false)
 const error = ref('')
 const signResult = ref('')
+const txBlockNumber = ref('')
 
 async function handleTestSign() {
   if (!selectedAccount.value || isSigning.value) {
@@ -22,6 +23,7 @@ async function handleTestSign() {
   isSigning.value = true
   error.value = ''
   signResult.value = ''
+  txBlockNumber.value = ''
 
   try {
     // Get dedot API client and signer
@@ -36,10 +38,11 @@ async function handleTestSign() {
     const tx = api.tx.system.remark(testRemark)
 
     // Sign and submit the transaction
-    const txHash = await tx.signAndSend(selectedAccount.value.address, { signer })
+    const { status } = await tx.signAndSend(selectedAccount.value.address, { signer }).untilBestChainBlockIncluded()
 
-    // Display success with transaction hash
-    const successMsg = `✅ Transaction successful! Hash: ${txHash.slice(0, 10)}...`
+    // Store the full hash and display success message
+    txBlockNumber.value = status.type === 'BestChainBlockIncluded' ? status.value.blockNumber.toString() : ''
+    const successMsg = `✅ Transaction successful! Block: ${txBlockNumber.value}`
     signResult.value = successMsg
   }
   catch (err) {
@@ -128,6 +131,19 @@ async function handleTestSign() {
           <p class="text-gray-600 text-sm mt-1 font-light">
             {{ signResult.replace('✅ ', '') }}
           </p>
+          <div v-if="txBlockNumber" class="mt-2">
+            <a
+              :href="`https://assethub-polkadot.subscan.io/block/${txBlockNumber}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center text-sm text-black hover:text-gray-600 font-medium transition-colors duration-200"
+            >
+              <span>View on Subscan</span>
+              <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
