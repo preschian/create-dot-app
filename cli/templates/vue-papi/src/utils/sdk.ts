@@ -1,9 +1,9 @@
 import type { PolkadotClient, TypedApi } from 'polkadot-api'
-import { asset_hub, people } from '@polkadot-api/descriptors'
 import { createClient } from 'polkadot-api'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
 import { getWsProvider } from 'polkadot-api/ws-provider/web'
 import { ref } from 'vue'
+import { asset_hub, people } from '../descriptors'
 
 const config = {
   asset_hub: {
