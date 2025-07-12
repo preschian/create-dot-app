@@ -1,11 +1,13 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWallets } from '@talismn/connect-wallets'
+import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { computed, ref } from 'vue'
 
-export function useWalletConnection() {
+const selectedAccount = ref<WalletAccount | null>(null)
+const connectedWallet = ref<Wallet | null>(null)
+
+export function useConnect() {
   const listAccounts = ref<WalletAccount[]>([])
-  const selectedAccount = ref<WalletAccount | null>(null)
-  const connectedWallet = ref<Wallet | null>(null)
   const isConnecting = ref<string | null>(null)
 
   const wallets = computed(() => getWallets())
@@ -71,4 +73,13 @@ export function useWalletConnection() {
     disconnect,
     selectAccount,
   }
+}
+
+export async function polkadotSigner() {
+  const selectedExtension = await connectInjectedExtension(
+    connectedWallet.value?.extensionName || '',
+  )
+  const account = selectedExtension.getAccounts().find(account => account.address === selectedAccount.value?.address)
+
+  return account?.polkadotSigner
 }

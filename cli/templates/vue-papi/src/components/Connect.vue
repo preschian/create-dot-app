@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useWalletConnection } from '../composables/useWalletConnection'
+import { useConnect } from '../composables/useConnect'
 
 const showConnectModal = ref(false)
 const showOtherWallets = ref(false)
@@ -15,7 +15,7 @@ const {
   connect,
   disconnect,
   selectAccount,
-} = useWalletConnection()
+} = useConnect()
 
 function handleSelectAccount(account: typeof selectedAccount.value) {
   if (account) {

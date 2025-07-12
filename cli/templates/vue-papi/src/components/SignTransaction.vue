@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { Binary } from 'polkadot-api'
 import { ref } from 'vue'
-import { useWallet } from '../composables/useWallet'
+import { polkadotSigner, useConnect } from '../composables/useConnect'
 import sdk from '../utils/sdk'
-import { getSigner } from '../utils/wallet'
 
-const { selectedAccount } = useWallet()
+const { selectedAccount } = useConnect()
 
 const isSigning = ref(false)
 const error = ref('')
@@ -26,10 +26,9 @@ async function handleTestSign() {
   try {
     // Get PAPI client and signer
     const { api } = sdk('asset_hub')
-    const signer = await getSigner()
+    const signer = await polkadotSigner()
 
     // Create a test transaction - a simple remark transaction using Binary
-    const { Binary } = await import('polkadot-api')
     const testRemark = Binary.fromText(`Test transaction from ${selectedAccount.value.address} at ${Date.now()}`)
 
     // Build the transaction using PAPI
@@ -37,19 +36,33 @@ async function handleTestSign() {
       remark: testRemark,
     })
 
-    // Sign and submit the transaction with the correct signer format
-    const result = await tx.signAndSubmit(signer)
+    console.log('tx', tx)
 
-    // Check transaction result
-    if (result.ok) {
-      const successMsg = `✅ Transaction successful! Hash: ${result.txHash.slice(0, 10)}...Block: ${result.block.number}`
-      signResult.value = successMsg
-    }
-    else {
-      error.value = 'Transaction failed - result not ok'
-      signResult.value = `❌ Transaction failed`
-      console.error('❌ Transaction failed - result not ok:', result)
-    }
+    tx.signSubmitAndWatch(signer).subscribe({
+      next: (event) => {
+        console.log('event', event)
+      },
+      error: (err) => {
+        console.error('❌ Transaction error:', err)
+      },
+      complete: () => {
+        console.log('Transaction completed')
+      },
+    })
+
+    // Sign and submit the transaction with the correct signer format
+    // const result = await tx.signAndSubmit(signer)
+
+    // // Check transaction result
+    // if (result.ok) {
+    //   const successMsg = `✅ Transaction successful! Hash: ${result.txHash.slice(0, 10)}...Block: ${result.block.number}`
+    //   signResult.value = successMsg
+    // }
+    // else {
+    //   error.value = 'Transaction failed - result not ok'
+    //   signResult.value = `❌ Transaction failed`
+    //   console.error('❌ Transaction failed - result not ok:', result)
+    // }
   }
   catch (err) {
     const errorMsg = err instanceof Error ? err.message : 'Failed to create transaction'
@@ -99,7 +112,7 @@ async function handleTestSign() {
         </div>
         <div>
           <div class="text-sm font-medium text-black">
-            {{ selectedAccount.meta?.name || 'Account' }}
+            {{ selectedAccount.name }}
           </div>
           <div class="text-xs text-gray-500">
             {{ selectedAccount.address.slice(0, 8) }}...{{ selectedAccount.address.slice(-8) }}
