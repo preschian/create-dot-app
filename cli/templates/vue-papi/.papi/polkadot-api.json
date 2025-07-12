@@ -1,6 +1,6 @@
 {
   "version": 0,
-  "descriptorPath": ".papi/descriptors",
+  "descriptorPath": "src/descriptors",
   "entries": {
     "asset_hub": {
       "chain": "polkadot_asset_hub",
@@ -14,5 +14,8 @@
       "genesis": "0x67fa177a097bfa18f77ea95ab56e9bcdfeb0e5b8a40e46298bb93e16b6fc5008",
       "codeHash": "0x5ad90a21b395a16a6d720983bb9fdd096577710beea33c7882bb61a7518dbb79"
     }
+  },
+  "options": {
+    "noDescriptorsPackage": true
   }
 }
