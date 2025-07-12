@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@nanostores/persistent": "^1.0.0",
+    "@polkadot-api/pjs-signer": "^0.6.9",
     "@polkadot/extension-dapp": "^0.59.2",
     "@polkadot/extension-inject": "^0.59.2",
+    "@talismn/connect-wallets": "^1.2.8",
     "nanostores": "^1.0.1",
     "polkadot-api": "^1.13.1",
     "vue": "^3.5.16"
