@@ -20,10 +20,11 @@ const config = {
   },
 }
 
-type Prefix = keyof typeof config
+export type Prefix = keyof typeof config
 type AssetHubAPI = TypedApi<typeof asset_hub>
 type PeopleAPI = TypedApi<typeof people>
 type PasAssetHubAPI = TypedApi<typeof pas_asset_hub>
+type UnionAPI = AssetHubAPI | PasAssetHubAPI | PeopleAPI
 
 const client = ref<Record<Prefix, PolkadotClient | undefined>>({
   asset_hub: undefined,
@@ -34,6 +35,7 @@ const client = ref<Record<Prefix, PolkadotClient | undefined>>({
 function sdk(chain: 'asset_hub'): { api: AssetHubAPI, client: PolkadotClient }
 function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI, client: PolkadotClient }
 function sdk(chain: 'people'): { api: PeopleAPI, client: PolkadotClient }
+function sdk(chain: Prefix): { api: UnionAPI, client: PolkadotClient }
 function sdk(chain: Prefix) {
   if (!client.value[chain]) {
     client.value[chain] = createClient(

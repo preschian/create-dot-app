@@ -3,10 +3,11 @@ import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
 import NFTCollection from './components/NFTCollection.vue'
 import SignTransaction from './components/SignTransaction.vue'
+import StatusBar from './components/StatusBar.vue'
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100">
+  <div class="min-h-screen bg-gray-100 pb-12">
     <Header />
 
     <!-- Main Content -->
@@ -39,5 +40,8 @@ import SignTransaction from './components/SignTransaction.vue'
     </section>
 
     <Footer />
+
+    <!-- Sticky Status Bar -->
+    <StatusBar />
   </div>
 </template>
