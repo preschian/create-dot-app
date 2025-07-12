@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatBalance, type HexString, hexToString } from 'dedot/utils'
+import { formatBalance, hexToString } from 'dedot/utils'
 import { onMounted, ref } from 'vue'
 import sdk from '../utils/sdk'
 
@@ -53,7 +53,7 @@ onMounted(async () => {
       const displayValue = queryIdentity.info.display.value
       owner.value = typeof displayValue === 'string'
         ? displayValue
-        : hexToString(displayValue as HexString)
+        : hexToString(displayValue)
     }
     else {
       owner.value = `${ownerAddress.slice(0, 4)}...${ownerAddress.slice(-4)}`

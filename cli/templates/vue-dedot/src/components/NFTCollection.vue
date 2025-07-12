@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type HexString, hexToString } from 'dedot/utils'
+import { hexToString } from 'dedot/utils'
 import { onMounted, reactive, ref } from 'vue'
 import sdk from '../utils/sdk'
 import NFTCard from './NFTCard.vue'
@@ -30,13 +30,13 @@ onMounted(async () => {
     .map(([key, value]) => ({
       collection: key[0],
       token: key[1],
-      metadata: hexToString(value.data as HexString),
+      metadata: hexToString(value.data),
     }))
 
   owners.value = new Set(queryOwner.map(([, value]) => value.owner.address()))
   listed.value = queryPrice.length
 
-  const metadataUrl = queryCollectionMetadata?.data ? hexToString(queryCollectionMetadata.data as HexString).replace('ipfs://', 'https://ipfs.io/ipfs/') : null
+  const metadataUrl = hexToString(queryCollectionMetadata?.data || '').replace('ipfs://', '')
 
   if (!metadataUrl) {
     return
