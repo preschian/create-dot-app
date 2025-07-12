@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
+import type { WalletExtension } from '../utils/wallet'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useWallet } from '../composables/useWallet'
 import {
@@ -8,7 +9,7 @@ import {
   getAvailableExtensions,
   getExtensionDisplayName,
   selectAccount,
-  type WalletExtension,
+
 } from '../utils/wallet'
 
 const {
