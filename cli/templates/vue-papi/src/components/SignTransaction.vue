@@ -43,9 +43,13 @@ async function signTransaction() {
 
     tx.signSubmitAndWatch(signer).subscribe({
       next: (event) => {
+        // Set txHash as soon as it's available in any event
+        if (event.txHash && !txHash.value) {
+          txHash.value = event.txHash
+        }
+
         if (event.type === 'finalized') {
           result.value = 'Transaction successful!'
-          txHash.value = event.txHash
           isProcessing.value = false
         }
       },
@@ -97,11 +101,20 @@ async function signTransaction() {
       <div class="text-sm" :class="result.includes('Error') ? 'text-gray-700' : 'text-gray-800'">
         {{ result }}
       </div>
+    </div>
+
+    <!-- Transaction Hash Link -->
+    <div v-if="txHash" class="mb-4 p-3 border border-gray-200 rounded">
+      <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">
+        Transaction Hash
+      </div>
+      <div class="text-sm text-gray-800 font-mono break-all mb-2">
+        {{ txHash }}
+      </div>
       <a
-        v-if="txHash"
         :href="`${getSubscanUrl(selectedChain)}/extrinsic/${txHash}`"
         target="_blank"
-        class="inline-flex items-center gap-1 mt-2 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
+        class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
       >
         View on Subscan ↗
       </a>
