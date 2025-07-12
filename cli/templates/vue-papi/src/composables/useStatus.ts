@@ -2,20 +2,25 @@ import type { Prefix } from '../utils/sdk'
 import { onMounted, ref } from 'vue'
 import sdk from '../utils/sdk'
 
-export function useStatus() {
-  const isConnected = ref(false)
+const isConnected = ref(false)
+const connectedNetworks = ref<{
+  name: string
+  key: Prefix
+  blockHeight: number
+  status: 'connecting' | 'connected'
+  subscanUrl: string
+}[]>([
+  { name: '', key: 'asset_hub', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-polkadot.subscan.io' },
+  { name: '', key: 'pas_asset_hub', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-paseo.subscan.io' },
+  { name: '', key: 'people', blockHeight: 0, status: 'connecting', subscanUrl: 'https://people-polkadot.subscan.io' },
+])
 
-  // Connected networks with their block heights - only the three available in SDK
-  const connectedNetworks = ref<{
-    name: string
-    key: Prefix
-    blockHeight: number
-    status: 'connecting' | 'connected'
-  }[]>([
-    { name: '', key: 'asset_hub' as Prefix, blockHeight: 0, status: 'connecting' },
-    { name: '', key: 'pas_asset_hub' as Prefix, blockHeight: 0, status: 'connecting' },
-    { name: '', key: 'people' as Prefix, blockHeight: 0, status: 'connecting' },
-  ])
+export function useStatus() {
+  // Helper function to get Subscan URL for a network
+  function getSubscanUrl(chain: Prefix) {
+    const network = connectedNetworks.value.find(n => n.key === chain)
+    return network?.subscanUrl || ''
+  }
 
   // Unified function to get latest block for any network
   function getLatestBlock(networkKey: Prefix) {
@@ -48,5 +53,6 @@ export function useStatus() {
     isConnected,
     connectedNetworks,
     getLatestBlock,
+    getSubscanUrl,
   }
 }
