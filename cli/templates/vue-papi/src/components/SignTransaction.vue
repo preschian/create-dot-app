@@ -98,7 +98,7 @@ async function signTransaction() {
     </div>
 
     <!-- Transaction Hash Link -->
-    <div v-if="txHash" class="mb-4 p-3 border border-gray-200 rounded">
+    <div v-if="txHash" class="mb-4 p-3 border border-gray-200">
       <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">
         Transaction Hash
       </div>
