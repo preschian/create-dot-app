@@ -6,7 +6,7 @@ import sdk from '../utils/sdk'
 interface Props {
   name?: string
   address?: string
-  status?: 'online' | 'offline' | 'none'
+  status?: 'online' | 'none'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -51,8 +51,6 @@ const avatarClasses = computed(() => {
 
   if (props.status === 'online')
     classes.push('avatar-online')
-  if (props.status === 'offline')
-    classes.push('avatar-offline')
 
   return classes.join(' ')
 })
