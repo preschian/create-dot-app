@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { FixedSizeBinary } from 'polkadot-api'
 import { onMounted, ref } from 'vue'
 import sdk from '../utils/sdk'
+import Avatar from './Avatar.vue'
 
 const props = defineProps<{
   metadata?: string
@@ -15,10 +15,9 @@ const metadata = ref<{
 }>()
 
 const { api, client } = sdk('asset_hub')
-const { api: peopleApi } = sdk('people')
 
 const price = ref<string>()
-const owner = ref<string>()
+const ownerAddress = ref<string>()
 const loading = ref(true)
 
 onMounted(async () => {
@@ -42,10 +41,7 @@ onMounted(async () => {
   }
 
   if (queryOwner?.owner) {
-    const queryIdentity = await peopleApi.query.Identity.IdentityOf.getValue(queryOwner.owner)
-    owner.value = queryIdentity?.info.display.value instanceof FixedSizeBinary
-      ? queryIdentity.info.display.value.asText()
-      : `${queryOwner?.owner.slice(0, 4)}...${queryOwner?.owner.slice(-4)}`
+    ownerAddress.value = queryOwner.owner
   }
 
   loading.value = false
@@ -108,20 +104,14 @@ onMounted(async () => {
 
         <!-- Owner & Action -->
         <div v-else class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
-              <span class="text-xs font-medium uppercase">{{ owner?.charAt(owner.length - 1) }}</span>
-            </div>
-            <div>
-              <div class="text-xs text-gray-500 uppercase tracking-wider">
-                Owner
-              </div>
-              <div class="text-xs text-black font-medium">
-                {{ owner }}
-              </div>
-            </div>
-          </div>
-          <a :href="`https://koda.art/ahp/gallery/${collection}-${token}`" target="_blank" class="bg-black hover:bg-gray-800 text-white px-4 py-1.5 text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer">
+          <Avatar
+            :address="ownerAddress"
+          />
+          <a
+            :href="`https://koda.art/ahp/gallery/${collection}-${token}`"
+            target="_blank"
+            class="btn btn-neutral btn-sm uppercase tracking-wider"
+          >
             View
           </a>
         </div>

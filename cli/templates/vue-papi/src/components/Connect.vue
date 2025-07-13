@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useConnect } from '../composables/useConnect'
+import Avatar from './Avatar.vue'
 
 const connectModal = ref<HTMLDialogElement | null>(null)
 const showOtherWallets = ref(false)
@@ -60,21 +61,11 @@ function isAccountSelected(account: any) {
     <!-- Connected Account Display -->
     <div v-else>
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-3">
-          <div class="avatar avatar-online avatar-placeholder">
-            <div class="bg-neutral text-neutral-content w-8 rounded-full">
-              <span class="text-xs uppercase">{{ selectedAccount.name?.charAt(0) || 'A' }}</span>
-            </div>
-          </div>
-          <div>
-            <div class="text-xs text-black font-medium">
-              {{ selectedAccount.name }}
-            </div>
-            <div class="text-xs text-gray-400">
-              {{ selectedAccount.address.slice(0, 4) }}...{{ selectedAccount.address.slice(-4) }}
-            </div>
-          </div>
-        </div>
+        <Avatar
+          :name="selectedAccount.name"
+          :address="selectedAccount.address"
+          status="online"
+        />
         <div class="flex gap-2">
           <button
             class="btn btn-outline btn-sm uppercase tracking-wider"
@@ -119,21 +110,12 @@ function isAccountSelected(account: any) {
               @click="handleSelectAccount(account)"
             >
               <div class="card-body">
-                <div class="flex items-center gap-3">
-                  <div class="avatar avatar-placeholder">
-                    <div class="bg-neutral text-neutral-content w-8 rounded-full">
-                      <span class="text-xs">{{ account.name?.charAt(0) || 'A' }}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="text-xs text-black font-medium">
-                      {{ account.name }}
-                    </div>
-                    <div class="text-xs text-gray-400">
-                      {{ account.address.slice(0, 4) }}...{{ account.address.slice(-4) }}
-                    </div>
-                  </div>
-                  <div v-if="isAccountSelected(account)" class="ml-auto">
+                <div class="flex items-center justify-between">
+                  <Avatar
+                    :name="account.name"
+                    :address="account.address"
+                  />
+                  <div v-if="isAccountSelected(account)">
                     <div class="w-2 h-2 bg-primary rounded-full" />
                   </div>
                 </div>
