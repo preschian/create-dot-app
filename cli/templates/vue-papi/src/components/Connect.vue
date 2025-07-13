@@ -37,12 +37,12 @@ function toggleOtherWallets() {
   showOtherWallets.value = !showOtherWallets.value
 }
 
-function isWalletConnected(wallet: any) {
-  return connectedWallet.value?.extensionName === wallet.extensionName
+function isWalletConnected(wallet: typeof connectedWallet.value) {
+  return connectedWallet.value?.extensionName === wallet?.extensionName
 }
 
-function isAccountSelected(account: any) {
-  return selectedAccount.value?.address === account.address
+function isAccountSelected(account: typeof selectedAccount.value) {
+  return selectedAccount.value?.address === account?.address
 }
 </script>
 

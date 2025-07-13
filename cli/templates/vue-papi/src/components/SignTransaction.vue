@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import type { Prefix } from '../utils/sdk'
-import { Binary } from 'polkadot-api'
 import { computed, ref } from 'vue'
-import { polkadotSigner, useConnect } from '../composables/useConnect'
+import { useConnect } from '../composables/useConnect'
 import { useStatus } from '../composables/useStatus'
-import sdk from '../utils/sdk'
+import { useTransaction } from '../composables/useTransaction'
 
 const { selectedAccount } = useConnect()
-const { connectedNetworks, getSubscanUrl } = useStatus()
+const { connectedNetworks } = useStatus()
+const {
+  isProcessing,
+  result,
+  txHash,
+  signRemarkTransaction,
+  getSubscanLink,
+} = useTransaction()
 
-const isProcessing = ref(false)
-const result = ref('')
-const txHash = ref('')
 const selectedChain = ref<Prefix>('asset_hub')
 
 // Generate chain options from connected networks
@@ -27,42 +30,9 @@ async function signTransaction() {
   if (!selectedAccount.value)
     return
 
-  isProcessing.value = true
-  result.value = ''
-  txHash.value = ''
+  const message = `Test from ${selectedAccount.value.address} with ${selectedAccount.value.wallet?.extensionName}`
 
-  try {
-    const { api } = sdk(selectedChain.value)
-    const signer = await polkadotSigner()
-
-    if (!signer)
-      throw new Error('No signer found')
-
-    const remark = Binary.fromText(`Test from ${selectedAccount.value.address} at ${Date.now()}`)
-    const tx = api.tx.System.remark({ remark })
-
-    tx.signSubmitAndWatch(signer).subscribe({
-      next: (event) => {
-        // Set txHash as soon as it's available in any event
-        if (event.txHash && !txHash.value) {
-          txHash.value = event.txHash
-        }
-
-        if (event.type === 'finalized') {
-          result.value = 'Transaction successful!'
-          isProcessing.value = false
-        }
-      },
-      error: (err) => {
-        result.value = `Error: ${err.message}`
-        isProcessing.value = false
-      },
-    })
-  }
-  catch (err) {
-    result.value = `Error: ${err instanceof Error ? err.message : 'Unknown error'}`
-    isProcessing.value = false
-  }
+  await signRemarkTransaction(selectedChain.value, message)
 }
 </script>
 
@@ -106,7 +76,7 @@ async function signTransaction() {
         {{ txHash }}
       </div>
       <a
-        :href="`${getSubscanUrl(selectedChain)}/extrinsic/${txHash}`"
+        :href="getSubscanLink(selectedChain, txHash)"
         target="_blank"
         class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
       >
