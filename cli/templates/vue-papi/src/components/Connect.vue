@@ -99,9 +99,7 @@ function isAccountSelected(account: any) {
             CONNECT WALLET
           </h2>
           <button class="text-gray-400 hover:text-black transition-colors duration-200" @click="closeConnectModal">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <span class="icon-[mdi--close] w-6 h-6" />
           </button>
         </div>
 
@@ -159,9 +157,7 @@ function isAccountSelected(account: any) {
                     class="w-12 h-12"
                   >
                   <div v-if="isWalletConnected(wallet)" class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                    <svg class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
+                    <span class="icon-[mdi--check] w-2 h-2 text-white" />
                   </div>
                 </div>
                 <div class="text-xs font-medium text-black">
@@ -174,9 +170,7 @@ function isAccountSelected(account: any) {
                   <div v-if="isConnecting === wallet.extensionName" class="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
                   <span v-if="isWalletConnected(wallet)">Connected</span>
                   <span v-else>{{ isConnecting === wallet.extensionName ? 'Connecting' : 'Connect' }}</span>
-                  <svg v-if="!isWalletConnected(wallet)" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
+                  <span v-if="!isWalletConnected(wallet)" class="icon-[mdi--chevron-right] w-3 h-3" />
                 </button>
               </div>
             </div>
@@ -191,9 +185,7 @@ function isAccountSelected(account: any) {
             </h3>
             <button class="text-xs text-gray-400 hover:text-black transition-colors duration-200 flex items-center gap-1" @click="toggleOtherWallets">
               {{ showOtherWallets ? 'Hide' : 'Show' }}
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="showOtherWallets ? 'M19 9l-7 7-7-7' : 'M9 5l7 7-7 7'" />
-              </svg>
+              <span :class="showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'" class="w-3 h-3" />
             </button>
           </div>
           <div v-if="showOtherWallets" class="grid grid-cols-4 gap-3">
@@ -217,9 +209,7 @@ function isAccountSelected(account: any) {
                   class="w-32 py-1.5 text-xs bg-black hover:bg-gray-800 text-white font-medium transition-colors duration-200 uppercase tracking-wider flex items-center justify-center gap-1"
                 >
                   <span>Download</span>
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2-2H5a2 2 0 01-2-2z" />
-                  </svg>
+                  <span class="icon-[mdi--download] w-3 h-3" />
                 </a>
               </div>
             </div>
