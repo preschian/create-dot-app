@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import type { Prefix } from '../utils/sdk'
-import { Binary } from 'polkadot-api'
 import { computed, ref } from 'vue'
-import { polkadotSigner, useConnect } from '../composables/useConnect'
+import { useConnect } from '../composables/useConnect'
 import { useStatus } from '../composables/useStatus'
-import sdk from '../utils/sdk'
+import { useTransaction } from '../composables/useTransaction'
 
 const { selectedAccount } = useConnect()
-const { connectedNetworks, getSubscanUrl } = useStatus()
+const { connectedNetworks } = useStatus()
+const {
+  isProcessing,
+  result,
+  txHash,
+  signRemarkTransaction,
+  getSubscanLink,
+} = useTransaction()
 
-const isProcessing = ref(false)
-const result = ref('')
-const txHash = ref('')
 const selectedChain = ref<Prefix>('asset_hub')
 
 // Generate chain options from connected networks
@@ -27,58 +30,21 @@ async function signTransaction() {
   if (!selectedAccount.value)
     return
 
-  isProcessing.value = true
-  result.value = ''
-  txHash.value = ''
+  const message = `Test from ${selectedAccount.value.address} with ${selectedAccount.value.wallet?.extensionName}`
 
-  try {
-    const { api } = sdk(selectedChain.value)
-    const signer = await polkadotSigner()
-
-    if (!signer)
-      throw new Error('No signer found')
-
-    const remark = Binary.fromText(`Test from ${selectedAccount.value.address} at ${Date.now()}`)
-    const tx = api.tx.System.remark({ remark })
-
-    tx.signSubmitAndWatch(signer).subscribe({
-      next: (event) => {
-        // Set txHash as soon as it's available in any event
-        if (event.txHash && !txHash.value) {
-          txHash.value = event.txHash
-        }
-
-        if (event.type === 'finalized') {
-          result.value = 'Transaction successful!'
-          isProcessing.value = false
-        }
-      },
-      error: (err) => {
-        result.value = `Error: ${err.message}`
-        isProcessing.value = false
-      },
-    })
-  }
-  catch (err) {
-    result.value = `Error: ${err instanceof Error ? err.message : 'Unknown error'}`
-    isProcessing.value = false
-  }
+  await signRemarkTransaction(selectedChain.value, message)
 }
 </script>
 
 <template>
-  <div class="p-4">
-    <h3 class="text-lg font-light text-black tracking-wide mb-4">
-      Test Transaction
-    </h3>
-
+  <div>
     <!-- Chain Selector -->
     <div class="mb-4">
       <label class="block text-xs text-gray-500 uppercase tracking-wider mb-2">Select Chain</label>
       <select
         v-model="selectedChain"
         :disabled="isProcessing"
-        class="w-full p-2 border border-gray-200 bg-white text-sm focus:border-black focus:outline-none disabled:opacity-50 transition-colors"
+        class="select select-neutral w-full"
       >
         <option v-for="chain in chainOptions" :key="chain.value" :value="chain.value">
           {{ chain.label }}
@@ -87,24 +53,22 @@ async function signTransaction() {
     </div>
 
     <!-- Status -->
-    <div v-if="isProcessing" class="mb-4 p-3 border border-gray-200 rounded">
-      <div class="flex items-center gap-2">
-        <span class="animate-spin text-gray-600">⟳</span>
-        <span class="text-sm text-gray-600">
-          Processing transaction on {{ chainOptions.find(c => c.value === selectedChain)?.label }}...
-        </span>
-      </div>
+    <div v-if="isProcessing" role="alert" class="alert alert-info mb-4">
+      <span class="icon-[mdi--loading] animate-spin" />
+      <span>
+        Processing transaction on {{ chainOptions.find(c => c.value === selectedChain)?.label }}...
+      </span>
     </div>
 
     <!-- Result -->
-    <div v-if="result" class="mb-4 p-3 border rounded" :class="result.includes('Error') ? 'border-gray-300 bg-gray-50' : 'border-gray-200'">
-      <div class="text-sm" :class="result.includes('Error') ? 'text-gray-700' : 'text-gray-800'">
-        {{ result }}
-      </div>
+    <div v-if="result" role="alert" class="alert mb-4" :class="result.includes('Error') ? 'alert-error' : 'alert-success'">
+      <span v-if="result.includes('Error')" class="icon-[mdi--alert-circle]" />
+      <span v-else class="icon-[mdi--check-circle]" />
+      <span>{{ result }}</span>
     </div>
 
     <!-- Transaction Hash Link -->
-    <div v-if="txHash" class="mb-4 p-3 border border-gray-200 rounded">
+    <div v-if="txHash" class="mb-4 p-3 border border-gray-200">
       <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">
         Transaction Hash
       </div>
@@ -112,11 +76,11 @@ async function signTransaction() {
         {{ txHash }}
       </div>
       <a
-        :href="`${getSubscanUrl(selectedChain)}/extrinsic/${txHash}`"
+        :href="getSubscanLink(selectedChain, txHash)"
         target="_blank"
         class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
       >
-        View on Subscan ↗
+        View on Subscan <span class="icon-[mdi--open-in-new]" />
       </a>
     </div>
 
@@ -124,16 +88,16 @@ async function signTransaction() {
     <button
       v-if="selectedAccount"
       :disabled="isProcessing"
-      class="w-full bg-black hover:bg-gray-800 text-white py-2 px-4 text-xs font-medium transition-colors duration-200 uppercase tracking-wider disabled:opacity-50"
+      class="btn btn-neutral btn-block uppercase tracking-wider"
       @click="signTransaction"
     >
+      <span v-if="isProcessing" class="icon-[mdi--loading] animate-spin" />
       {{ isProcessing ? 'Processing...' : 'Sign Transaction' }}
     </button>
 
-    <div v-else class="w-full p-3 border border-gray-200 rounded text-center">
-      <div class="text-sm text-gray-600">
-        Please connect your wallet first
-      </div>
+    <div v-else role="alert" class="alert alert-warning">
+      <span class="icon-[mdi--wallet-outline]" />
+      <span>Please connect your wallet first</span>
     </div>
   </div>
 </template>

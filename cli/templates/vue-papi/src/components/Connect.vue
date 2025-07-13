@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useConnect } from '../composables/useConnect'
+import Avatar from './Avatar.vue'
 
-const showConnectModal = ref(false)
+const connectModal = ref<HTMLDialogElement | null>(null)
 const showOtherWallets = ref(false)
 
 const {
@@ -20,28 +21,28 @@ const {
 function handleSelectAccount(account: typeof selectedAccount.value) {
   if (account) {
     selectAccount(account)
-    showConnectModal.value = false
+    connectModal.value?.close()
   }
 }
 
 function openConnectModal() {
-  showConnectModal.value = true
+  connectModal.value?.showModal()
 }
 
 function closeConnectModal() {
-  showConnectModal.value = false
+  connectModal.value?.close()
 }
 
 function toggleOtherWallets() {
   showOtherWallets.value = !showOtherWallets.value
 }
 
-function isWalletConnected(wallet: any) {
-  return connectedWallet.value?.extensionName === wallet.extensionName
+function isWalletConnected(wallet: typeof connectedWallet.value) {
+  return connectedWallet.value?.extensionName === wallet?.extensionName
 }
 
-function isAccountSelected(account: any) {
-  return selectedAccount.value?.address === account.address
+function isAccountSelected(account: typeof selectedAccount.value) {
+  return selectedAccount.value?.address === account?.address
 }
 </script>
 
@@ -50,7 +51,7 @@ function isAccountSelected(account: any) {
     <!-- Connect Button -->
     <div v-if="!selectedAccount">
       <button
-        class="px-4 py-1.5 bg-black hover:bg-gray-800 text-white text-xs font-medium transition-colors duration-200 uppercase tracking-wider flex items-center gap-2 hover:cursor-pointer"
+        class="btn btn-neutral btn-sm uppercase tracking-wider"
         @click="openConnectModal"
       >
         Connect Wallet
@@ -58,30 +59,22 @@ function isAccountSelected(account: any) {
     </div>
 
     <!-- Connected Account Display -->
-    <div v-else class="">
+    <div v-else>
       <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
-            <span class="text-xs font-medium uppercase">{{ selectedAccount.name?.charAt(0) || 'A' }}</span>
-          </div>
-          <div>
-            <div class="text-xs text-black font-medium">
-              {{ selectedAccount.name }}
-            </div>
-            <div class="text-xs text-gray-400">
-              {{ selectedAccount.address.slice(0, 4) }}...{{ selectedAccount.address.slice(-4) }}
-            </div>
-          </div>
-        </div>
+        <Avatar
+          :name="selectedAccount.name"
+          :address="selectedAccount.address"
+          status="online"
+        />
         <div class="flex gap-2">
           <button
-            class="px-4 py-1.5 bg-black hover:bg-gray-800 text-white text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer"
+            class="btn btn-outline btn-sm uppercase tracking-wider"
             @click="openConnectModal"
           >
             Change
           </button>
           <button
-            class="px-4 py-1.5 bg-black hover:bg-gray-800 text-white text-xs font-medium transition-colors duration-200 uppercase tracking-wider hover:cursor-pointer"
+            class="btn btn-outline btn-sm uppercase tracking-wider"
             @click="disconnect"
           >
             Disconnect
@@ -90,16 +83,16 @@ function isAccountSelected(account: any) {
       </div>
     </div>
 
-    <!-- Modal Overlay -->
-    <div v-if="showConnectModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="closeConnectModal">
-      <div class="bg-white border border-gray-200 p-6 max-w-2xl mx-auto" @click.stop>
+    <!-- Modal using HTML dialog element -->
+    <dialog ref="connectModal" class="modal">
+      <div class="modal-box max-w-2xl">
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-lg font-medium text-black uppercase tracking-wider">
             CONNECT WALLET
           </h2>
-          <button class="text-gray-400 hover:text-black transition-colors duration-200" @click="closeConnectModal">
-            <span class="icon-[mdi--close] w-6 h-6" />
+          <button class="btn btn-sm btn-circle btn-ghost" @click="closeConnectModal">
+            <span class="icon-[mdi--close]" />
           </button>
         </div>
 
@@ -112,24 +105,19 @@ function isAccountSelected(account: any) {
             <div
               v-for="account in listAccounts"
               :key="account.address"
-              class="p-4 bg-white hover:bg-gray-50 cursor-pointer transition-colors duration-200"
-              :class="isAccountSelected(account) ? 'border-2 border-blue-500' : 'border border-gray-200 hover:border-black'"
+              class="card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow"
+              :class="isAccountSelected(account) ? 'border-primary' : 'border-base-300 hover:border-primary'"
               @click="handleSelectAccount(account)"
             >
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
-                  <span class="text-xs font-medium uppercase">{{ account.name?.charAt(0) || 'A' }}</span>
-                </div>
-                <div>
-                  <div class="text-xs text-black font-medium">
-                    {{ account.name }}
+              <div class="card-body">
+                <div class="flex items-center justify-between">
+                  <Avatar
+                    :name="account.name"
+                    :address="account.address"
+                  />
+                  <div v-if="isAccountSelected(account)">
+                    <div class="w-2 h-2 bg-primary rounded-full" />
                   </div>
-                  <div class="text-xs text-gray-400">
-                    {{ account.address.slice(0, 4) }}...{{ account.address.slice(-4) }}
-                  </div>
-                </div>
-                <div v-if="isAccountSelected(account)" class="ml-auto">
-                  <div class="w-2 h-2 bg-blue-500 rounded-full" />
                 </div>
               </div>
             </div>
@@ -145,18 +133,18 @@ function isAccountSelected(account: any) {
             <div
               v-for="wallet in installedWallets"
               :key="wallet.extensionName"
-              class="p-4 bg-white hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
-              :class="isWalletConnected(wallet) ? 'border-2 border-green-500' : 'border border-gray-200 hover:border-black'"
+              class="card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow"
+              :class="isWalletConnected(wallet) ? 'border-success' : 'border-base-300 hover:border-primary'"
               @click="connect(wallet)"
             >
-              <div class="flex flex-col items-center text-center gap-2">
+              <div class="card-body items-center text-center">
                 <div class="relative">
                   <img
                     :src="wallet.logo.src"
                     :alt="wallet.logo.alt"
                     class="w-12 h-12"
                   >
-                  <div v-if="isWalletConnected(wallet)" class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                  <div v-if="isWalletConnected(wallet)" class="absolute -top-1 -right-1 w-4 h-4 bg-success rounded-full flex items-center justify-center">
                     <span class="icon-[mdi--check] w-2 h-2 text-white" />
                   </div>
                 </div>
@@ -165,12 +153,12 @@ function isAccountSelected(account: any) {
                 </div>
                 <button
                   :disabled="isConnecting === wallet.extensionName"
-                  class="w-32 py-1.5 text-xs bg-black hover:bg-gray-800 disabled:bg-gray-400 hover:cursor-pointer text-white font-medium transition-colors duration-200 uppercase tracking-wider flex items-center justify-center gap-1"
+                  class="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
                 >
-                  <div v-if="isConnecting === wallet.extensionName" class="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
+                  <span v-if="isConnecting === wallet.extensionName" class="icon-[mdi--loading] animate-spin" />
                   <span v-if="isWalletConnected(wallet)">Connected</span>
                   <span v-else>{{ isConnecting === wallet.extensionName ? 'Connecting' : 'Connect' }}</span>
-                  <span v-if="!isWalletConnected(wallet)" class="icon-[mdi--chevron-right] w-3 h-3" />
+                  <span v-if="!isWalletConnected(wallet)" class="icon-[mdi--chevron-right]" />
                 </button>
               </div>
             </div>
@@ -183,18 +171,18 @@ function isAccountSelected(account: any) {
             <h3 class="text-xs text-gray-500 uppercase tracking-wider">
               Other wallets
             </h3>
-            <button class="text-xs text-gray-400 hover:text-black transition-colors duration-200 flex items-center gap-1" @click="toggleOtherWallets">
+            <button class="btn btn-ghost btn-sm" @click="toggleOtherWallets">
               {{ showOtherWallets ? 'Hide' : 'Show' }}
-              <span :class="showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'" class="w-3 h-3" />
+              <span :class="showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'" />
             </button>
           </div>
           <div v-if="showOtherWallets" class="grid grid-cols-4 gap-3">
             <div
               v-for="wallet in availableWallets"
               :key="wallet.extensionName"
-              class="p-4 bg-white hover:bg-gray-50 border border-gray-200 hover:border-black transition-colors duration-200"
+              class="card card-compact bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all"
             >
-              <div class="flex flex-col items-center text-center gap-2">
+              <div class="card-body items-center text-center">
                 <img
                   :src="wallet.logo.src"
                   :alt="wallet.logo.alt"
@@ -206,16 +194,19 @@ function isAccountSelected(account: any) {
                 <a
                   :href="wallet.installUrl"
                   target="_blank"
-                  class="w-32 py-1.5 text-xs bg-black hover:bg-gray-800 text-white font-medium transition-colors duration-200 uppercase tracking-wider flex items-center justify-center gap-1"
+                  class="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
                 >
                   <span>Download</span>
-                  <span class="icon-[mdi--download] w-3 h-3" />
+                  <span class="icon-[mdi--download]" />
                 </a>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
   </div>
 </template>

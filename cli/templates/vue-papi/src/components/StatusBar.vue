@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useStatus } from '../composables/useStatus'
 import SignTransaction from './SignTransaction.vue'
 
 const { isConnected, connectedNetworks } = useStatus()
+const transactionModal = ref<HTMLDialogElement | null>(null)
 </script>
 
 <template>
@@ -11,16 +13,14 @@ const { isConnected, connectedNetworks } = useStatus()
       <div class="flex items-center justify-between text-sm">
         <!-- Connection Status -->
         <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-2">
-            <div class="flex items-center space-x-1">
-              <div
-                class="w-2 h-2 rounded-full transition-colors"
-                :class="isConnected ? 'bg-green-500' : 'bg-red-500'"
-              />
-              <span class="text-black font-medium">
-                {{ isConnected ? 'Live' : 'Connecting...' }}
-              </span>
+          <div class="flex items-center space-x-4">
+            <div class="inline-grid *:[grid-area:1/1]">
+              <div :class="isConnected ? 'status-success' : 'status-error'" class="status rounded-full animate-ping" />
+              <div :class="isConnected ? 'status-success' : 'status-error'" class="status rounded-full" />
             </div>
+            <span class="text-black font-medium">
+              {{ isConnected ? 'Live' : 'Connecting...' }}
+            </span>
           </div>
 
           <!-- Networks Info -->
@@ -42,10 +42,8 @@ const { isConnected, connectedNetworks } = useStatus()
                       :class="network.status === 'connected' ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-200'"
                     >
                       <div class="flex items-center space-x-2">
-                        <div
-                          class="w-2 h-2 rounded-full"
-                          :class="network.status === 'connected' ? 'bg-green-500' : 'bg-gray-400'"
-                        />
+                        <div v-if="network.status === 'connected'" class="status status-success rounded-full" />
+                        <div v-else class="status status-warning rounded-full" />
                         <span class="text-sm font-medium text-black">{{ network.name }}</span>
                       </div>
                       <div class="flex items-center space-x-2">
@@ -69,18 +67,36 @@ const { isConnected, connectedNetworks } = useStatus()
 
         <!-- Transaction Testing -->
         <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-2 relative group">
-            <span class="text-gray-500 cursor-pointer text-xs px-3 py-1 border border-gray-200 hover:border-black hover:text-black transition-colors uppercase tracking-wider">
-              Test Transaction
-            </span>
-
-            <!-- Transaction Testing Tooltip -->
-            <div class="absolute bottom-full right-0 mb-2 w-96 bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-              <SignTransaction />
-            </div>
-          </div>
+          <button
+            class="btn btn-outline btn-sm text-xs uppercase tracking-wider"
+            @click="transactionModal?.showModal()"
+          >
+            Test Transaction
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Transaction Modal -->
+  <dialog ref="transactionModal" class="modal">
+    <div class="modal-box">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-lg">
+          Test Transaction
+        </h3>
+        <button
+          class="btn btn-sm btn-circle btn-ghost"
+          @click="transactionModal?.close()"
+        >
+          <span class="icon-[mdi--close]" />
+        </button>
+      </div>
+
+      <SignTransaction />
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
 </template>
