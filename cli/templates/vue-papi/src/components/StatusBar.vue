@@ -13,16 +13,14 @@ const transactionModal = ref<HTMLDialogElement | null>(null)
       <div class="flex items-center justify-between text-sm">
         <!-- Connection Status -->
         <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-2">
-            <div class="flex items-center space-x-1">
-              <div
-                class="w-2 h-2 rounded-full transition-colors"
-                :class="isConnected ? 'bg-green-500' : 'bg-red-500'"
-              />
-              <span class="text-black font-medium">
-                {{ isConnected ? 'Live' : 'Connecting...' }}
-              </span>
+          <div class="flex items-center space-x-4">
+            <div class="inline-grid *:[grid-area:1/1]">
+              <div :class="isConnected ? 'status-success' : 'status-error'" class="status rounded-full animate-ping" />
+              <div :class="isConnected ? 'status-success' : 'status-error'" class="status rounded-full" />
             </div>
+            <span class="text-black font-medium">
+              {{ isConnected ? 'Live' : 'Connecting...' }}
+            </span>
           </div>
 
           <!-- Networks Info -->
@@ -44,10 +42,8 @@ const transactionModal = ref<HTMLDialogElement | null>(null)
                       :class="network.status === 'connected' ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-200'"
                     >
                       <div class="flex items-center space-x-2">
-                        <div
-                          class="w-2 h-2 rounded-full"
-                          :class="network.status === 'connected' ? 'bg-green-500' : 'bg-gray-400'"
-                        />
+                        <div v-if="network.status === 'connected'" class="status status-success rounded-full" />
+                        <div v-else class="status status-warning rounded-full" />
                         <span class="text-sm font-medium text-black">{{ network.name }}</span>
                       </div>
                       <div class="flex items-center space-x-2">
