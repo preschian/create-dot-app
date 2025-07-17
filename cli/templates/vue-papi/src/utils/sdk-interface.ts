@@ -1,5 +1,5 @@
 import type { Prefix } from '~/utils/sdk'
-import { FixedSizeBinary } from 'polkadot-api'
+import { Binary, FixedSizeBinary } from 'polkadot-api'
 import sdk from '~/utils/sdk'
 import { formatPrice } from './formatters'
 
@@ -76,5 +76,36 @@ export function subscribeToBlocks(
       blockHeight: block.number,
       chainName,
     })
+  })
+}
+
+export function createRemarkTransaction(
+  chainPrefix: Prefix,
+  message: string,
+  signer: any,
+  callbacks: {
+    onTxHash: (hash: string) => void
+    onFinalized: () => void
+    onError: (error: string) => void
+  },
+) {
+  const { api } = sdk(chainPrefix)
+
+  const remark = Binary.fromText(message)
+  const tx = api.tx.System.remark({ remark })
+
+  tx.signSubmitAndWatch(signer).subscribe({
+    next: (event) => {
+      if (event.type === 'txBestBlocksState') {
+        callbacks.onTxHash(event.txHash)
+      }
+
+      if (event.type === 'finalized') {
+        callbacks.onFinalized()
+      }
+    },
+    error: (err) => {
+      callbacks.onError(err.message || 'Unknown error')
+    },
   })
 }

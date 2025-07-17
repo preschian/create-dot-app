@@ -1,7 +1,6 @@
 import type { Prefix } from '~/utils/sdk'
-import { Binary } from 'polkadot-api'
 import { ref } from 'vue'
-import sdk from '~/utils/sdk'
+import { createRemarkTransaction } from '~/utils/sdk-interface'
 import { polkadotSigner, useConnect } from './useConnect'
 import { useStatus } from './useStatus'
 
@@ -24,29 +23,22 @@ export function useTransaction() {
     txHash.value = ''
 
     try {
-      const { api } = sdk(chainPrefix)
       const signer = await polkadotSigner()
 
       if (!signer) {
         throw new Error('No signer found')
       }
 
-      const remark = Binary.fromText(message)
-      const tx = api.tx.System.remark({ remark })
-
-      tx.signSubmitAndWatch(signer).subscribe({
-        next: (event) => {
-          if (event.type === 'txBestBlocksState') {
-            txHash.value = event.txHash
-          }
-
-          if (event.type === 'finalized') {
-            result.value = 'Transaction successful!'
-            isProcessing.value = false
-          }
+      createRemarkTransaction(chainPrefix, message, signer, {
+        onTxHash: (hash) => {
+          txHash.value = hash
         },
-        error: (err) => {
-          result.value = `Error: ${err.message || 'Unknown error'}`
+        onFinalized: () => {
+          result.value = 'Transaction successful!'
+          isProcessing.value = false
+        },
+        onError: (error) => {
+          result.value = `Error: ${error}`
           isProcessing.value = false
         },
       })
