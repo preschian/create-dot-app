@@ -1,4 +1,5 @@
 import { onMounted, reactive, ref } from 'vue'
+import { formatIpfsUrl } from '../utils/formatters'
 import sdk from '../utils/sdk'
 
 export interface TokenCollectionItem {
@@ -42,13 +43,14 @@ export function useTokenCollection(collectionId: number) {
     owners.value = new Set(queryOwner.map(item => item.value.owner))
     listed.value = queryPrice.length
 
-    const metadataUrl = queryCollectionMetadata?.data.asText().replace('ipfs://', 'https://ipfs.io/ipfs/')
+    const metadataUrl = queryCollectionMetadata?.data.asText()
 
     if (!metadataUrl) {
       return
     }
 
-    const metadata = await fetch(metadataUrl)
+    const formattedUrl = formatIpfsUrl(metadataUrl)
+    const metadata = await fetch(formattedUrl)
     const metadataJson = await metadata.json()
     collection.name = metadataJson.name
     collection.description = metadataJson.description

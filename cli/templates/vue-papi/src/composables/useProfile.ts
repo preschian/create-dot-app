@@ -1,5 +1,6 @@
 import { FixedSizeBinary } from 'polkadot-api'
 import { computed, onMounted, ref } from 'vue'
+import { formatAddress, getInitials } from '../utils/formatters'
 import sdk from '../utils/sdk'
 
 export interface UseProfileParams {
@@ -32,14 +33,8 @@ export function useProfile(params: UseProfileParams) {
   const displayAddress = computed(() => {
     if (!params.address)
       return undefined
-    return `${params.address.slice(0, 4)}...${params.address.slice(-4)}`
+    return formatAddress(params.address)
   })
-
-  function getInitials(name?: string): string {
-    if (!name)
-      return 'A'
-    return name.charAt(0).toUpperCase()
-  }
 
   return {
     displayName,

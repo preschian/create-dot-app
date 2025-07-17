@@ -1,4 +1,5 @@
 import { onMounted, ref } from 'vue'
+import { formatPrice } from '../utils/formatters'
 import sdk from '../utils/sdk'
 
 export interface TokenMetadata {
@@ -37,7 +38,7 @@ export function useToken(params: UseTokenParams) {
     if (price.value) {
       const chainSpec = await client.getChainSpecData()
       const tokenDecimals = chainSpec.properties.tokenDecimals
-      price.value = (Number(price.value) / 10 ** tokenDecimals).toFixed()
+      price.value = formatPrice(price.value, tokenDecimals)
     }
 
     if (queryOwner?.owner) {
