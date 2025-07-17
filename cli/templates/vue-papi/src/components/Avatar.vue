@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { FixedSizeBinary } from 'polkadot-api'
-import { computed, onMounted, ref } from 'vue'
-import sdk from '../utils/sdk'
+import { computed } from 'vue'
+import { useProfile } from '../composables/useProfile'
 
 interface Props {
   name?: string
@@ -13,38 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
   status: 'none',
 })
 
-const { api: peopleApi } = sdk('people')
-const resolvedName = ref<string>()
-
-onMounted(async () => {
-  if (props.address && !props.name) {
-    try {
-      const queryIdentity = await peopleApi.query.Identity.IdentityOf.getValue(props.address)
-      resolvedName.value = queryIdentity?.info.display.value instanceof FixedSizeBinary
-        ? queryIdentity.info.display.value.asText()
-        : undefined
-    }
-    catch {
-      // No identity found, will use address
-    }
-  }
-})
-
-const displayName = computed(() => {
-  return props.name || resolvedName.value
-})
-
-const displayAddress = computed(() => {
-  if (!props.address)
-    return undefined
-  return `${props.address.slice(0, 4)}...${props.address.slice(-4)}`
-})
-
-function getInitials(name?: string): string {
-  if (!name)
-    return 'A'
-  return name.charAt(0).toUpperCase()
-}
+const { displayName, displayAddress, getInitials } = useProfile(props)
 
 const avatarClasses = computed(() => {
   const classes = ['avatar', 'avatar-placeholder']
