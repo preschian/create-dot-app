@@ -1,7 +1,6 @@
-import { FixedSizeBinary } from 'polkadot-api'
 import { computed, onMounted, ref } from 'vue'
 import { formatAddress, getInitials } from '~/utils/formatters'
-import sdk from '~/utils/sdk'
+import { getIdentity } from '~/utils/sdk-interface'
 
 export interface UseProfileParams {
   name?: string
@@ -9,20 +8,11 @@ export interface UseProfileParams {
 }
 
 export function useProfile(params: UseProfileParams) {
-  const { api: peopleApi } = sdk('people')
   const resolvedName = ref<string>()
 
   onMounted(async () => {
     if (params.address && !params.name) {
-      try {
-        const queryIdentity = await peopleApi.query.Identity.IdentityOf.getValue(params.address)
-        resolvedName.value = queryIdentity?.info.display.value instanceof FixedSizeBinary
-          ? queryIdentity.info.display.value.asText()
-          : undefined
-      }
-      catch {
-        // No identity found, will use address
-      }
+      resolvedName.value = await getIdentity(params.address)
     }
   })
 

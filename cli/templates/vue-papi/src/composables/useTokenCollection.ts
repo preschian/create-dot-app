@@ -1,49 +1,22 @@
 import { onMounted, reactive, ref } from 'vue'
 import { formatIpfsUrl } from '~/utils/formatters'
-import sdk from '~/utils/sdk'
-
-export interface TokenCollectionItem {
-  collection: number
-  token: number
-  metadata: string
-}
-
-export interface TokenCollectionInfo {
-  name: string
-  description: string
-}
+import { getCollectionDetail } from '~/utils/sdk-interface'
 
 export function useTokenCollection(collectionId: number) {
-  const { api } = sdk('asset_hub')
-
-  const items = ref<TokenCollectionItem[]>([])
+  const items = ref<Awaited<ReturnType<typeof getCollectionDetail>>['collectionItems']>([])
   const owners = ref<Set<string>>(new Set())
   const listed = ref<number>(0)
-  const collection = reactive<TokenCollectionInfo>({
+  const collection = reactive({
     name: 'Loading...',
     description: 'Loading...',
   })
 
   onMounted(async () => {
-    const [queryMetadata, queryOwner, queryPrice, queryCollectionMetadata] = await Promise.all([
-      api.query.Nfts.ItemMetadataOf.getEntries(collectionId),
-      api.query.Nfts.Item.getEntries(collectionId),
-      api.query.Nfts.ItemPriceOf.getEntries(collectionId),
-      api.query.Nfts.CollectionMetadataOf.getValue(collectionId),
-    ])
+    const { collectionItems, collectionOwners, collectionListed, metadataUrl } = await getCollectionDetail(collectionId)
 
-    items.value = queryMetadata
-      .sort((a, b) => a.keyArgs[1] - b.keyArgs[1])
-      .map(item => ({
-        collection: item.keyArgs[0],
-        token: item.keyArgs[1],
-        metadata: item.value.data.asText(),
-      }))
-
-    owners.value = new Set(queryOwner.map(item => item.value.owner))
-    listed.value = queryPrice.length
-
-    const metadataUrl = queryCollectionMetadata?.data.asText()
+    items.value = collectionItems
+    owners.value = collectionOwners
+    listed.value = collectionListed
 
     if (!metadataUrl) {
       return

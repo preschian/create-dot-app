@@ -8,7 +8,7 @@ const props = defineProps<{
   token?: number
 }>()
 
-const { metadata, price, ownerAddress, loading } = useToken(props)
+const { metadata, price, owner, loading } = useToken(props)
 </script>
 
 <template>
@@ -68,7 +68,7 @@ const { metadata, price, ownerAddress, loading } = useToken(props)
         <!-- Owner & Action -->
         <div v-else class="flex items-center justify-between">
           <Avatar
-            :address="ownerAddress"
+            :address="owner"
           />
           <a
             :href="`https://koda.art/ahp/gallery/${collection}-${token}`"
