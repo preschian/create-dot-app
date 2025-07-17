@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import sdk from '../utils/sdk'
+import { useToken } from '../composables/useToken'
 import Avatar from './Avatar.vue'
 
 const props = defineProps<{
@@ -9,43 +8,7 @@ const props = defineProps<{
   token?: number
 }>()
 
-const metadata = ref<{
-  name: string
-  image: string
-}>()
-
-const { api, client } = sdk('asset_hub')
-
-const price = ref<string>()
-const ownerAddress = ref<string>()
-const loading = ref(true)
-
-onMounted(async () => {
-  if (!props.metadata || !props.token) {
-    return
-  }
-
-  const [getMetadata, queryOwner, queryPrice] = await Promise.all([
-    fetch(props.metadata).then(res => res.json()),
-    api.query.Nfts.Item.getValue(props.collection, props.token),
-    api.query.Nfts.ItemPriceOf.getValue(props.collection, props.token),
-  ])
-
-  metadata.value = getMetadata
-  price.value = queryPrice?.[0].toString()
-
-  if (price.value) {
-    const chainSpec = await client.getChainSpecData()
-    const tokenDecimals = chainSpec.properties.tokenDecimals
-    price.value = (Number(price.value) / 10 ** tokenDecimals).toFixed()
-  }
-
-  if (queryOwner?.owner) {
-    ownerAddress.value = queryOwner.owner
-  }
-
-  loading.value = false
-})
+const { metadata, price, ownerAddress, loading } = useToken(props)
 </script>
 
 <template>

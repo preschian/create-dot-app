@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-import NFTCollection from './components/NFTCollection.vue'
 import StatusBar from './components/StatusBar.vue'
+import TokenCollection from './components/TokenCollection.vue'
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import StatusBar from './components/StatusBar.vue'
 
     <!-- Main Content -->
     <main>
-      <NFTCollection />
+      <TokenCollection />
     </main>
 
     <Footer />
