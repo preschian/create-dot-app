@@ -1,3 +1,4 @@
+import type { Prefix } from '~/utils/sdk'
 import { FixedSizeBinary } from 'polkadot-api'
 import sdk from '~/utils/sdk'
 import { formatPrice } from './formatters'
@@ -61,4 +62,19 @@ export async function getCollectionDetail(collection: number) {
     collectionListed,
     metadataUrl: queryCollectionMetadata?.data.asText(),
   }
+}
+
+export function subscribeToBlocks(
+  networkKey: Prefix,
+  onBlock: (data: { blockHeight: number, chainName: string }) => void,
+) {
+  const { client } = sdk(networkKey)
+
+  client.blocks$.subscribe(async (block) => {
+    const chainName = await client.getChainSpecData().then(data => data.name)
+    onBlock({
+      blockHeight: block.number,
+      chainName,
+    })
+  })
 }

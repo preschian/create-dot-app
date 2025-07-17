@@ -1,6 +1,6 @@
 import type { Prefix } from '~/utils/sdk'
 import { onMounted, ref } from 'vue'
-import sdk from '~/utils/sdk'
+import { subscribeToBlocks } from '~/utils/sdk-interface'
 
 const isConnected = ref(false)
 const connectedNetworks = ref<{
@@ -24,15 +24,13 @@ export function useStatus() {
 
   // Unified function to get latest block for any network
   function getLatestBlock(networkKey: Prefix) {
-    const { client } = sdk(networkKey)
-
-    client.blocks$.subscribe(async (block) => {
+    subscribeToBlocks(networkKey, ({ blockHeight, chainName }) => {
       // Update network block height
       const network = connectedNetworks.value.find(n => n.key === networkKey)
       if (network) {
-        network.blockHeight = block.number
+        network.blockHeight = blockHeight
         network.status = 'connected'
-        network.name = await client.getChainSpecData().then(data => data.name)
+        network.name = chainName
       }
 
       // Set connected status
