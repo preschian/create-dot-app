@@ -1,6 +1,6 @@
-import type { Prefix } from '../utils/sdk'
+import type { Prefix } from '~/utils/sdk'
 import { onMounted, ref } from 'vue'
-import sdk from '../utils/sdk'
+import sdk from '~/utils/sdk'
 
 const isConnected = ref(false)
 const connectedNetworks = ref<{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useToken } from '../composables/useToken'
+import { useToken } from '~/composables/useToken'
 import Avatar from './Avatar.vue'
 
 const props = defineProps<{

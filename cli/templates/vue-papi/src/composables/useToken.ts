@@ -1,6 +1,6 @@
 import { onMounted, ref } from 'vue'
-import { formatPrice } from '../utils/formatters'
-import sdk from '../utils/sdk'
+import { formatPrice } from '~/utils/formatters'
+import sdk from '~/utils/sdk'
 
 export interface TokenMetadata {
   name: string

@@ -1,6 +1,6 @@
 import { onMounted, reactive, ref } from 'vue'
-import { formatIpfsUrl } from '../utils/formatters'
-import sdk from '../utils/sdk'
+import { formatIpfsUrl } from '~/utils/formatters'
+import sdk from '~/utils/sdk'
 
 export interface TokenCollectionItem {
   collection: number

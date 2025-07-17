@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useProfile } from '../composables/useProfile'
+import { useProfile } from '~/composables/useProfile'
 
 interface Props {
   name?: string

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTokenCollection } from '../composables/useTokenCollection'
+import { useTokenCollection } from '~/composables/useTokenCollection'
 import TokenCard from './TokenCard.vue'
 
 const COLLECTION = 486
