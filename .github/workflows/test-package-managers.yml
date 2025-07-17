@@ -1,4 +1,4 @@
-name: Test Package Managers
+name: Package Managers
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  test-package-managers:
+  install:
     runs-on: ubuntu-latest
     strategy:
       matrix:
