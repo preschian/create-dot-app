@@ -1,7 +1,7 @@
 import { FixedSizeBinary } from 'polkadot-api'
 import { computed, onMounted, ref } from 'vue'
-import { formatAddress, getInitials } from '../utils/formatters'
-import sdk from '../utils/sdk'
+import { formatAddress, getInitials } from '~/utils/formatters'
+import sdk from '~/utils/sdk'
 
 export interface UseProfileParams {
   name?: string

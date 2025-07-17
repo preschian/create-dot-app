@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStatus } from '../composables/useStatus'
+import { useStatus } from '~/composables/useStatus'
 import SignTransaction from './SignTransaction.vue'
 
 const { isConnected, connectedNetworks } = useStatus()

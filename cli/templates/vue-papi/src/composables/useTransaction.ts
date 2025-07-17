@@ -1,7 +1,7 @@
-import type { Prefix } from '../utils/sdk'
+import type { Prefix } from '~/utils/sdk'
 import { Binary } from 'polkadot-api'
 import { ref } from 'vue'
-import sdk from '../utils/sdk'
+import sdk from '~/utils/sdk'
 import { polkadotSigner, useConnect } from './useConnect'
 import { useStatus } from './useStatus'
 

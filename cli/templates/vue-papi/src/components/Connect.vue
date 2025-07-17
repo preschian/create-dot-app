@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useConnect } from '../composables/useConnect'
+import { useConnect } from '~/composables/useConnect'
 import Avatar from './Avatar.vue'
 
 const connectModal = ref<HTMLDialogElement | null>(null)

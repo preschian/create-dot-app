@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Prefix } from '../utils/sdk'
+import type { Prefix } from '~/utils/sdk'
 import { computed, ref } from 'vue'
-import { useConnect } from '../composables/useConnect'
-import { useStatus } from '../composables/useStatus'
-import { useTransaction } from '../composables/useTransaction'
+import { useConnect } from '~/composables/useConnect'
+import { useStatus } from '~/composables/useStatus'
+import { useTransaction } from '~/composables/useTransaction'
 
 const { selectedAccount } = useConnect()
 const { connectedNetworks } = useStatus()
