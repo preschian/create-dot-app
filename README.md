@@ -8,15 +8,15 @@ A command-line interface (CLI) tool designed to streamline the development proce
 - **React.js**
 - **Vue.js**
 
-**Coming Soon:**
-- **Next.js**
-- **Nuxt.js**
-- **Svelte**
-- **SvelteKit**
-
 ### 🔗 Dual SDK Integration Support
 - **[PAPI](https://papi.how/)**
 - **[Dedot](https://docs.dedot.dev/)**
+
+### 📋 Planned Templates
+
+**Frontend Frameworks:** Next.js, Nuxt.js, Svelte, SvelteKit
+
+**Backend Frameworks:** Hono, Elysia, Fastify
 
 ## Installation
 
