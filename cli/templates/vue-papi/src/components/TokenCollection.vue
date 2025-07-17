@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTokenCollection } from '../composables/useTokenCollection'
-import NFTCard from './NFTCard.vue'
+import TokenCard from './TokenCard.vue'
 
 const COLLECTION = 486
 
@@ -55,7 +55,7 @@ const { items, owners, listed, collection } = useTokenCollection(COLLECTION)
 
       <!-- Minimalist NFT Grid -->
       <div v-if="items.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <NFTCard
+        <TokenCard
           v-for="metadata in items"
           :key="`${metadata.collection}-${metadata.token}`"
           :metadata="metadata.metadata"
@@ -64,7 +64,7 @@ const { items, owners, listed, collection } = useTokenCollection(COLLECTION)
         />
       </div>
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <NFTCard
+        <TokenCard
           v-for="n in 32"
           :key="n"
           :collection="COLLECTION"
