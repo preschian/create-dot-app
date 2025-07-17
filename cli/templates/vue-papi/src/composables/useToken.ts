@@ -1,6 +1,5 @@
 import { onMounted, ref } from 'vue'
-import { formatPrice } from '~/utils/formatters'
-import sdk from '~/utils/sdk'
+import { getTokenDetail } from '~/utils/sdk-interface'
 
 export interface TokenMetadata {
   name: string
@@ -16,34 +15,19 @@ export interface UseTokenParams {
 export function useToken(params: UseTokenParams) {
   const metadata = ref<TokenMetadata>()
   const price = ref<string>()
-  const ownerAddress = ref<string>()
+  const owner = ref<string>()
   const loading = ref(true)
-
-  const { api, client } = sdk('asset_hub')
 
   onMounted(async () => {
     if (!params.metadata || !params.token) {
       return
     }
 
-    const [getMetadata, queryOwner, queryPrice] = await Promise.all([
-      fetch(params.metadata).then(res => res.json()),
-      api.query.Nfts.Item.getValue(params.collection, params.token),
-      api.query.Nfts.ItemPriceOf.getValue(params.collection, params.token),
-    ])
+    const { tokenMetadata, tokenPrice, tokenOwner } = await getTokenDetail(params.collection, params.token, params.metadata)
 
-    metadata.value = getMetadata
-    price.value = queryPrice?.[0].toString()
-
-    if (price.value) {
-      const chainSpec = await client.getChainSpecData()
-      const tokenDecimals = chainSpec.properties.tokenDecimals
-      price.value = formatPrice(price.value, tokenDecimals)
-    }
-
-    if (queryOwner?.owner) {
-      ownerAddress.value = queryOwner.owner
-    }
+    metadata.value = tokenMetadata
+    price.value = tokenPrice || ''
+    owner.value = tokenOwner || ''
 
     loading.value = false
   })
@@ -51,7 +35,7 @@ export function useToken(params: UseTokenParams) {
   return {
     metadata,
     price,
-    ownerAddress,
+    owner,
     loading,
   }
 }
