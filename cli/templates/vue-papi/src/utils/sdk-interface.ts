@@ -71,10 +71,9 @@ export function subscribeToBlocks(
   const { client } = sdk(networkKey)
 
   client.blocks$.subscribe(async (block) => {
-    const chainName = await client.getChainSpecData().then(data => data.name)
     onBlock({
       blockHeight: block.number,
-      chainName,
+      chainName: await client.getChainSpecData().then(data => data.name),
     })
   })
 }
