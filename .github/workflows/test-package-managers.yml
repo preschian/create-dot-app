@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-manager: [npm, pnpm, bun]
-        working-directory: [cli/templates/vue-papi]
+        package-manager: [npm, pnpm, bun, yarn]
+        working-directory: [cli/templates/react-papi,cli/templates/vue-papi]
     
     steps:
       - name: Checkout code
@@ -37,47 +37,12 @@ jobs:
 
       - name: Install dependencies with ${{ matrix.package-manager }}
         working-directory: ${{ matrix.working-directory }}
-        run: |
-          case "${{ matrix.package-manager }}" in
-            npm)
-              npm install
-              ;;
-            pnpm)
-              pnpm install
-              ;;
-            bun)
-              bun install
-              ;;
-          esac
+        run: ${{ matrix.package-manager }} install
 
       - name: Lint code
         working-directory: ${{ matrix.working-directory }}
-        run: |
-          case "${{ matrix.package-manager }}" in
-            npm)
-              npm run lint
-              ;;
-            pnpm)
-              pnpm run lint
-              ;;
-            bun)
-              bun run lint
-              ;;
-          esac
+        run: ${{ matrix.package-manager }} run lint
 
       - name: Build project with ${{ matrix.package-manager }}
         working-directory: ${{ matrix.working-directory }}
-        run: |
-          case "${{ matrix.package-manager }}" in
-            npm)
-              npm run build
-              ;;
-            pnpm)
-              pnpm run build
-              ;;
-            bun)
-              bun run build
-              ;;
-          esac
-
- 
+        run: ${{ matrix.package-manager }} run build
