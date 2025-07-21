@@ -14,9 +14,10 @@ A command-line interface (CLI) tool designed to streamline the development proce
 
 ### 📋 Planned Templates
 
-**Frontend Frameworks:** Next.js, Nuxt.js, Svelte, SvelteKit
+- **Frontend Frameworks:** Next.js, Nuxt.js, Svelte, SvelteKit, Solid, Remix
+- **Backend Frameworks:** Hono, Elysia, Fastify, H3
 
-**Backend Frameworks:** Hono, Elysia, Fastify
+*Want any specific UI or frontend framework such as Shadcn/UI, Chakra UI, or others? Let me know by opening an issue!*
 
 ## Installation
 
