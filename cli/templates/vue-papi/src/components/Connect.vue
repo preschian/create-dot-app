@@ -66,15 +66,15 @@ function isAccountSelected(account: typeof selectedAccount.value) {
           :address="selectedAccount.address"
           status="online"
         />
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2">
           <button
-            class="btn btn-outline btn-sm uppercase tracking-wider"
+            class="btn btn-outline btn-sm uppercase tracking-wider w-full sm:w-auto"
             @click="openConnectModal"
           >
             Change
           </button>
           <button
-            class="btn btn-outline btn-sm uppercase tracking-wider"
+            class="btn btn-outline btn-sm uppercase tracking-wider w-full sm:w-auto"
             @click="disconnect"
           >
             Disconnect
@@ -84,11 +84,11 @@ function isAccountSelected(account: typeof selectedAccount.value) {
     </div>
 
     <!-- Modal using HTML dialog element -->
-    <dialog ref="connectModal" class="modal">
-      <div class="modal-box max-w-2xl">
+    <dialog ref="connectModal" class="modal modal-bottom sm:modal-middle">
+      <div class="modal-box w-11/12 max-w-2xl mx-auto">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-lg font-medium text-black uppercase tracking-wider">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <h2 class="text-base sm:text-lg font-medium text-black uppercase tracking-wider">
             CONNECT WALLET
           </h2>
           <button class="btn btn-sm btn-circle btn-ghost" @click="closeConnectModal">
@@ -97,7 +97,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
         </div>
 
         <!-- Account Selection -->
-        <div v-if="listAccounts.length" class="mb-6">
+        <div v-if="listAccounts.length" class="mb-4 sm:mb-6">
           <h3 class="text-xs text-gray-500 uppercase tracking-wider mb-3">
             Select Account
           </h3>
@@ -125,11 +125,11 @@ function isAccountSelected(account: typeof selectedAccount.value) {
         </div>
 
         <!-- Installed -->
-        <div v-if="installedWallets.length" class="mb-6">
+        <div v-if="installedWallets.length" class="mb-4 sm:mb-6">
           <h3 class="text-xs text-gray-500 uppercase tracking-wider mb-3">
             Installed
           </h3>
-          <div class="grid grid-cols-4 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <div
               v-for="wallet in installedWallets"
               :key="wallet.extensionName"
@@ -153,7 +153,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
                 </div>
                 <button
                   :disabled="isConnecting === wallet.extensionName"
-                  class="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
+                  class="btn btn-neutral btn-sm w-full sm:w-32 uppercase tracking-wider text-xs"
                 >
                   <span v-if="isConnecting === wallet.extensionName" class="icon-[mdi--loading] animate-spin" />
                   <span v-if="isWalletConnected(wallet)">Connected</span>
@@ -171,12 +171,12 @@ function isAccountSelected(account: typeof selectedAccount.value) {
             <h3 class="text-xs text-gray-500 uppercase tracking-wider">
               Other wallets
             </h3>
-            <button class="btn btn-ghost btn-sm" @click="toggleOtherWallets">
+            <button class="btn btn-ghost btn-sm text-xs" @click="toggleOtherWallets">
               {{ showOtherWallets ? 'Hide' : 'Show' }}
               <span :class="showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'" />
             </button>
           </div>
-          <div v-if="showOtherWallets" class="grid grid-cols-4 gap-3">
+          <div v-if="showOtherWallets" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <div
               v-for="wallet in availableWallets"
               :key="wallet.extensionName"
@@ -194,7 +194,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
                 <a
                   :href="wallet.installUrl"
                   target="_blank"
-                  class="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
+                  class="btn btn-neutral btn-sm w-full sm:w-32 uppercase tracking-wider text-xs"
                 >
                   <span>Download</span>
                   <span class="icon-[mdi--download]" />
