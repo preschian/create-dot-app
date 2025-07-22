@@ -5,7 +5,7 @@ import TokenCollection from './components/TokenCollection'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 pb-12">
       <Header />
 
       {/* Main Content */}

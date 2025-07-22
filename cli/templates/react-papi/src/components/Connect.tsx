@@ -48,38 +48,41 @@ export default function Connect() {
   return (
     <div>
       {/* Connect Button */}
-      {!selectedAccount ? (
-        <button
-          className="btn btn-neutral btn-sm uppercase tracking-wider"
-          onClick={openConnectModal}
-        >
-          Connect Wallet
-        </button>
-      ) : (
-        /* Connected Account Display */
-        <div className="flex items-center justify-between gap-2">
-          <Avatar
-            name={selectedAccount.name}
-            address={selectedAccount.address}
-            status="online"
-            // className="hidden sm:block"
-          />
-          <div className="flex gap-2">
+      {!selectedAccount
+        ? (
             <button
-              className="btn btn-outline btn-sm uppercase tracking-wider hidden sm:block"
+              className="btn btn-neutral btn-sm uppercase tracking-wider"
               onClick={openConnectModal}
             >
-              Change
+              Connect Wallet
             </button>
-            <button
-              className="btn btn-outline btn-sm uppercase tracking-wider"
-              onClick={disconnect}
-            >
-              Disconnect
-            </button>
-          </div>
-        </div>
-      )}
+          )
+        : (
+            // Connected Account Display
+            <div className="flex items-center justify-between gap-2">
+              <div className="hidden sm:block">
+                <Avatar
+                  name={selectedAccount.name}
+                  address={selectedAccount.address}
+                  status="online"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  className="btn btn-outline btn-sm uppercase tracking-wider hidden sm:block"
+                  onClick={openConnectModal}
+                >
+                  Change
+                </button>
+                <button
+                  className="btn btn-outline btn-sm uppercase tracking-wider"
+                  onClick={disconnect}
+                >
+                  Disconnect
+                </button>
+              </div>
+            </div>
+          )}
 
       {/* Modal using HTML dialog element */}
       <dialog ref={connectModal} className="modal modal-bottom sm:modal-middle">
@@ -131,10 +134,10 @@ export default function Connect() {
               <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">
                 Installed
               </h3>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                 {installedWallets.map(wallet => (
                   <div
-                    key={wallet.extensionName}
+                    key={wallet.installUrl}
                     className={`card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow ${
                       isWalletConnected(wallet)
                         ? 'border-success'
@@ -202,10 +205,10 @@ export default function Connect() {
                 </button>
               </div>
               {showOtherWallets && (
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {availableWallets.map(wallet => (
                     <div
-                      key={wallet.extensionName}
+                      key={wallet.installUrl}
                       className="card card-compact bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all"
                     >
                       <div className="card-body items-center text-center">

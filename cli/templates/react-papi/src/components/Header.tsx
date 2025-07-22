@@ -12,7 +12,7 @@ export default function Header() {
               </div>
             </a>
             <h1 className="text-2xl font-light text-black tracking-wide">
-              Token Showcase
+              NFT Showcase
             </h1>
           </div>
           <Connect />
