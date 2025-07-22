@@ -1,4 +1,4 @@
-import WalletConnect from './WalletConnect'
+import Connect from './Connect';
 
 export default function Header() {
   return (
@@ -12,12 +12,12 @@ export default function Header() {
               </div>
             </a>
             <h1 className="text-2xl font-light text-black tracking-wide">
-              NFT Showcase
+              Token Showcase
             </h1>
           </div>
-          <WalletConnect />
+          <Connect />
         </div>
       </div>
     </header>
-  )
+  );
 }

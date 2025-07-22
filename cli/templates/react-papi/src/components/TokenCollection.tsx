@@ -1,67 +1,10 @@
-import { useEffect, useState } from 'react'
-import sdk from '../utils/sdk'
-import NFTCard from './NFTCard'
+import { useTokenCollection } from '../hooks/useTokenCollection'
+import TokenCard from './TokenCard'
 
-const { api } = sdk('asset_hub')
-const COLLECTION = 486
+const COLLECTION_ID = 486
 
-interface NFTItem {
-  collection: number
-  token: number
-  metadata: string
-}
-
-interface CollectionInfo {
-  name: string
-  description: string
-}
-
-export default function NFTCollection() {
-  const [items, setItems] = useState<NFTItem[]>([])
-  const [owners, setOwners] = useState<Set<string>>(() => new Set())
-  const [listed, setListed] = useState<number>(0)
-  const [collection, setCollection] = useState<CollectionInfo>({
-    name: 'Loading...',
-    description: 'Loading...',
-  })
-
-  useEffect(() => {
-    async function loadCollection() {
-      const [queryMetadata, queryOwner, queryPrice, queryCollectionMetadata] = await Promise.all([
-        api.query.Nfts.ItemMetadataOf.getEntries(COLLECTION),
-        api.query.Nfts.Item.getEntries(COLLECTION),
-        api.query.Nfts.ItemPriceOf.getEntries(COLLECTION),
-        api.query.Nfts.CollectionMetadataOf.getValue(COLLECTION),
-      ])
-
-      const nftItems = queryMetadata
-        .sort((a: any, b: any) => a.keyArgs[1] - b.keyArgs[1])
-        .map((item: any) => ({
-          collection: item.keyArgs[0],
-          token: item.keyArgs[1],
-          metadata: item.value.data.asText(),
-        }))
-      setItems(nftItems)
-
-      setOwners(new Set(queryOwner.map((item: any) => item.value.owner)))
-      setListed(queryPrice.length)
-
-      const metadataUrl = queryCollectionMetadata?.data.asText().replace('ipfs://', 'https://ipfs.io/ipfs/')
-
-      if (!metadataUrl) {
-        return
-      }
-
-      const metadata = await fetch(metadataUrl)
-      const metadataJson = await metadata.json()
-      setCollection({
-        name: metadataJson.name,
-        description: metadataJson.description,
-      })
-    }
-
-    loadCollection()
-  }, [])
+export default function TokenCollection() {
+  const { items, owners, listed, collection } = useTokenCollection(COLLECTION_ID)
 
   return (
     <div className="min-h-screen bg-white">
@@ -115,12 +58,12 @@ export default function NFTCollection() {
           </div>
         </div>
 
-        {/* Minimalist NFT Grid */}
+        {/* Minimalist Token Grid */}
         {items.length
           ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {items.map(metadata => (
-                  <NFTCard
+                  <TokenCard
                     key={`${metadata.collection}-${metadata.token}`}
                     metadata={metadata.metadata}
                     collection={metadata.collection}
@@ -132,9 +75,9 @@ export default function NFTCollection() {
           : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {Array.from({ length: 32 }, (_, i) => (
-                  <NFTCard
+                  <TokenCard
                     key={i}
-                    collection={COLLECTION}
+                    collection={COLLECTION_ID}
                   />
                 ))}
               </div>
