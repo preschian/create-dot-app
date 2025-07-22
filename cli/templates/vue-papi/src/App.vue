@@ -12,10 +12,8 @@ import TransactionTesting from './components/TransactionTesting.vue'
     <Header />
 
     <main class="flex-1 container mx-auto px-4 py-8 space-y-8">
-      <AccountDashboard />
-
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <NetworkStatus />
+        <AccountDashboard />
         <TransactionTesting />
       </div>
 
@@ -23,5 +21,8 @@ import TransactionTesting from './components/TransactionTesting.vue'
     </main>
 
     <Footer />
+
+    <!-- Floating Network Status -->
+    <NetworkStatus />
   </div>
 </template>

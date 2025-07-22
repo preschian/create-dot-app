@@ -1,74 +1,70 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useStatus } from '~/composables/useStatus'
 
-const { connectedNetworks, getSubscanUrl } = useStatus()
+const { connectedNetworks } = useStatus()
+const isMinimized = ref(true)
+
+function toggleMinimized() {
+  isMinimized.value = !isMinimized.value
+}
 </script>
 
 <template>
-  <div class="bg-white border border-gray-200 overflow-hidden hover:border-black transition-all duration-300 hover:shadow-lg">
-    <div class="p-4">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-light text-black tracking-wide">
-          Network Status
-        </h2>
-        <div class="text-sm text-gray-500">
-          {{ connectedNetworks.filter(n => n.status === 'connected').length }} of {{ connectedNetworks.length }} networks connected
+  <div class="fixed bottom-4 right-4 z-50">
+    <!-- Minimized: Just server icon button -->
+    <button
+      v-if="isMinimized"
+      class="btn btn-circle btn-neutral shadow-lg hover:shadow-xl"
+      @click="toggleMinimized"
+    >
+      <span class="icon-[mdi--server-network] text-xl" />
+    </button>
+
+    <!-- Expanded: Full panel -->
+    <div v-else class="bg-white border border-gray-200 shadow overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-3 bg-gray-50 border-b border-gray-200">
+        <div class="flex items-center space-x-2">
+          <span class="text-sm font-light text-black tracking-wide">Networks</span>
+          <div class="badge badge-neutral badge-sm">
+            {{ connectedNetworks.filter(n => n.status === 'connected').length }}/{{ connectedNetworks.length }}
+          </div>
         </div>
+        <button
+          class="btn btn-ghost btn-sm btn-circle"
+          @click="toggleMinimized"
+        >
+          <span class="icon-[mdi--close]" />
+        </button>
       </div>
 
-      <div class="space-y-3">
-        <div
-          v-for="network in connectedNetworks"
-          :key="network.key"
-          class="group bg-white border border-gray-200 overflow-hidden hover:border-black transition-all duration-300 hover:shadow-lg"
-        >
-          <div class="p-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <div class="inline-grid *:[grid-area:1/1]">
-                  <div
-                    v-if="network.status === 'connecting'"
-                    class="status status-warning rounded-full animate-pulse"
-                  />
-                  <div
-                    :class="network.status === 'connected' ? 'status-success' : 'status-warning'"
-                    class="status rounded-full"
-                  />
-                </div>
-                <div>
-                  <h3 class="font-light text-black tracking-wide">
-                    {{ network.name || network.key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }}
-                  </h3>
-                  <p class="text-sm text-gray-500">
-                    {{ network.key }}
-                  </p>
-                </div>
-              </div>
+      <!-- Content -->
+      <div class="p-3">
+        <div class="space-y-2">
+          <div
+            v-for="network in connectedNetworks"
+            :key="network.key"
+            class="flex items-center justify-between text-sm gap-4"
+          >
+            <div class="flex items-center space-x-2">
+              <div :class="network.status === 'connected' ? 'status-success animate-pulse' : 'status-warning'" class="status rounded-full" />
+              <span class="font-light text-black tracking-wide">
+                {{ network.name || 'Unknown' }}
+              </span>
+            </div>
 
-              <div class="flex items-center space-x-4">
-                <div class="text-right">
-                  <div
-                    class="text-xs px-2 py-1 border uppercase tracking-wider"
-                    :class="network.status === 'connected' ? 'bg-white border-gray-200 text-gray-700' : 'bg-gray-100 border-gray-300 text-gray-600'"
-                  >
-                    {{ network.status === 'connected' ? 'Connected' : 'Connecting' }}
-                  </div>
-                  <div v-if="network.status === 'connected' && network.blockHeight > 0" class="text-xs font-mono text-gray-500 mt-1">
-                    Block #{{ network.blockHeight.toLocaleString() }}
-                  </div>
-                </div>
-
-                <a
-                  v-if="network.status === 'connected'"
-                  :href="getSubscanUrl(network.key)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn btn-neutral btn-sm uppercase tracking-wider"
-                  title="View on Subscan"
-                >
-                  View
-                </a>
-              </div>
+            <div class="text-xs font-mono text-gray-500">
+              <span
+                v-if="network.status === 'connected' && network.blockHeight > 0"
+                :key="`${network.key}-${network.blockHeight}`"
+                class="block-highlight"
+              >
+                #{{ network.blockHeight.toLocaleString() }}
+              </span>
+              <span v-else class="animate-pulse">
+                #---
+              </span>
             </div>
           </div>
         </div>
