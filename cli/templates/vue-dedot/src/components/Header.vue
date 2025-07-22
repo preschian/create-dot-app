@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import WalletConnect from './WalletConnect.vue'
+import Connect from './Connect.vue'
 </script>
 
 <template>
@@ -16,7 +16,7 @@ import WalletConnect from './WalletConnect.vue'
             NFT Showcase
           </h1>
         </div>
-        <WalletConnect />
+        <Connect />
       </div>
     </div>
   </header>

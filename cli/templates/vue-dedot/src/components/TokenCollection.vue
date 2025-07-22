@@ -1,52 +1,10 @@
 <script setup lang="ts">
-import { hexToString } from 'dedot/utils'
-import { onMounted, reactive, ref } from 'vue'
-import sdk from '../utils/sdk'
-import NFTCard from './NFTCard.vue'
+import { useTokenCollection } from '~/composables/useTokenCollection'
+import TokenCard from './TokenCard.vue'
 
-const { api: assetHubApi } = sdk('asset_hub')
 const COLLECTION = 486
 
-const items = ref<{ collection: number, token: number, metadata: string }[]>([])
-const owners = ref<Set<string>>(new Set())
-const listed = ref<number>(0)
-const collection = reactive({
-  name: 'Loading...',
-  description: 'Loading...',
-})
-
-onMounted(async () => {
-  const api = await assetHubApi
-
-  const [queryMetadata, queryOwner, queryPrice, queryCollectionMetadata] = await Promise.all([
-    api.query.nfts.itemMetadataOf.entries(COLLECTION),
-    api.query.nfts.item.entries(COLLECTION),
-    api.query.nfts.itemPriceOf.entries(COLLECTION),
-    api.query.nfts.collectionMetadataOf(COLLECTION),
-  ])
-
-  items.value = queryMetadata
-    .sort((a, b) => a[0][1] - b[0][1])
-    .map(([key, value]) => ({
-      collection: key[0],
-      token: key[1],
-      metadata: hexToString(value.data),
-    }))
-
-  owners.value = new Set(queryOwner.map(([, value]) => value.owner.address()))
-  listed.value = queryPrice.length
-
-  const metadataUrl = hexToString(queryCollectionMetadata?.data || '').replace('ipfs://', '')
-
-  if (!metadataUrl) {
-    return
-  }
-
-  const metadata = await fetch(metadataUrl)
-  const metadataJson = await metadata.json()
-  collection.name = metadataJson.name
-  collection.description = metadataJson.description
-})
+const { items, owners, listed, collection } = useTokenCollection(COLLECTION)
 </script>
 
 <template>
@@ -97,7 +55,7 @@ onMounted(async () => {
 
       <!-- Minimalist NFT Grid -->
       <div v-if="items.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <NFTCard
+        <TokenCard
           v-for="metadata in items"
           :key="`${metadata.collection}-${metadata.token}`"
           :metadata="metadata.metadata"
@@ -106,7 +64,7 @@ onMounted(async () => {
         />
       </div>
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <NFTCard
+        <TokenCard
           v-for="n in 32"
           :key="n"
           :collection="COLLECTION"

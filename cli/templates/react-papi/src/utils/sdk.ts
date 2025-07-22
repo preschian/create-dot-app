@@ -1,12 +1,19 @@
-import { asset_hub, people } from '@polkadot-api/descriptors'
-import { createClient, type PolkadotClient, type TypedApi } from 'polkadot-api'
+import type { Atom } from '@xstate/store'
+import type { PolkadotClient, TypedApi } from 'polkadot-api'
+import { createAtom } from '@xstate/store'
+import { createClient } from 'polkadot-api'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
 import { getWsProvider } from 'polkadot-api/ws-provider/web'
+import { asset_hub, pas_asset_hub, people } from '~/descriptors'
 
 const config = {
   asset_hub: {
     descriptor: asset_hub,
     providers: ['wss://polkadot-asset-hub-rpc.polkadot.io'],
+  },
+  pas_asset_hub: {
+    descriptor: pas_asset_hub,
+    providers: ['wss://pas-rpc.stakeworld.io/assethub'],
   },
   people: {
     descriptor: people,
@@ -14,20 +21,27 @@ const config = {
   },
 }
 
-type Prefix = keyof typeof config
+export type Prefix = keyof typeof config
 type AssetHubAPI = TypedApi<typeof asset_hub>
 type PeopleAPI = TypedApi<typeof people>
+type PasAssetHubAPI = TypedApi<typeof pas_asset_hub>
+type UnionAPI = AssetHubAPI | PasAssetHubAPI | PeopleAPI
 
-const clientStore: Record<Prefix, PolkadotClient | undefined> = {
+const clientStore: Atom<Record<Prefix, PolkadotClient | undefined>> = createAtom({
   asset_hub: undefined,
+  pas_asset_hub: undefined,
   people: undefined,
-}
+})
 
 function sdk(chain: 'asset_hub'): { api: AssetHubAPI, client: PolkadotClient }
+function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI, client: PolkadotClient }
 function sdk(chain: 'people'): { api: PeopleAPI, client: PolkadotClient }
+function sdk(chain: Prefix): { api: UnionAPI, client: PolkadotClient }
 function sdk(chain: Prefix) {
-  if (!clientStore[chain]) {
-    clientStore[chain] = createClient(
+  const client = clientStore.get()
+
+  if (!client[chain]) {
+    client[chain] = createClient(
       withPolkadotSdkCompat(
         getWsProvider(config[chain].providers[0]),
       ),
@@ -35,8 +49,8 @@ function sdk(chain: Prefix) {
   }
 
   return {
-    api: clientStore[chain].getTypedApi(config[chain].descriptor),
-    client: clientStore[chain],
+    api: client[chain].getTypedApi(config[chain].descriptor),
+    client: client[chain],
   }
 }
 

@@ -1,4 +1,4 @@
-import WalletConnect from './WalletConnect'
+import Connect from './Connect'
 
 export default function Header() {
   return (
@@ -15,7 +15,7 @@ export default function Header() {
               NFT Showcase
             </h1>
           </div>
-          <WalletConnect />
+          <Connect />
         </div>
       </div>
     </header>

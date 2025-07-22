@@ -1,6 +1,6 @@
-import type { Prefix } from '~/utils/sdk'
+import type { Prefix } from '../utils/sdk'
 import { Binary, FixedSizeBinary } from 'polkadot-api'
-import sdk from '~/utils/sdk'
+import sdk from '../utils/sdk'
 import { formatPrice } from './formatters'
 
 export async function getIdentity(address: string) {
