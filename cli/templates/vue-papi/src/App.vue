@@ -2,7 +2,6 @@
 import AccountCardExample from './components/AccountCardExample.vue'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-import TransactionTesting from './components/TransactionTesting.vue'
 </script>
 
 <template>
@@ -23,9 +22,7 @@ import TransactionTesting from './components/TransactionTesting.vue'
     </section>
 
     <main class="container mx-auto py-8 space-y-8">
-      <!-- <AccountDashboard /> -->
       <AccountCardExample />
-      <!-- <TransactionTesting /> -->
     </main>
 
     <Footer />

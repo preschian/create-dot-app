@@ -11,23 +11,20 @@ export function formatAddress(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`
 }
 
-export function formatIpfsUrl(url: string): string {
-  return url.replace('ipfs://', 'https://ipfs.io/ipfs/')
-}
-
 export function formatPrice(price: string, decimals: number): string {
   return (Number(price) / 10 ** decimals).toFixed(4).toLocaleString()
-}
-
-export function getInitials(name?: string): string {
-  if (!name)
-    return 'A'
-  return name.charAt(0).toUpperCase()
 }
 
 export function explorerAccount(chain: Prefix, address?: string): string {
   const url = new URL(subscan[chain])
   url.pathname = `/account/${address || ''}`
+
+  return url.toString()
+}
+
+export function explorerDetail(chain: Prefix, hash: string): string {
+  const url = new URL(subscan[chain])
+  url.pathname = `/extrinsic/${hash}`
 
   return url.toString()
 }

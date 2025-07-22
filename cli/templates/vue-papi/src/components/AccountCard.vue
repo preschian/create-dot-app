@@ -3,6 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { useCurrentBlock } from '~/composables/useCurrentBlock'
 import { buyTokenUrl, explorerAccount } from '~/utils/formatters'
 import Balance from './Balance.vue'
+import SignTransaction from './SignTransaction.vue'
 
 interface Props {
   chainKey: Prefix
@@ -77,12 +78,9 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
           </a>
         </div>
 
-        <!-- Submit Transaction Button -->
+        <!-- Transaction Component -->
         <div v-if="isConnected">
-          <button class="btn btn-sm btn-neutral w-full uppercase tracking-wider">
-            <span class="icon-[mdi--file-send]" />
-            Submit Transaction
-          </button>
+          <SignTransaction :chain-key="chainKey" />
         </div>
 
         <!-- Disconnected state -->
