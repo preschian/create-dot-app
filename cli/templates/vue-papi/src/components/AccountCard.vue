@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
 import { useCurrentBlock } from '~/composables/useCurrentBlock'
+import { buyTokenUrl, explorerAccount } from '~/utils/formatters'
 import Balance from './Balance.vue'
 
 interface Props {
@@ -13,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   chainColor: 'bg-gray-500',
 })
 
-const { name, currentBlock, isConnected, explorerAccount } = useCurrentBlock(props.chainKey)
+const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
 </script>
 
 <template>
@@ -67,11 +68,11 @@ const { name, currentBlock, isConnected, explorerAccount } = useCurrentBlock(pro
       <!-- Quick Actions Row -->
       <div class="pt-3 border-t border-gray-100">
         <div class="grid grid-cols-2 gap-2 mb-3">
-          <button class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
+          <a :href="buyTokenUrl(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
             <span class="icon-[mdi--currency-usd]" />
             Buy Token
-          </button>
-          <a :href="`${explorerAccount}${address}`" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
+          </a>
+          <a :href="explorerAccount(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
             <span class="icon-[mdi--open-in-new]" />
             Explorer
           </a>
