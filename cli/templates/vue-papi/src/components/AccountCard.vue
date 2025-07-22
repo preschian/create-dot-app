@@ -5,15 +5,10 @@ import { buyTokenUrl, explorerAccount } from '~/utils/formatters'
 import Balance from './Balance.vue'
 import SignTransaction from './SignTransaction.vue'
 
-interface Props {
+const props = defineProps<{
   chainKey: Prefix
   address?: string
-  chainColor?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  chainColor: 'bg-gray-500',
-})
+}>()
 
 const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
 </script>
@@ -23,7 +18,6 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center space-x-2">
-        <div :class="chainColor" class="w-3 h-3 rounded-full" />
         <h3 class="font-light text-black tracking-wide">
           {{ name || '---' }}
         </h3>

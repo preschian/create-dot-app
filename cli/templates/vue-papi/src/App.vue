@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import AccountCardExample from './components/AccountCardExample.vue'
-import Footer from './components/Footer.vue'
-import Header from './components/Header.vue'
+import AccountCard from '~/components/AccountCard.vue'
+import Footer from '~/components/Footer.vue'
+import Header from '~/components/Header.vue'
+import { useConnect } from '~/composables/useConnect'
+import { chainKeys } from '~/utils/sdk'
+
+const { selectedAccount } = useConnect()
 </script>
 
 <template>
@@ -21,8 +25,16 @@ import Header from './components/Header.vue'
       </div>
     </section>
 
+    <!-- Account Cards -->
     <main class="container mx-auto py-8 space-y-8">
-      <AccountCardExample />
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <div v-for="chainKey in chainKeys" :key="chainKey">
+          <AccountCard
+            :chain-key="chainKey"
+            :address="selectedAccount?.address"
+          />
+        </div>
+      </div>
     </main>
 
     <Footer />

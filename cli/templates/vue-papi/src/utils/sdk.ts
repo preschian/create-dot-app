@@ -25,6 +25,8 @@ const config = {
 }
 
 export type Prefix = keyof typeof config
+export const chainKeys = Object.keys(config) as Prefix[]
+
 type DotAPI = TypedApi<typeof dot>
 type DotAssetHubAPI = TypedApi<typeof dot_asset_hub>
 type PasAPI = TypedApi<typeof pas>
