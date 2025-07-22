@@ -1,7 +1,7 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWallets } from '@talismn/connect-wallets'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 const selectedAccount = ref<WalletAccount | null>(null)
 const connectedWallet = ref<Wallet | null>(null)
@@ -9,15 +9,9 @@ const listAccounts = ref<WalletAccount[]>([])
 const isConnecting = ref<string | null>(null)
 
 export function useConnect() {
-  const wallets = computed(() => getWallets())
-
-  const installedWallets = computed(() =>
-    wallets.value.filter(wallet => wallet.installed),
-  )
-
-  const availableWallets = computed(() =>
-    wallets.value.filter(wallet => !wallet.installed),
-  )
+  const wallets = getWallets()
+  const installedWallets = wallets.filter(wallet => wallet.installed)
+  const availableWallets = wallets.filter(wallet => !wallet.installed)
 
   async function connect(wallet: Wallet) {
     try {
@@ -26,19 +20,13 @@ export function useConnect() {
       connectedWallet.value = wallet
 
       await wallet.enable('CDA')
+      const accounts = await wallet.getAccounts()
 
-      const unsubscribe = await wallet.subscribeAccounts((accounts) => {
-        if (accounts) {
-          accounts.forEach((account) => {
-            if (!listAccounts.value.some(a => a.address === account.address)) {
-              listAccounts.value.push(account)
-            }
-          })
-        }
-      })
+      if (accounts) {
+        listAccounts.value = accounts
+      }
 
       isConnecting.value = null
-      return unsubscribe
     }
     catch (err) {
       console.error(err)
