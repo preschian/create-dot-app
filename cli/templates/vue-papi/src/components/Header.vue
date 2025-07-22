@@ -3,21 +3,19 @@ import Connect from './Connect.vue'
 </script>
 
 <template>
-  <header class="bg-white shadow-sm">
-    <div class="container mx-auto px-4 py-6">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <a href="https://polkadot.network" target="_blank" class="block group">
-            <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center group-hover:bg-gray-800 transition-colors">
-              <span class="text-white font-bold text-sm">DOT</span>
-            </div>
-          </a>
-          <h1 class="text-2xl font-light text-black tracking-wide">
-            NFT Showcase
-          </h1>
-        </div>
+  <div class="navbar bg-base-100 shadow-sm">
+    <div class="container mx-auto">
+      <div class="navbar-start">
+        <a href="https://polkadot.com" target="_blank" class="btn btn-ghost">
+          <span class="icon-[token-branded--polkadot] text-2xl" />
+          <span class="text-xl font-bold font-mono text-black tracking-wide ml-1">
+            App Name
+          </span>
+        </a>
+      </div>
+      <div class="navbar-end">
         <Connect />
       </div>
     </div>
-  </header>
+  </div>
 </template>

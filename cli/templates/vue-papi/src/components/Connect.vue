@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useConnect } from '~/composables/useConnect'
-import Avatar from './Avatar.vue'
 
 const connectModal = ref<HTMLDialogElement | null>(null)
 const showOtherWallets = ref(false)
@@ -14,8 +13,8 @@ const {
   installedWallets,
   availableWallets,
   connect,
-  disconnect,
   selectAccount,
+  disconnect,
 } = useConnect()
 
 function handleSelectAccount(account: typeof selectedAccount.value) {
@@ -48,40 +47,35 @@ function isAccountSelected(account: typeof selectedAccount.value) {
 
 <template>
   <div>
-    <!-- Connect Button -->
-    <div v-if="!selectedAccount">
+    <!-- Connect/Disconnect Buttons -->
+    <div class="flex items-center gap-2">
       <button
-        class="btn btn-neutral btn-sm uppercase tracking-wider"
+        class="btn btn-outline btn-sm font-mono"
         @click="openConnectModal"
       >
-        Connect Wallet
-      </button>
-    </div>
-
-    <!-- Connected Account Display -->
-    <div v-else>
-      <div class="flex items-center justify-between gap-2">
-        <Avatar
-          :name="selectedAccount.name"
-          :address="selectedAccount.address"
-          status="online"
-          class="hidden sm:block"
-        />
-        <div class="flex gap-2">
-          <button
-            class="btn btn-outline btn-sm uppercase tracking-wider hidden sm:block"
-            @click="openConnectModal"
-          >
-            Change
-          </button>
-          <button
-            class="btn btn-outline btn-sm uppercase tracking-wider"
-            @click="disconnect"
-          >
-            Disconnect
-          </button>
+        <div v-if="!selectedAccount" class="flex items-center gap-2">
+          <span class="icon-[mdi--wallet] w-4 h-4" />
+          <span>Connect Wallet</span>
         </div>
-      </div>
+        <div v-else class="flex items-center gap-2">
+          <span class="icon-[mdi--wallet] w-4 h-4" />
+          <span>{{ selectedAccount.name }}</span>
+          <img
+            :src="connectedWallet?.logo.src"
+            :alt="connectedWallet?.logo.alt"
+            class="w-4 h-4"
+          >
+        </div>
+      </button>
+
+      <!-- Disconnect Button (only shown when connected) -->
+      <button
+        v-if="selectedAccount"
+        class="btn btn-outline btn-sm font-mono"
+        @click="disconnect"
+      >
+        <span class="icon-[mdi--logout] w-4 h-4" />
+      </button>
     </div>
 
     <!-- Modal using HTML dialog element -->
@@ -112,10 +106,19 @@ function isAccountSelected(account: typeof selectedAccount.value) {
             >
               <div class="card-body">
                 <div class="flex items-center justify-between">
-                  <Avatar
-                    :name="account.name"
-                    :address="account.address"
-                  />
+                  <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                      <span class="icon-[mdi--account] text-gray-500" />
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-black">
+                        {{ account.name }}
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        {{ account.address }}
+                      </p>
+                    </div>
+                  </div>
                   <div v-if="isAccountSelected(account)">
                     <div class="w-2 h-2 bg-primary rounded-full" />
                   </div>
@@ -130,7 +133,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
           <h3 class="text-xs text-gray-500 uppercase tracking-wider mb-3">
             Installed
           </h3>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
             <div
               v-for="wallet in installedWallets"
               :key="wallet.extensionName"
@@ -177,7 +180,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
               <span :class="showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'" />
             </button>
           </div>
-          <div v-if="showOtherWallets" class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div v-if="showOtherWallets" class="grid grid-cols-2 lg:grid-cols-3 gap-3">
             <div
               v-for="wallet in availableWallets"
               :key="wallet.extensionName"

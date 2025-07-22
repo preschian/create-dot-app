@@ -11,18 +11,14 @@ import TransactionTesting from './components/TransactionTesting.vue'
   <div class="min-h-screen bg-gray-100 flex flex-col justify-between">
     <Header />
 
-    <main class="flex-1 container mx-auto px-4 py-8 space-y-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <AccountDashboard />
-        <TransactionTesting />
-      </div>
-
-      <!-- <TokenCollection /> -->
+    <main class="container mx-auto px-4 py-8 space-y-8">
+      <AccountDashboard />
+      <TransactionTesting />
     </main>
 
     <Footer />
-
-    <!-- Floating Network Status -->
-    <NetworkStatus />
   </div>
+
+  <!-- Floating Network Status -->
+  <NetworkStatus />
 </template>
