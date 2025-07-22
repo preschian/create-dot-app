@@ -9,7 +9,7 @@ import Connect from './Connect.vue'
         <a href="https://polkadot.com" target="_blank" class="btn btn-ghost">
           <span class="icon-[token-branded--polkadot] text-2xl" />
           <span class="text-xl font-bold font-mono text-black tracking-wide ml-1">
-            App Name
+            Dapp
           </span>
         </a>
       </div>

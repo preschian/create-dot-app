@@ -1,24 +1,33 @@
 <script setup lang="ts">
-import AccountDashboard from './components/AccountDashboard.vue'
+import AccountCardExample from './components/AccountCardExample.vue'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-import NetworkStatus from './components/NetworkStatus.vue'
-import TokenCollection from './components/TokenCollection.vue'
 import TransactionTesting from './components/TransactionTesting.vue'
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col justify-between">
+  <div class="min-h-screen flex flex-col justify-between">
     <Header />
 
-    <main class="container mx-auto px-4 py-8 space-y-8">
-      <AccountDashboard />
-      <TransactionTesting />
+    <!-- Hero Section -->
+    <section class="bg-white py-16 hidden sm:block">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-5xl font-bold text-gray-900 mb-4">
+          <span>App Starter</span>
+        </h1>
+        <p class="text-xl text-gray-600 font-mono flex items-center justify-center gap-2">
+          <span>Powered by</span>
+          <span class="icon-[token-branded--polkadot] animate-spin" style="animation-duration: 16s;" />
+        </p>
+      </div>
+    </section>
+
+    <main class="container mx-auto py-8 space-y-8">
+      <!-- <AccountDashboard /> -->
+      <AccountCardExample />
+      <!-- <TransactionTesting /> -->
     </main>
 
     <Footer />
   </div>
-
-  <!-- Floating Network Status -->
-  <NetworkStatus />
 </template>

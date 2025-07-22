@@ -7,7 +7,7 @@ export function formatIpfsUrl(url: string): string {
 }
 
 export function formatPrice(price: string, decimals: number): string {
-  return (Number(price) / 10 ** decimals).toFixed()
+  return (Number(price) / 10 ** decimals).toFixed(4).toLocaleString()
 }
 
 export function getInitials(name?: string): string {

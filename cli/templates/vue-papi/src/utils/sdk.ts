@@ -3,38 +3,45 @@ import { createClient } from 'polkadot-api'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
 import { getWsProvider } from 'polkadot-api/ws-provider/web'
 import { ref } from 'vue'
-import { asset_hub, pas_asset_hub, people } from '~/descriptors'
+import { dot, dot_asset_hub, pas, pas_asset_hub } from '~/descriptors'
 
 const config = {
-  asset_hub: {
-    descriptor: asset_hub,
-    providers: ['wss://polkadot-asset-hub-rpc.polkadot.io'],
+  dot: {
+    descriptor: dot,
+    providers: ['wss://dot-rpc.stakeworld.io'],
+  },
+  dot_asset_hub: {
+    descriptor: dot_asset_hub,
+    providers: ['wss://dot-rpc.stakeworld.io/assethub'],
+  },
+  pas: {
+    descriptor: pas,
+    providers: ['wss://pas-rpc.stakeworld.io'],
   },
   pas_asset_hub: {
     descriptor: pas_asset_hub,
     providers: ['wss://pas-rpc.stakeworld.io/assethub'],
   },
-  people: {
-    descriptor: people,
-    providers: ['wss://polkadot-people-rpc.polkadot.io'],
-  },
 }
 
 export type Prefix = keyof typeof config
-type AssetHubAPI = TypedApi<typeof asset_hub>
-type PeopleAPI = TypedApi<typeof people>
+type DotAPI = TypedApi<typeof dot>
+type DotAssetHubAPI = TypedApi<typeof dot_asset_hub>
+type PasAPI = TypedApi<typeof pas>
 type PasAssetHubAPI = TypedApi<typeof pas_asset_hub>
-type UnionAPI = AssetHubAPI | PasAssetHubAPI | PeopleAPI
+type UnionAPI = DotAPI | DotAssetHubAPI | PasAPI | PasAssetHubAPI
 
 const client = ref<Record<Prefix, PolkadotClient | undefined>>({
-  asset_hub: undefined,
+  dot: undefined,
+  dot_asset_hub: undefined,
+  pas: undefined,
   pas_asset_hub: undefined,
-  people: undefined,
 })
 
-function sdk(chain: 'asset_hub'): { api: AssetHubAPI, client: PolkadotClient }
+function sdk(chain: 'dot'): { api: DotAPI, client: PolkadotClient }
+function sdk(chain: 'dot_asset_hub'): { api: DotAssetHubAPI, client: PolkadotClient }
+function sdk(chain: 'pas'): { api: PasAPI, client: PolkadotClient }
 function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI, client: PolkadotClient }
-function sdk(chain: 'people'): { api: PeopleAPI, client: PolkadotClient }
 function sdk(chain: Prefix): { api: UnionAPI, client: PolkadotClient }
 function sdk(chain: Prefix) {
   if (!client.value[chain]) {

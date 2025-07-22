@@ -10,9 +10,10 @@ const connectedNetworks = ref<{
   status: 'connecting' | 'connected'
   subscanUrl: string
 }[]>([
-  { name: '', key: 'asset_hub', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-polkadot.subscan.io' },
+  { name: '', key: 'dot', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-polkadot.subscan.io' },
+  { name: '', key: 'dot_asset_hub', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-polkadot.subscan.io' },
+  { name: '', key: 'pas', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-paseo.subscan.io' },
   { name: '', key: 'pas_asset_hub', blockHeight: 0, status: 'connecting', subscanUrl: 'https://assethub-paseo.subscan.io' },
-  { name: '', key: 'people', blockHeight: 0, status: 'connecting', subscanUrl: 'https://people-polkadot.subscan.io' },
 ])
 
 export function useStatus() {
@@ -42,9 +43,10 @@ export function useStatus() {
 
   // Initialize connections on mount
   onMounted(() => {
-    getLatestBlock('asset_hub')
+    getLatestBlock('dot')
+    getLatestBlock('dot_asset_hub')
+    getLatestBlock('pas')
     getLatestBlock('pas_asset_hub')
-    getLatestBlock('people')
   })
 
   return {

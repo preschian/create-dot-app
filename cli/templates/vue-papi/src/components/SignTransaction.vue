@@ -15,7 +15,7 @@ const {
   getSubscanLink,
 } = useTransaction()
 
-const selectedChain = ref<Prefix>('asset_hub')
+const selectedChain = ref<Prefix>('dot')
 
 // Generate chain options from connected networks
 const chainOptions = computed(() =>

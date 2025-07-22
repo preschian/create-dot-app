@@ -27,8 +27,6 @@
 }
 
 .block-highlight {
-  animation: flash-highlight 0.6s ease-out;
-  padding: 2px 6px;
-  border-radius: 4px;
+  animation: flash-highlight 1s ease-out;
   display: inline-block;
 }
