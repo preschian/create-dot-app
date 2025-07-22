@@ -69,8 +69,7 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
       <div class="pt-3 border-t border-gray-100">
         <div class="grid grid-cols-2 gap-2 mb-3">
           <a :href="buyTokenUrl(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
-            <span class="icon-[mdi--currency-usd]" />
-            Buy Token
+            Funds Token
           </a>
           <a :href="explorerAccount(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
             <span class="icon-[mdi--open-in-new]" />

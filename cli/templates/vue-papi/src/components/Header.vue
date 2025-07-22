@@ -3,7 +3,7 @@ import Connect from './Connect.vue'
 </script>
 
 <template>
-  <div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar bg-base-100 border-b border-gray-200">
     <div class="container mx-auto flex items-center">
       <div class="navbar-start">
         <a href="https://polkadot.com" target="_blank" class="btn btn-ghost">
