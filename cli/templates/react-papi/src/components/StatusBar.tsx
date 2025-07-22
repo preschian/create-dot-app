@@ -73,6 +73,7 @@ export default function StatusBar() {
           {/* Transaction Testing */}
           <div className="flex items-center space-x-4">
             <button
+              type="button"
               className="btn btn-outline btn-sm text-xs uppercase tracking-wider"
               onClick={() => transactionModal.current?.showModal()}
             >
@@ -88,6 +89,7 @@ export default function StatusBar() {
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-bold text-lg">Test Transaction</h3>
             <button
+              type="button"
               className="btn btn-sm btn-circle btn-ghost"
               onClick={() => transactionModal.current?.close()}
             >
@@ -97,7 +99,7 @@ export default function StatusBar() {
           <SignTransaction />
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button type="button">close</button>
         </form>
       </dialog>
     </div>
