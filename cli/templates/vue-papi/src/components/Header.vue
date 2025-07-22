@@ -4,7 +4,7 @@ import Connect from './Connect.vue'
 
 <template>
   <div class="navbar bg-base-100 shadow-sm">
-    <div class="container mx-auto">
+    <div class="container mx-auto flex items-center">
       <div class="navbar-start">
         <a href="https://polkadot.com" target="_blank" class="btn btn-ghost">
           <span class="icon-[token-branded--polkadot] text-2xl" />

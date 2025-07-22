@@ -5,11 +5,10 @@ import { computed, ref } from 'vue'
 
 const selectedAccount = ref<WalletAccount | null>(null)
 const connectedWallet = ref<Wallet | null>(null)
+const listAccounts = ref<WalletAccount[]>([])
+const isConnecting = ref<string | null>(null)
 
 export function useConnect() {
-  const listAccounts = ref<WalletAccount[]>([])
-  const isConnecting = ref<string | null>(null)
-
   const wallets = computed(() => getWallets())
 
   const installedWallets = computed(() =>
