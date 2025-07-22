@@ -1,4 +1,4 @@
-import Connect from './Connect';
+import Connect from './Connect'
 
 export default function Header() {
   return (
@@ -19,5 +19,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  );
+  )
 }

@@ -51,7 +51,9 @@ export default function TokenCard({ metadata, collection, token }: TokenCardProp
                           Price
                         </div>
                         <div className="text-base font-medium text-white">
-                                                {price} DOT
+                          {price}
+                          {' '}
+                          DOT
                         </div>
                       </div>
                     )

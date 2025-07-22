@@ -1,7 +1,7 @@
-import Footer from './components/Footer';
-import Header from './components/Header';
-import TokenCollection from './components/TokenCollection';
-import StatusBar from './components/StatusBar';
+import Footer from './components/Footer'
+import Header from './components/Header'
+import StatusBar from './components/StatusBar'
+import TokenCollection from './components/TokenCollection'
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
       <Footer />
       <StatusBar />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

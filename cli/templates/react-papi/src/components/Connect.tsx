@@ -1,10 +1,10 @@
-import { useState, useRef } from 'react';
-import { useConnect } from '../hooks/useConnect';
-import Avatar from './Avatar';
+import { useRef, useState } from 'react'
+import { useConnect } from '~/hooks/useConnect'
+import Avatar from './Avatar'
 
 export default function Connect() {
-  const connectModal = useRef<HTMLDialogElement | null>(null);
-  const [showOtherWallets, setShowOtherWallets] = useState(false);
+  const connectModal = useRef<HTMLDialogElement | null>(null)
+  const [showOtherWallets, setShowOtherWallets] = useState(false)
 
   const {
     listAccounts,
@@ -16,33 +16,33 @@ export default function Connect() {
     connect,
     disconnect,
     selectAccount,
-  } = useConnect();
+  } = useConnect()
 
   function handleSelectAccount(account: any) {
     if (account) {
-      selectAccount(account);
-      connectModal.current?.close();
+      selectAccount(account)
+      connectModal.current?.close()
     }
   }
 
   function openConnectModal() {
-    connectModal.current?.showModal();
+    connectModal.current?.showModal()
   }
 
   function closeConnectModal() {
-    connectModal.current?.close();
+    connectModal.current?.close()
   }
 
   function toggleOtherWallets() {
-    setShowOtherWallets(!showOtherWallets);
+    setShowOtherWallets(!showOtherWallets)
   }
 
   function isWalletConnected(wallet: any) {
-    return connectedWallet?.extensionName === wallet?.extensionName;
+    return connectedWallet?.extensionName === wallet?.extensionName
   }
 
   function isAccountSelected(account: any) {
-    return selectedAccount?.address === account?.address;
+    return selectedAccount?.address === account?.address
   }
 
   return (
@@ -101,7 +101,7 @@ export default function Connect() {
                 Select Account
               </h3>
               <div className="space-y-2">
-                {listAccounts.map((account) => (
+                {listAccounts.map(account => (
                   <div
                     key={account.address}
                     className={`card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow ${
@@ -132,7 +132,7 @@ export default function Connect() {
                 Installed
               </h3>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                {installedWallets.map((wallet) => (
+                {installedWallets.map(wallet => (
                   <div
                     key={wallet.extensionName}
                     className={`card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow ${
@@ -165,13 +165,17 @@ export default function Connect() {
                         {isConnecting === wallet.extensionName && (
                           <span className="icon-[mdi--loading] animate-spin" />
                         )}
-                        {isWalletConnected(wallet) ? (
-                          'Connected'
-                        ) : isConnecting === wallet.extensionName ? (
-                          'Connecting'
-                        ) : (
-                          'Connect'
-                        )}
+                        {isWalletConnected(wallet)
+                          ? (
+                              'Connected'
+                            )
+                          : isConnecting === wallet.extensionName
+                            ? (
+                                'Connecting'
+                              )
+                            : (
+                                'Connect'
+                              )}
                         {!isWalletConnected(wallet) && (
                           <span className="icon-[mdi--chevron-right]" />
                         )}
@@ -199,7 +203,7 @@ export default function Connect() {
               </div>
               {showOtherWallets && (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                  {availableWallets.map((wallet) => (
+                  {availableWallets.map(wallet => (
                     <div
                       key={wallet.extensionName}
                       className="card card-compact bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all"
@@ -234,5 +238,5 @@ export default function Connect() {
         </form>
       </dialog>
     </div>
-  );
+  )
 }
