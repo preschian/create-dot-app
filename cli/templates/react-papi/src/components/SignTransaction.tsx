@@ -106,6 +106,7 @@ export default function SignTransaction() {
       {selectedAccount
         ? (
             <button
+              type="button"
               disabled={isProcessing}
               className="btn btn-neutral btn-block uppercase tracking-wider"
               onClick={handleSignTransaction}

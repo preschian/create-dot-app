@@ -51,6 +51,7 @@ export default function Connect() {
       {!selectedAccount
         ? (
             <button
+              type="button"
               className="btn btn-neutral btn-sm uppercase tracking-wider"
               onClick={openConnectModal}
             >
@@ -69,12 +70,14 @@ export default function Connect() {
               </div>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   className="btn btn-outline btn-sm uppercase tracking-wider hidden sm:block"
                   onClick={openConnectModal}
                 >
                   Change
                 </button>
                 <button
+                  type="button"
                   className="btn btn-outline btn-sm uppercase tracking-wider"
                   onClick={disconnect}
                 >
@@ -92,7 +95,7 @@ export default function Connect() {
             <h2 className="text-lg font-medium text-black uppercase tracking-wider">
               CONNECT WALLET
             </h2>
-            <button className="btn btn-sm btn-circle btn-ghost" onClick={closeConnectModal}>
+            <button type="button" className="btn btn-sm btn-circle btn-ghost" onClick={closeConnectModal}>
               <span className="icon-[mdi--close]" />
             </button>
           </div>
@@ -162,6 +165,7 @@ export default function Connect() {
                         {wallet.title}
                       </div>
                       <button
+                        type="button"
                         disabled={isConnecting === wallet.extensionName}
                         className="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
                       >
@@ -197,7 +201,7 @@ export default function Connect() {
                 <h3 className="text-xs text-gray-500 uppercase tracking-wider">
                   Other wallets
                 </h3>
-                <button className="btn btn-ghost btn-sm" onClick={toggleOtherWallets}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={toggleOtherWallets}>
                   {showOtherWallets ? 'Hide' : 'Show'}
                   <span
                     className={showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'}
@@ -237,7 +241,7 @@ export default function Connect() {
           )}
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button type="button">close</button>
         </form>
       </dialog>
     </div>
