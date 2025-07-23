@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         package-manager: [npm, pnpm, bun, yarn]
-        working-directory: [cli/templates/react-papi,cli/templates/vue-papi]
+        working-directory: [templates/react-papi,templates/vue-papi]
     
     steps:
       - name: Checkout code
