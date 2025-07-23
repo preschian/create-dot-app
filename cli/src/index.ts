@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import path from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
 import {
   cancel,
   intro,
@@ -10,26 +9,36 @@ import {
   select,
   spinner,
   text,
+  log,
 } from '@clack/prompts'
 import fs from 'fs-extra'
 import color from 'picocolors'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import { downloadRepo } from '@begit/core'
 
 async function main() {
   console.log()
   intro(color.inverse(' create-dot-app '))
 
-  const name = await text({
-    message: 'What is your project name?',
-    defaultValue: 'my-polkadot-app',
-    placeholder: 'my-polkadot-app',
-  })
+  // Get project name from command line args or prompt
+  const projectNameArg = process.argv[2]
+  let name: string
 
-  if (isCancel(name)) {
-    cancel('Operation cancelled')
-    return process.exit(0)
+  if (projectNameArg) {
+    name = projectNameArg
+    log.info(`Using project name: ${projectNameArg}`)
+  } else {
+    const nameInput = await text({
+      message: 'What is your project name?',
+      defaultValue: 'my-polkadot-app',
+      placeholder: 'my-polkadot-app',
+    })
+
+    if (isCancel(nameInput)) {
+      cancel('Operation cancelled')
+      return process.exit(0)
+    }
+
+    name = nameInput
   }
 
   const template = await select({
@@ -37,6 +46,7 @@ async function main() {
     options: [
       { value: 'react-papi', label: 'React + PAPI' },
       { value: 'vue-papi', label: 'Vue + PAPI' },
+      { value: 'vue-dedot', label: 'Vue + Dedot' },
     ],
   })
 
@@ -49,16 +59,7 @@ async function main() {
   s.start('Creating your project...')
 
   try {
-    // Get the template path
-    const templatePath = path.join(__dirname, '..', 'templates', template)
     const targetPath = path.resolve(process.cwd(), name)
-
-    // Check if template exists
-    if (!await fs.pathExists(templatePath)) {
-      s.stop('Template not found')
-      cancel(`Template "${template}" not found at ${templatePath}`)
-      return process.exit(1)
-    }
 
     // Check if target directory already exists
     if (await fs.pathExists(targetPath)) {
@@ -67,24 +68,34 @@ async function main() {
       return process.exit(1)
     }
 
-    // Copy template to target directory
-    await fs.copy(templatePath, targetPath)
+    // Download template using begit
+    await downloadRepo({
+      repo: {
+       owner: "preschian",
+       name: "create-dot-app",
+       branch: 'main',
+       subdir: `templates/${template}`,
+      },
+      dest: name,
+    });
 
     // Update package.json with the project name
     const packageJsonPath = path.join(targetPath, 'package.json')
     if (await fs.pathExists(packageJsonPath)) {
       const packageJson = await fs.readJson(packageJsonPath)
-      packageJson.name = name as string
+      packageJson.name = name
       await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 })
     }
 
     s.stop('Project created successfully!')
 
-    outro(`${color.green('✓')} Done! Next steps:
-      ${color.cyan(`cd ${name}`)}
-      ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}
-      ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev)')}
+    log.info(`${color.green('✓')} Done! Next steps:
+    ${color.cyan(`cd ${name}`)}
+    ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}
+    ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev)')}
     `)
+
+    outro('Happy coding!')
   }
   catch (error) {
     s.stop('Failed to create project')

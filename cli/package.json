@@ -26,13 +26,15 @@
     "prepack": "tsdown"
   },
   "dependencies": {
+    "@begit/core": "^0.3.3",
     "@clack/prompts": "^0.11.0",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "picocolors": "^1.1.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.15.30",
-    "tsdown": "latest"
+    "@types/node": "^24.1.0",
+    "tsdown": "latest",
+    "typescript": "^5.8.3"
   }
 }

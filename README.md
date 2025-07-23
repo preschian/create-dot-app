@@ -19,35 +19,23 @@ A command-line interface (CLI) tool designed to streamline the development proce
 
 *Want any specific UI or frontend framework such as Shadcn/UI, Chakra UI, or others? Let me know by opening an issue!*
 
-## Installation
-
-```bash
-npm install -g create-dot-app
-```
-
-Or use with npx:
-```bash
-npx create-dot-app my-polkadot-app
-```
-
 ## Usage
 
 Create a new Polkadot dApp project:
 
 ```bash
-create-dot-app <project-name>
+npx create-dot-app@latest
 ```
 
 Follow the interactive prompts to:
 1. Choose your preferred frontend framework
 2. Select your SDK integration (PAPI or Dedot)
-3. Configure additional project settings
 
 ## Quick Start
 
 ```bash
 # Create a new project
-npx create-dot-app my-dapp
+npx create-dot-app@latest
 
 # Navigate to project directory
 cd my-dapp
