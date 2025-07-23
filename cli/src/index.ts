@@ -18,15 +18,26 @@ async function main() {
   console.log()
   intro(color.inverse(' create-dot-app '))
 
-  const name = await text({
-    message: 'What is your project name?',
-    defaultValue: 'my-polkadot-app',
-    placeholder: 'my-polkadot-app',
-  })
+  // Get project name from command line args or prompt
+  const projectNameArg = process.argv[2]
+  let name: string
 
-  if (isCancel(name)) {
-    cancel('Operation cancelled')
-    return process.exit(0)
+  if (projectNameArg) {
+    name = projectNameArg
+    console.log(color.dim(`Using project name: ${projectNameArg}`))
+  } else {
+    const nameInput = await text({
+      message: 'What is your project name?',
+      defaultValue: 'my-polkadot-app',
+      placeholder: 'my-polkadot-app',
+    })
+
+    if (isCancel(nameInput)) {
+      cancel('Operation cancelled')
+      return process.exit(0)
+    }
+
+    name = nameInput
   }
 
   const template = await select({
@@ -71,7 +82,7 @@ async function main() {
     const packageJsonPath = path.join(targetPath, 'package.json')
     if (await fs.pathExists(packageJsonPath)) {
       const packageJson = await fs.readJson(packageJsonPath)
-      packageJson.name = name as string
+      packageJson.name = name
       await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 })
     }
 
