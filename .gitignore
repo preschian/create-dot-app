@@ -219,3 +219,4 @@ $RECYCLE.BIN/
 
 # CLI
 cli/templates/**/bun.lock
+templates/**/bun.lock
