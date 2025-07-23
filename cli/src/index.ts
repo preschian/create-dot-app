@@ -89,11 +89,10 @@ async function main() {
 
     s.stop('Project created successfully!')
 
-    log.info(`${color.green('✓')} Done! Next steps:
-      ${color.cyan(`cd ${name}`)}
-      ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}
-      ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev)')}
-    `)
+    log.info(`${color.green('✓')} Done! Next steps:`)
+    log.info(`${color.cyan(`cd ${name}`)}`)
+    log.info(`${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}`)
+    log.info(`${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev)')}`)
 
     outro('Happy coding!')
   }
