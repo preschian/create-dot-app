@@ -6,6 +6,7 @@
   max-width: 1200px;
 }
 
+/* to enable dark mode, remove data-theme="light" from html tag */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
