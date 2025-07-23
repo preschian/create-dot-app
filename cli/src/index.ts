@@ -9,6 +9,7 @@ import {
   select,
   spinner,
   text,
+  log,
 } from '@clack/prompts'
 import fs from 'fs-extra'
 import color from 'picocolors'
@@ -24,7 +25,7 @@ async function main() {
 
   if (projectNameArg) {
     name = projectNameArg
-    console.log(color.dim(`Using project name: ${projectNameArg}`))
+    log.info(`Using project name: ${projectNameArg}`)
   } else {
     const nameInput = await text({
       message: 'What is your project name?',
@@ -88,11 +89,13 @@ async function main() {
 
     s.stop('Project created successfully!')
 
-    outro(`${color.green('✓')} Done! Next steps:
+    log.info(`${color.green('✓')} Done! Next steps:
       ${color.cyan(`cd ${name}`)}
       ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}
       ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev)')}
     `)
+
+    outro('Happy coding!')
   }
   catch (error) {
     s.stop('Failed to create project')
