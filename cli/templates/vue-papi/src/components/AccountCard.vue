@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
 import { useCurrentBlock } from '~/composables/useCurrentBlock'
-import { buyTokenUrl, explorerAccount, unifyAddress } from '~/utils/formatters'
+import { buyTokenUrl, explorerAccount } from '~/utils/formatters'
 import Balance from './Balance.vue'
 import SignTransaction from './SignTransaction.vue'
 
@@ -11,8 +11,6 @@ const props = defineProps<{
 }>()
 
 const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
-
-const unifiedAddress = props.address ? unifyAddress(props.address) : null
 </script>
 
 <template>
@@ -47,8 +45,8 @@ const unifiedAddress = props.address ? unifyAddress(props.address) : null
     <!-- Account Section -->
     <div class="border-t border-gray-100 pt-4">
       <!-- Balance (when address exists) -->
-      <div v-if="unifiedAddress">
-        <Balance :key="unifiedAddress" :address="unifiedAddress" :chain-key="chainKey" />
+      <div v-if="address">
+        <Balance :key="address" :address="address" :chain-key="chainKey" />
       </div>
 
       <!-- Connect Wallet Message (when no address) -->
@@ -61,14 +59,14 @@ const unifiedAddress = props.address ? unifyAddress(props.address) : null
     </div>
 
     <!-- Actions Section -->
-    <div v-if="unifiedAddress" class="mt-4">
+    <div v-if="address" class="mt-4">
       <!-- Quick Actions Row -->
       <div class="pt-3 border-t border-gray-100">
         <div class="grid grid-cols-2 gap-2 mb-3">
-          <a :href="buyTokenUrl(chainKey, unifiedAddress)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
+          <a :href="buyTokenUrl(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
             Funds Token
           </a>
-          <a :href="explorerAccount(chainKey, unifiedAddress)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
+          <a :href="explorerAccount(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
             <span class="icon-[mdi--open-in-new]" />
             Explorer
           </a>

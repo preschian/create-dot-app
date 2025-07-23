@@ -4,6 +4,7 @@ import Footer from '~/components/Footer.vue'
 import Header from '~/components/Header.vue'
 import { useConnect } from '~/composables/useConnect'
 import { chainKeys } from '~/utils/sdk'
+import { unifyAddress } from './utils/formatters'
 
 const { selectedAccount } = useConnect()
 </script>
@@ -31,7 +32,7 @@ const { selectedAccount } = useConnect()
         <div v-for="chainKey in chainKeys" :key="chainKey">
           <AccountCard
             :chain-key="chainKey"
-            :address="selectedAccount?.address"
+            :address="selectedAccount?.address ? unifyAddress(selectedAccount.address) : undefined"
           />
         </div>
       </div>
