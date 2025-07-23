@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useConnect } from '~/composables/useConnect'
-import { formatAddress } from '~/utils/formatters'
+import { stripAddress } from '~/utils/formatters'
 
 const connectModal = ref<HTMLDialogElement | null>(null)
 const showOtherWallets = ref(false)
@@ -115,7 +115,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
                       {{ account.name }}
                     </p>
                     <p class="text-xs text-gray-500">
-                      {{ formatAddress(account.address) }}
+                      {{ stripAddress(account.address) }}
                     </p>
                   </div>
                 </div>
