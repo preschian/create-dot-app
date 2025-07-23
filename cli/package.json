@@ -26,6 +26,7 @@
     "prepack": "tsdown"
   },
   "dependencies": {
+    "@begit/core": "^0.3.3",
     "@clack/prompts": "^0.11.0",
     "fs-extra": "^11.2.0",
     "picocolors": "^1.1.1"

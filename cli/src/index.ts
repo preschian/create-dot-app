@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import path from 'node:path'
 import process from 'node:process'
-import { fileURLToPath } from 'node:url'
 import {
   cancel,
   intro,
@@ -13,9 +12,7 @@ import {
 } from '@clack/prompts'
 import fs from 'fs-extra'
 import color from 'picocolors'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import { downloadRepo } from '@begit/core'
 
 async function main() {
   console.log()
@@ -37,6 +34,7 @@ async function main() {
     options: [
       { value: 'react-papi', label: 'React + PAPI' },
       { value: 'vue-papi', label: 'Vue + PAPI' },
+      { value: 'vue-dedot', label: 'Vue + Dedot' },
     ],
   })
 
@@ -49,16 +47,7 @@ async function main() {
   s.start('Creating your project...')
 
   try {
-    // Get the template path
-    const templatePath = path.join(__dirname, '..', 'templates', template)
     const targetPath = path.resolve(process.cwd(), name)
-
-    // Check if template exists
-    if (!await fs.pathExists(templatePath)) {
-      s.stop('Template not found')
-      cancel(`Template "${template}" not found at ${templatePath}`)
-      return process.exit(1)
-    }
 
     // Check if target directory already exists
     if (await fs.pathExists(targetPath)) {
@@ -67,8 +56,16 @@ async function main() {
       return process.exit(1)
     }
 
-    // Copy template to target directory
-    await fs.copy(templatePath, targetPath)
+    // Download template using begit
+    await downloadRepo({
+      repo: {
+       owner: "preschian",
+       name: "create-dot-app",
+       branch: 'main',
+       subdir: `templates/${template}`,
+      },
+      dest: name,
+    });
 
     // Update package.json with the project name
     const packageJsonPath = path.join(targetPath, 'package.json')
