@@ -35,6 +35,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
 export function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
+  address = '',
   signer: any,
   callbacks: {
     onTxHash: (hash: string) => void
@@ -58,6 +59,7 @@ export function createRemarkTransaction(
       }
     },
     error: (err) => {
+      console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
     },
   })

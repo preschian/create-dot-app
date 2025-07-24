@@ -57,6 +57,7 @@ export function createRemarkTransaction(
         callbacks.onFinalized()
       }
     }).catch((err) => {
+      console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
     })
   })
