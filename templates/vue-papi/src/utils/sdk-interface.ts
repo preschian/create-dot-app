@@ -61,8 +61,7 @@ export function createRemarkTransaction(
 
   tx.signSubmitAndWatch(signer).subscribe({
     next: (event) => {
-      if (event.type === 'txBestBlocksState') {
-        // @ts-expect-error - type error?
+      if (event.type === 'txBestBlocksState' && event.found) {
         callbacks.onTxHash(event.block.hash.toString())
       }
 
