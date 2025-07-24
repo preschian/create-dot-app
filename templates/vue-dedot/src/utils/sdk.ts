@@ -1,38 +1,47 @@
-import type { PaseoAssetHubApi, PolkadotAssetHubApi, PolkadotPeopleApi } from '@dedot/chaintypes'
+import type { PaseoApi, PaseoAssetHubApi, PolkadotApi, PolkadotAssetHubApi } from '@dedot/chaintypes'
 import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
 
-const assetHubProvider = new WsProvider('wss://polkadot-asset-hub-rpc.polkadot.io')
-const paseoAssetHubProvider = new WsProvider('wss://pas-rpc.stakeworld.io/assethub')
-const peopleProvider = new WsProvider('wss://polkadot-people-rpc.polkadot.io')
+const dotProvider = new WsProvider('wss://dot-rpc.stakeworld.io')
+const dotAssetHubProvider = new WsProvider('wss://dot-rpc.stakeworld.io/assethub')
+const pasProvider = new WsProvider('wss://pas-rpc.stakeworld.io')
+const pasAssetHubProvider = new WsProvider('wss://pas-rpc.stakeworld.io/assethub')
 
 const config = {
-  asset_hub: {
-    client: DedotClient.new<PolkadotAssetHubApi>(assetHubProvider),
+  dot: {
+    client: DedotClient.new<PolkadotApi>(dotProvider),
+  },
+  dot_asset_hub: {
+    client: DedotClient.new<PolkadotAssetHubApi>(dotAssetHubProvider),
+  },
+  pas: {
+    client: DedotClient.new<PaseoApi>(pasProvider),
   },
   pas_asset_hub: {
-    client: DedotClient.new<PaseoAssetHubApi>(paseoAssetHubProvider),
-  },
-  people: {
-    client: DedotClient.new<PolkadotPeopleApi>(peopleProvider),
+    client: DedotClient.new<PaseoAssetHubApi>(pasAssetHubProvider),
   },
 }
 
 export type Prefix = keyof typeof config
-type AssetHubAPI = Promise<DedotClient<PolkadotAssetHubApi>>
+export const chainKeys = Object.keys(config) as Prefix[]
+
+type DotAPI = Promise<DedotClient<PolkadotApi>>
+type DotAssetHubAPI = Promise<DedotClient<PolkadotAssetHubApi>>
+type PasAPI = Promise<DedotClient<PaseoApi>>
 type PasAssetHubAPI = Promise<DedotClient<PaseoAssetHubApi>>
-type PeopleAPI = Promise<DedotClient<PolkadotPeopleApi>>
-type UnionAPI = AssetHubAPI | PasAssetHubAPI | PeopleAPI
+type UnionAPI = DotAPI | DotAssetHubAPI | PasAPI | PasAssetHubAPI
 
 const client = ref<Record<Prefix, Promise<DedotClient<any>> | undefined>>({
-  asset_hub: undefined,
+  dot: undefined,
+  dot_asset_hub: undefined,
+  pas: undefined,
   pas_asset_hub: undefined,
-  people: undefined,
 })
 
-function sdk(chain: 'asset_hub'): { api: AssetHubAPI }
+function sdk(chain: 'dot'): { api: DotAPI }
+function sdk(chain: 'dot_asset_hub'): { api: DotAssetHubAPI }
+function sdk(chain: 'pas'): { api: PasAPI }
 function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI }
-function sdk(chain: 'people'): { api: PeopleAPI }
 function sdk(chain: Prefix): { api: UnionAPI }
 function sdk(chain: Prefix) {
   if (!client.value[chain]) {

@@ -1,49 +1,56 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWalletBySource, getWallets } from '@talismn/connect-wallets'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
-const selectedAccount = ref<WalletAccount | null>(null)
-const connectedWallet = ref<Wallet | null>(null)
+const storageWallet = 'dapp:wallet'
+const storageAccount = 'dapp:account'
+
+function getStorage(key: string) {
+  const value = localStorage.getItem(key)
+  return value ? JSON.parse(value) : null
+}
+
+function setStorage(key: string, value: any) {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+function removeStorage(key: string) {
+  localStorage.removeItem(key)
+}
+
+const selectedAccount = ref<WalletAccount | null>(getStorage(storageAccount))
+const connectedWallet = ref<Wallet | null>(getStorage(storageWallet))
+const listAccounts = ref<WalletAccount[]>([])
+const isConnecting = ref<string | null>(null)
 
 export function useConnect() {
-  const listAccounts = ref<WalletAccount[]>([])
-  const isConnecting = ref<string | null>(null)
-
-  const wallets = computed(() => getWallets())
-
-  const installedWallets = computed(() =>
-    wallets.value.filter(wallet => wallet.installed),
-  )
-
-  const availableWallets = computed(() =>
-    wallets.value.filter(wallet => !wallet.installed),
-  )
+  const wallets = getWallets()
+  const installedWallets = wallets.filter(wallet => wallet.installed)
+  const availableWallets = wallets.filter(wallet => !wallet.installed)
 
   async function connect(wallet: Wallet) {
     try {
       isConnecting.value = wallet.extensionName
       listAccounts.value = []
+
+      // set connected wallet
       connectedWallet.value = wallet
+      setStorage(storageWallet, wallet)
 
       await wallet.enable('CDA')
+      const accounts = await wallet.getAccounts()
 
-      const unsubscribe = await wallet.subscribeAccounts((accounts) => {
-        if (accounts) {
-          accounts.forEach((account) => {
-            if (!listAccounts.value.some(a => a.address === account.address)) {
-              listAccounts.value.push(account)
-            }
-          })
-        }
-      })
+      if (accounts) {
+        listAccounts.value = accounts
+      }
 
       isConnecting.value = null
-      return unsubscribe
     }
     catch (err) {
       console.error(err)
       isConnecting.value = null
       connectedWallet.value = null
+      removeStorage(storageWallet)
     }
   }
 
@@ -51,10 +58,13 @@ export function useConnect() {
     selectedAccount.value = null
     connectedWallet.value = null
     listAccounts.value = []
+    removeStorage(storageAccount)
+    removeStorage(storageWallet)
   }
 
   function selectAccount(account: WalletAccount) {
     selectedAccount.value = account
+    setStorage(storageAccount, account)
   }
 
   return {
@@ -76,5 +86,7 @@ export function useConnect() {
 
 export async function polkadotSigner() {
   const wallet = getWalletBySource(connectedWallet.value?.extensionName)
+  await wallet?.enable('CDA')
+
   return wallet?.signer
 }
