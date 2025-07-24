@@ -1,5 +1,5 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
-import { getWalletBySource, getWallets } from '@talismn/connect-wallets'
+import { getWallets } from '@talismn/connect-wallets'
 import { ref } from 'vue'
 
 const storageWallet = 'dapp:wallet'
@@ -18,8 +18,8 @@ function removeStorage(key: string) {
   localStorage.removeItem(key)
 }
 
-const selectedAccount = ref<WalletAccount | null>(getStorage(storageAccount))
-const connectedWallet = ref<Wallet | null>(getStorage(storageWallet))
+export const selectedAccount = ref<WalletAccount | null>(getStorage(storageAccount))
+export const connectedWallet = ref<Wallet | null>(getStorage(storageWallet))
 const listAccounts = ref<WalletAccount[]>([])
 const isConnecting = ref<string | null>(null)
 
@@ -82,11 +82,4 @@ export function useConnect() {
     disconnect,
     selectAccount,
   }
-}
-
-export async function polkadotSigner() {
-  const wallet = getWalletBySource(connectedWallet.value?.extensionName)
-  await wallet?.enable('CDA')
-
-  return wallet?.signer
 }

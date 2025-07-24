@@ -1,6 +1,15 @@
 import type { Prefix } from './sdk'
+import { getWalletBySource } from '@talismn/connect-wallets'
+import { connectedWallet } from '~/composables/useConnect'
 import { formatPrice } from './formatters'
 import sdk from './sdk'
+
+export async function polkadotSigner() {
+  const wallet = getWalletBySource(connectedWallet.value?.extensionName)
+  await wallet?.enable('CDA')
+
+  return wallet?.signer
+}
 
 export function subscribeToBlocks(
   networkKey: Prefix,
