@@ -34,7 +34,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   const balance = await api.query.system.account(address)
   const chainSpec = await api.chainSpec.properties()
   const tokenDecimals = chainSpec.tokenDecimals
-  const tokenSymbol = chainSpec.tokenSymbol
+  const tokenSymbol = chainSpec.tokenSymbol?.toString() || ''
   const freeBalance = formatPrice(balance.data.free.toString(), Number(tokenDecimals))
 
   return {
