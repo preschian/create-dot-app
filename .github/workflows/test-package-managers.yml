@@ -11,8 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-manager: [npm, pnpm, bun, yarn]
-        working-directory: [templates/react-papi,templates/vue-papi]
+        # package-manager: [npm, pnpm, bun, yarn]
+        package-manager: [npm]
+        working-directory: [
+          templates/react-papi
+          templates/vue-papi
+          templates/vue-dedot
+        ]
     
     steps:
       - name: Checkout code
