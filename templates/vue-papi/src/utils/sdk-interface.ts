@@ -1,7 +1,18 @@
 import type { Prefix } from '~/utils/sdk'
 import { Binary } from 'polkadot-api'
+import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
+import { connectedWallet, selectedAccount } from '~/composables/useConnect'
 import sdk from '~/utils/sdk'
 import { formatPrice } from './formatters'
+
+export async function polkadotSigner() {
+  const selectedExtension = await connectInjectedExtension(
+    connectedWallet.value?.extensionName || '',
+  )
+  const account = selectedExtension.getAccounts().find(account => account.address === selectedAccount.value?.address)
+
+  return account?.polkadotSigner
+}
 
 export function subscribeToBlocks(
   networkKey: Prefix,
@@ -35,6 +46,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
 export function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
+  address = '',
   signer: any,
   callbacks: {
     onTxHash: (hash: string) => void
@@ -49,8 +61,8 @@ export function createRemarkTransaction(
 
   tx.signSubmitAndWatch(signer).subscribe({
     next: (event) => {
-      if (event.type === 'txBestBlocksState') {
-        callbacks.onTxHash(event.txHash)
+      if (event.type === 'txBestBlocksState' && event.found) {
+        callbacks.onTxHash(event.block.hash.toString())
       }
 
       if (event.type === 'finalized') {
@@ -58,6 +70,7 @@ export function createRemarkTransaction(
       }
     },
     error: (err) => {
+      console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
     },
   })

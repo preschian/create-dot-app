@@ -1,12 +1,10 @@
 import type { Prefix } from '~/utils/sdk'
 import { ref } from 'vue'
-import { createRemarkTransaction } from '~/utils/sdk-interface'
-import { polkadotSigner, useConnect } from './useConnect'
-import { useStatus } from './useStatus'
+import { createRemarkTransaction, polkadotSigner } from '~/utils/sdk-interface'
+import { useConnect } from './useConnect'
 
 export function useTransaction() {
   const { selectedAccount } = useConnect()
-  const { getSubscanUrl } = useStatus()
 
   const isProcessing = ref(false)
   const result = ref('')
@@ -49,15 +47,10 @@ export function useTransaction() {
     }
   }
 
-  const getSubscanLink = (chainPrefix: Prefix, hash: string) => {
-    return `${getSubscanUrl(chainPrefix)}/block/${hash}`
-  }
-
   return {
     isProcessing,
     result,
     txHash,
     signRemarkTransaction,
-    getSubscanLink,
   }
 }

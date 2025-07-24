@@ -30,7 +30,7 @@ export function explorerAccount(chain: Prefix, address?: string): string {
 
 export function explorerDetail(chain: Prefix, hash: string): string {
   const url = new URL(subscan[chain])
-  url.pathname = `/extrinsic/${hash}`
+  url.pathname = `/block/${hash}`
 
   return url.toString()
 }

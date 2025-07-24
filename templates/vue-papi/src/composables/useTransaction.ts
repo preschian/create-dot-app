@@ -1,7 +1,7 @@
 import type { Prefix } from '~/utils/sdk'
 import { ref } from 'vue'
-import { createRemarkTransaction } from '~/utils/sdk-interface'
-import { polkadotSigner, useConnect } from './useConnect'
+import { createRemarkTransaction, polkadotSigner } from '~/utils/sdk-interface'
+import { useConnect } from './useConnect'
 
 export function useTransaction() {
   const { selectedAccount } = useConnect()
@@ -27,7 +27,7 @@ export function useTransaction() {
         throw new Error('No signer found')
       }
 
-      createRemarkTransaction(chainPrefix, message, signer, {
+      createRemarkTransaction(chainPrefix, message, selectedAccount.value.address, signer, {
         onTxHash: (hash) => {
           txHash.value = hash
         },
