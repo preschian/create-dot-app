@@ -1,0 +1,26 @@
+name: Mirror to Another Repository
+
+on:
+  push:
+    branches:
+      - "**"
+
+  schedule:
+    - cron: "0 */6 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to mirror
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: "git@github.com:preschian/create-dot-app-mirror.git"
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
