@@ -22,32 +22,16 @@ const config = {
     descriptor: pas_asset_hub,
     providers: ['wss://pas-rpc.stakeworld.io/assethub'],
   },
-}
+} as const
 
 export type Prefix = keyof typeof config
 export const chainKeys = Object.keys(config) as Prefix[]
 
-type DotAPI = TypedApi<typeof dot>
-type DotAssetHubAPI = TypedApi<typeof dot_asset_hub>
-type PasAPI = TypedApi<typeof pas>
-type PasAssetHubAPI = TypedApi<typeof pas_asset_hub>
-type UnionAPI = DotAPI | DotAssetHubAPI | PasAPI | PasAssetHubAPI
+const clients = ref<Partial<Record<Prefix, PolkadotClient>>>({})
 
-const client = ref<Record<Prefix, PolkadotClient | undefined>>({
-  dot: undefined,
-  dot_asset_hub: undefined,
-  pas: undefined,
-  pas_asset_hub: undefined,
-})
-
-function sdk(chain: 'dot'): { api: DotAPI, client: PolkadotClient }
-function sdk(chain: 'dot_asset_hub'): { api: DotAssetHubAPI, client: PolkadotClient }
-function sdk(chain: 'pas'): { api: PasAPI, client: PolkadotClient }
-function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI, client: PolkadotClient }
-function sdk(chain: Prefix): { api: UnionAPI, client: PolkadotClient }
-function sdk(chain: Prefix) {
-  if (!client.value[chain]) {
-    client.value[chain] = createClient(
+export default function sdk<T extends Prefix>(chain: T) {
+  if (!clients.value[chain]) {
+    clients.value[chain] = createClient(
       withPolkadotSdkCompat(
         getWsProvider(config[chain].providers[0]),
       ),
@@ -55,9 +39,7 @@ function sdk(chain: Prefix) {
   }
 
   return {
-    api: client.value[chain].getTypedApi(config[chain].descriptor),
-    client: client.value[chain],
+    api: clients.value[chain]!.getTypedApi(config[chain].descriptor) as TypedApi<typeof config[T]['descriptor']>,
+    client: clients.value[chain]!,
   }
 }
-
-export default sdk
