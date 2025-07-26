@@ -2,55 +2,39 @@ import type { PaseoApi, PaseoAssetHubApi, PolkadotApi, PolkadotAssetHubApi } fro
 import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
 
-const dotProvider = new WsProvider('wss://dot-rpc.stakeworld.io')
-const dotAssetHubProvider = new WsProvider('wss://dot-rpc.stakeworld.io/assethub')
-const pasProvider = new WsProvider('wss://pas-rpc.stakeworld.io')
-const pasAssetHubProvider = new WsProvider('wss://pas-rpc.stakeworld.io/assethub')
-
-const config = {
+const CONFIG = {
   dot: {
-    client: DedotClient.new<PolkadotApi>(dotProvider),
+    providers: ['wss://dot-rpc.stakeworld.io'],
+    apiType: {} as PolkadotApi,
   },
   dot_asset_hub: {
-    client: DedotClient.new<PolkadotAssetHubApi>(dotAssetHubProvider),
+    providers: ['wss://dot-rpc.stakeworld.io/assethub'],
+    apiType: {} as PolkadotAssetHubApi,
   },
   pas: {
-    client: DedotClient.new<PaseoApi>(pasProvider),
+    providers: ['wss://pas-rpc.stakeworld.io'],
+    apiType: {} as PaseoApi,
   },
   pas_asset_hub: {
-    client: DedotClient.new<PaseoAssetHubApi>(pasAssetHubProvider),
+    providers: ['wss://pas-rpc.stakeworld.io/assethub'],
+    apiType: {} as PaseoAssetHubApi,
   },
-}
+} as const
 
-export type Prefix = keyof typeof config
-export const chainKeys = Object.keys(config) as Prefix[]
+export type Prefix = keyof typeof CONFIG
+export const chainKeys = Object.keys(CONFIG) as Prefix[]
 
-type DotAPI = Promise<DedotClient<PolkadotApi>>
-type DotAssetHubAPI = Promise<DedotClient<PolkadotAssetHubApi>>
-type PasAPI = Promise<DedotClient<PaseoApi>>
-type PasAssetHubAPI = Promise<DedotClient<PaseoAssetHubApi>>
-type UnionAPI = DotAPI | DotAssetHubAPI | PasAPI | PasAssetHubAPI
+export type ApiTypeFor<T extends Prefix> = (typeof CONFIG)[T]['apiType']
+export type DedotApiFor<T extends Prefix> = Promise<DedotClient<ApiTypeFor<T>>>
 
-const client = ref<Record<Prefix, Promise<DedotClient<any>> | undefined>>({
-  dot: undefined,
-  dot_asset_hub: undefined,
-  pas: undefined,
-  pas_asset_hub: undefined,
-})
+const clients = ref<Partial<Record<Prefix, Promise<DedotClient<ApiTypeFor<Prefix>>>>>>({})
 
-function sdk(chain: 'dot'): { api: DotAPI }
-function sdk(chain: 'dot_asset_hub'): { api: DotAssetHubAPI }
-function sdk(chain: 'pas'): { api: PasAPI }
-function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI }
-function sdk(chain: Prefix): { api: UnionAPI }
-function sdk(chain: Prefix) {
-  if (!client.value[chain]) {
-    client.value[chain] = config[chain].client
+export default function sdk<T extends Prefix>(chain: T): { api: DedotApiFor<T> } {
+  if (!clients.value[chain]) {
+    clients.value[chain] = DedotClient.new(new WsProvider([...CONFIG[chain].providers]))
   }
 
   return {
-    api: client.value[chain],
+    api: clients.value[chain]! as DedotApiFor<T>,
   }
 }
-
-export default sdk
