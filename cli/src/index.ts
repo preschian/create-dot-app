@@ -13,6 +13,7 @@ import {
 } from '@clack/prompts'
 import fs from 'fs-extra'
 import color from 'picocolors'
+import { shutdownAnalytics, trackProjectCreated } from './posthog.js'
 import { pickTemplate } from './template-selector.js'
 
 async function main() {
@@ -36,6 +37,7 @@ async function main() {
 
     if (isCancel(nameInput)) {
       cancel('Operation cancelled')
+      await shutdownAnalytics()
       return process.exit(0)
     }
 
@@ -54,6 +56,7 @@ async function main() {
     if (await fs.pathExists(targetPath)) {
       s.stop('Directory already exists')
       cancel(`Directory "${name}" already exists`)
+      await shutdownAnalytics()
       return process.exit(1)
     }
 
@@ -78,6 +81,9 @@ async function main() {
 
     s.stop('Project created successfully!')
 
+    // Track successful project creation with template and name
+    await trackProjectCreated(template, name)
+
     log.info(`${color.green('✓')} Done! Next steps:
     ${color.cyan(`cd ${name}`)}
     ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}
@@ -89,8 +95,12 @@ async function main() {
   catch (error) {
     s.stop('Failed to create project')
     cancel(`Failed to create project: ${error}`)
+    await shutdownAnalytics()
     return process.exit(1)
   }
+
+  // Ensure analytics are sent before process exits
+  await shutdownAnalytics()
 }
 
 main().catch(console.error)
