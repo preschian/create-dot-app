@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
-import { useConnect } from '~/hooks/useConnect'
-import Avatar from './Avatar'
+import { useConnect } from '../hooks/useConnect'
+import { stripAddress } from '../utils/formatters'
 
 export default function Connect() {
-  const connectModal = useRef<HTMLDialogElement | null>(null)
+  const modalRef = useRef<HTMLDialogElement>(null)
   const [showOtherWallets, setShowOtherWallets] = useState(false)
 
   const {
@@ -14,88 +14,85 @@ export default function Connect() {
     installedWallets,
     availableWallets,
     connect,
-    disconnect,
     selectAccount,
+    disconnect,
   } = useConnect()
 
-  function handleSelectAccount(account: any) {
+  function handleSelectAccount(account: typeof selectedAccount) {
     if (account) {
       selectAccount(account)
-      connectModal.current?.close()
+      modalRef.current?.close()
     }
   }
 
   function openConnectModal() {
-    connectModal.current?.showModal()
+    modalRef.current?.showModal()
   }
 
   function closeConnectModal() {
-    connectModal.current?.close()
+    modalRef.current?.close()
   }
 
   function toggleOtherWallets() {
     setShowOtherWallets(!showOtherWallets)
   }
 
-  function isWalletConnected(wallet: any) {
+  function isWalletConnected(wallet: typeof connectedWallet) {
     return connectedWallet?.extensionName === wallet?.extensionName
   }
 
-  function isAccountSelected(account: any) {
+  function isAccountSelected(account: typeof selectedAccount) {
     return selectedAccount?.address === account?.address
   }
 
   return (
-    <div>
-      {/* Connect Button */}
-      {!selectedAccount
-        ? (
-            <button
-              type="button"
-              className="btn btn-neutral btn-sm uppercase tracking-wider"
-              onClick={openConnectModal}
-            >
-              Connect Wallet
-            </button>
-          )
-        : (
-            // Connected Account Display
-            <div className="flex items-center justify-between gap-2">
-              <div className="hidden sm:block">
-                <Avatar
-                  name={selectedAccount.name}
-                  address={selectedAccount.address}
-                  status="online"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm uppercase tracking-wider hidden sm:block"
-                  onClick={openConnectModal}
-                >
-                  Change
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm uppercase tracking-wider"
-                  onClick={disconnect}
-                >
-                  Disconnect
-                </button>
-              </div>
-            </div>
-          )}
+    <>
+      {/* Connect/Disconnect Buttons */}
+      <div className="flex items-center gap-2">
+        <button
+          className="btn btn-outline btn-sm font-mono"
+          onClick={openConnectModal}
+        >
+          {!selectedAccount
+            ? (
+                <div className="flex items-center gap-2">
+                  <span className="icon-[mdi--wallet] w-4 h-4" />
+                  <span>Connect Wallet</span>
+                </div>
+              )
+            : (
+                <div className="flex items-center gap-2">
+                  <span className="icon-[mdi--wallet] w-4 h-4" />
+                  <span className="hidden sm:block">{selectedAccount.name}</span>
+                  <img
+                    src={connectedWallet?.logo.src}
+                    alt={connectedWallet?.logo.alt}
+                    className="w-4 h-4"
+                  />
+                </div>
+              )}
+        </button>
+
+        {/* Disconnect Button (only shown when connected) */}
+        {selectedAccount && (
+          <button
+            className="btn btn-outline btn-sm font-mono"
+            onClick={disconnect}
+          >
+            <span className="icon-[mdi--logout] w-4 h-4" />
+          </button>
+        )}
+      </div>
 
       {/* Modal using HTML dialog element */}
-      <dialog ref={connectModal} className="modal modal-bottom sm:modal-middle">
+      <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box max-w-2xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-medium text-black uppercase tracking-wider">
               CONNECT WALLET
             </h2>
-            <button type="button" className="btn btn-sm btn-circle btn-ghost" onClick={closeConnectModal}>
+            <button className="btn btn-sm btn-circle btn-ghost" onClick={closeConnectModal}>
               <span className="icon-[mdi--close]" />
             </button>
           </div>
@@ -119,7 +116,19 @@ export default function Connect() {
                   >
                     <div className="card-body">
                       <div className="flex items-center justify-between">
-                        <Avatar name={account.name} address={account.address} />
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                            <span className="icon-[mdi--account] text-gray-500" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-black">
+                              {account.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {stripAddress(account.address)}
+                            </p>
+                          </div>
+                        </div>
                         {isAccountSelected(account) && (
                           <div className="w-2 h-2 bg-primary rounded-full" />
                         )}
@@ -140,7 +149,7 @@ export default function Connect() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                 {installedWallets.map(wallet => (
                   <div
-                    key={wallet.installUrl}
+                    key={wallet.extensionName}
                     className={`card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow ${
                       isWalletConnected(wallet)
                         ? 'border-success'
@@ -165,7 +174,6 @@ export default function Connect() {
                         {wallet.title}
                       </div>
                       <button
-                        type="button"
                         disabled={isConnecting === wallet.extensionName}
                         className="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
                       >
@@ -201,7 +209,7 @@ export default function Connect() {
                 <h3 className="text-xs text-gray-500 uppercase tracking-wider">
                   Other wallets
                 </h3>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={toggleOtherWallets}>
+                <button className="btn btn-ghost btn-sm" onClick={toggleOtherWallets}>
                   {showOtherWallets ? 'Hide' : 'Show'}
                   <span
                     className={showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'}
@@ -212,7 +220,7 @@ export default function Connect() {
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {availableWallets.map(wallet => (
                     <div
-                      key={wallet.installUrl}
+                      key={wallet.extensionName}
                       className="card card-compact bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all"
                     >
                       <div className="card-body items-center text-center">
@@ -227,6 +235,7 @@ export default function Connect() {
                         <a
                           href={wallet.installUrl}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="btn btn-neutral btn-sm w-32 uppercase tracking-wider"
                         >
                           <span>Download</span>
@@ -241,9 +250,9 @@ export default function Connect() {
           )}
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button type="button">close</button>
+          <button>close</button>
         </form>
       </dialog>
-    </div>
+    </>
   )
 }
