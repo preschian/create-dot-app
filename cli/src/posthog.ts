@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
-import process from 'node:process'
 import { PostHog } from 'posthog-node'
+import { version } from '../package.json'
 
 const client = new PostHog(
   'phc_a0IjGCTftVf4VZHbSsMG4h7E8e9Q4DWAulfnXJPdMMO',
@@ -20,7 +20,7 @@ export async function trackProjectCreated(template: string, projectName: string)
       properties: {
         template,
         project_name: projectName,
-        cli_version: process.env.npm_package_version || 'unknown',
+        cli_version: version || 'unknown',
       },
     })
   }
