@@ -218,5 +218,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,node
 
 # CLI
-cli/templates/**/bun.lock
 templates/**/bun.lock
+templates/**/pnpm-lock.yaml
+templates/**/package-lock.json
+templates/**/yarn.lock
