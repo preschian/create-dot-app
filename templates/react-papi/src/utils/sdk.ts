@@ -1,47 +1,36 @@
-import type { Atom } from '@xstate/store'
 import type { PolkadotClient, TypedApi } from 'polkadot-api'
-import { createAtom } from '@xstate/store'
 import { createClient } from 'polkadot-api'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
 import { getWsProvider } from 'polkadot-api/ws-provider/web'
-import { asset_hub, pas_asset_hub, people } from '~/descriptors'
+import { dot, dot_asset_hub, pas, pas_asset_hub } from '../descriptors'
 
 const config = {
-  asset_hub: {
-    descriptor: asset_hub,
-    providers: ['wss://polkadot-asset-hub-rpc.polkadot.io'],
+  dot: {
+    descriptor: dot,
+    providers: ['wss://dot-rpc.stakeworld.io'],
+  },
+  dot_asset_hub: {
+    descriptor: dot_asset_hub,
+    providers: ['wss://dot-rpc.stakeworld.io/assethub'],
+  },
+  pas: {
+    descriptor: pas,
+    providers: ['wss://pas-rpc.stakeworld.io'],
   },
   pas_asset_hub: {
     descriptor: pas_asset_hub,
     providers: ['wss://pas-rpc.stakeworld.io/assethub'],
   },
-  people: {
-    descriptor: people,
-    providers: ['wss://polkadot-people-rpc.polkadot.io'],
-  },
-}
+} as const
 
 export type Prefix = keyof typeof config
-type AssetHubAPI = TypedApi<typeof asset_hub>
-type PeopleAPI = TypedApi<typeof people>
-type PasAssetHubAPI = TypedApi<typeof pas_asset_hub>
-type UnionAPI = AssetHubAPI | PasAssetHubAPI | PeopleAPI
+export const chainKeys = Object.keys(config) as Prefix[]
 
-const clientStore: Atom<Record<Prefix, PolkadotClient | undefined>> = createAtom({
-  asset_hub: undefined,
-  pas_asset_hub: undefined,
-  people: undefined,
-})
+const clients: Partial<Record<Prefix, PolkadotClient>> = {}
 
-function sdk(chain: 'asset_hub'): { api: AssetHubAPI, client: PolkadotClient }
-function sdk(chain: 'pas_asset_hub'): { api: PasAssetHubAPI, client: PolkadotClient }
-function sdk(chain: 'people'): { api: PeopleAPI, client: PolkadotClient }
-function sdk(chain: Prefix): { api: UnionAPI, client: PolkadotClient }
-function sdk(chain: Prefix) {
-  const client = clientStore.get()
-
-  if (!client[chain]) {
-    client[chain] = createClient(
+export default function sdk<T extends Prefix>(chain: T) {
+  if (!clients[chain]) {
+    clients[chain] = createClient(
       withPolkadotSdkCompat(
         getWsProvider(config[chain].providers[0]),
       ),
@@ -49,9 +38,7 @@ function sdk(chain: Prefix) {
   }
 
   return {
-    api: client[chain].getTypedApi(config[chain].descriptor),
-    client: client[chain],
+    api: clients[chain]!.getTypedApi(config[chain].descriptor) as TypedApi<typeof config[T]['descriptor']>,
+    client: clients[chain]!,
   }
 }
-
-export default sdk
