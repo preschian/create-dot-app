@@ -14,9 +14,10 @@ jobs:
         # package-manager: [npm, pnpm, bun, yarn]
         package-manager: [npm]
         working-directory: [
+          templates/react-dedot,
           templates/react-papi,
-          templates/vue-papi,
           templates/vue-dedot,
+          templates/vue-papi,
         ]
     
     steps:
