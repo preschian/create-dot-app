@@ -1,45 +1,45 @@
-import type { Prefix } from '../utils/sdk'
-import { Binary } from 'polkadot-api'
-import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
-import { connectedWallet, selectedAccount } from '../hooks/useConnect' // Adjusted for React
-import sdk from '../utils/sdk'
+import type { Prefix } from './sdk'
+import { getWalletBySource } from '@talismn/connect-wallets'
+import { connectedWallet } from '~/hooks/useConnect'
 import { formatPrice } from './formatters'
+import sdk from './sdk'
 
 export async function polkadotSigner() {
-  const selectedExtension = await connectInjectedExtension(
-    connectedWallet.get()?.extensionName || '',
-  )
-  const account = selectedExtension.getAccounts().find(account => account.address === selectedAccount.get()?.address)
+  const wallet = getWalletBySource(connectedWallet.get()?.extensionName)
+  await wallet?.enable('CDA')
 
-  return account?.polkadotSigner
+  return wallet?.signer
 }
 
 export function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
-  const { client } = sdk(networkKey)
+  const { api: apiInstance } = sdk(networkKey)
 
-  client.blocks$.subscribe(async (block) => {
-    onBlock({
-      blockHeight: block.number,
-      chainName: await client.getChainSpecData().then(data => data.name),
+  apiInstance.then((api) => {
+    api.query.system.events(async () => {
+      onBlock({
+        blockHeight: await api.query.system.number(),
+        chainName: await api.chainSpec.chainName(),
+      })
     })
   })
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
-  const { api, client } = sdk(chainPrefix)
-  const balance = await api.query.System.Account.getValue(address)
-  const chainSpec = await client.getChainSpecData()
-  const tokenDecimals = chainSpec.properties.tokenDecimals
-  const tokenSymbol = chainSpec.properties.tokenSymbol
-  const freeBalance = formatPrice(balance.data.free.toString(), tokenDecimals)
+  const { api: apiInstance } = sdk(chainPrefix)
+  const api = await apiInstance
+
+  const balance = await api.query.system.account(address)
+  const chainSpec = await api.chainSpec.properties()
+  const tokenDecimals = chainSpec.tokenDecimals
+  const tokenSymbol = chainSpec.tokenSymbol?.toString() || ''
+  const freeBalance = formatPrice(balance.data.free.toString(), Number(tokenDecimals))
 
   return {
     balance: freeBalance,
     symbol: tokenSymbol,
-    chainName: chainSpec.name,
   }
 }
 
@@ -54,24 +54,20 @@ export function createRemarkTransaction(
     onError: (error: string) => void
   },
 ) {
-  const { api } = sdk(chainPrefix)
+  const { api: apiInstance } = sdk(chainPrefix)
 
-  const remark = Binary.fromText(message)
-  const tx = api.tx.System.remark({ remark })
-
-  tx.signSubmitAndWatch(signer).subscribe({
-    next: (event) => {
-      if (event.type === 'txBestBlocksState' && event.found) {
-        callbacks.onTxHash(event.block.hash.toString())
+  apiInstance.then((api) => {
+    api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
+      if (result.status.type === 'BestChainBlockIncluded') {
+        callbacks.onTxHash(result.status.value.blockHash)
       }
 
-      if (event.type === 'finalized') {
+      if (result.status.type === 'Finalized') {
         callbacks.onFinalized()
       }
-    },
-    error: (err) => {
+    }).catch((err) => {
       console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
-    },
+    })
   })
 }

@@ -1,44 +1,40 @@
-import type { PolkadotClient, TypedApi } from 'polkadot-api'
-import { createClient } from 'polkadot-api'
-import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
-import { getWsProvider } from 'polkadot-api/ws-provider/web'
-import { dot, dot_asset_hub, pas, pas_asset_hub } from '../descriptors'
+import type { PaseoApi, PaseoAssetHubApi, PolkadotApi, PolkadotAssetHubApi } from '@dedot/chaintypes'
+import { createAtom } from '@xstate/store'
+import { DedotClient, WsProvider } from 'dedot'
 
-const config = {
+const CONFIG = {
   dot: {
-    descriptor: dot,
     providers: ['wss://dot-rpc.stakeworld.io'],
+    apiType: {} as PolkadotApi,
   },
   dot_asset_hub: {
-    descriptor: dot_asset_hub,
     providers: ['wss://dot-rpc.stakeworld.io/assethub'],
+    apiType: {} as PolkadotAssetHubApi,
   },
   pas: {
-    descriptor: pas,
     providers: ['wss://pas-rpc.stakeworld.io'],
+    apiType: {} as PaseoApi,
   },
   pas_asset_hub: {
-    descriptor: pas_asset_hub,
     providers: ['wss://pas-rpc.stakeworld.io/assethub'],
+    apiType: {} as PaseoAssetHubApi,
   },
 } as const
 
-export type Prefix = keyof typeof config
-export const chainKeys = Object.keys(config) as Prefix[]
+export type Prefix = keyof typeof CONFIG
+export const chainKeys = Object.keys(CONFIG) as Prefix[]
 
-const clients: Partial<Record<Prefix, PolkadotClient>> = {}
+export type ApiTypeFor<T extends Prefix> = (typeof CONFIG)[T]['apiType']
+export type DedotApiFor<T extends Prefix> = Promise<DedotClient<ApiTypeFor<T>>>
 
-export default function sdk<T extends Prefix>(chain: T) {
-  if (!clients[chain]) {
-    clients[chain] = createClient(
-      withPolkadotSdkCompat(
-        getWsProvider(config[chain].providers[0]),
-      ),
-    )
+const clients = createAtom<Partial<Record<Prefix, Promise<DedotClient<ApiTypeFor<Prefix>>>>>>({})
+
+export default function sdk<T extends Prefix>(chain: T): { api: DedotApiFor<T> } {
+  if (!clients.get()[chain]) {
+    clients.set({ ...clients.get(), [chain]: DedotClient.new(new WsProvider([...CONFIG[chain].providers])) })
   }
 
   return {
-    api: clients[chain]!.getTypedApi(config[chain].descriptor) as TypedApi<typeof config[T]['descriptor']>,
-    client: clients[chain]!,
+    api: clients.get()[chain]! as DedotApiFor<T>,
   }
 }
