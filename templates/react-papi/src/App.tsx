@@ -29,11 +29,13 @@ function App() {
       <main className="container mx-auto py-8 space-y-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
           {chainKeys.map(chainKey => (
-            <AccountCard
-              key={chainKey}
-              chainKey={chainKey}
-              address={selectedAccount?.address ? unifyAddress(selectedAccount.address) : undefined}
-            />
+            <div key={chainKey}>
+              <AccountCard
+                key={chainKey}
+                chainKey={chainKey}
+                address={selectedAccount?.address ? unifyAddress(selectedAccount.address) : undefined}
+              />
+            </div>
           ))}
         </div>
       </main>
