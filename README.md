@@ -35,7 +35,7 @@ Follow the interactive prompts to:
 
 ```bash
 # Create a new project
-npx create-dot-app@latest
+npx create-dot-app@latest my-dapp
 
 # Navigate to project directory
 cd my-dapp
