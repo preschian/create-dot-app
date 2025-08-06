@@ -1,5 +1,11 @@
 # create-dot-app
 
+## 1.0.3
+
+### Patch Changes
+
+- [#50](https://github.com/preschian/create-dot-app/pull/50) [`416f40f`](https://github.com/preschian/create-dot-app/commit/416f40f685090283802cc63bd61d684e6c5bff85) Thanks [@preschian](https://github.com/preschian)! - add readme to package
+
 ## 1.0.0
 
 ### Major Changes
