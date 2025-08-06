@@ -81,8 +81,8 @@ async function main() {
 
     s.stop('Project created successfully!')
 
-    // Track successful project creation with template and name
-    await trackProjectCreated(template, name)
+    // Track successful project creation with template
+    await trackProjectCreated(template)
 
     log.info(`${color.green('✓')} Done! Next steps:
     ${color.cyan(`cd ${name}`)}
