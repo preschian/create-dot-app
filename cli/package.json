@@ -3,6 +3,11 @@
   "type": "module",
   "version": "1.0.2",
   "description": "A CLI tool to bootstrap Polkadot-based decentralized applications with multiple frontend frameworks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/preschian/create-dot-app.git",
+    "directory": "cli"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
