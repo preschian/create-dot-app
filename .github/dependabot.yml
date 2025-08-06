@@ -5,9 +5,33 @@
 
 version: 2
 updates:
+  # Root and CLI directories use bun
   - package-ecosystem: bun
     directories:
       - "/"
+      - "/cli"
+    schedule:
+      interval: "weekly"
+    groups:
+      # Group all patch and minor updates together
+      patch-minor-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - patch
+          - minor
+      # Group all major updates together
+      major-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - major
+  
+  # Templates use npm
+  - package-ecosystem: npm
+    directories:
       - "/templates/*"
     schedule:
       interval: "weekly"
