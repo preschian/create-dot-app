@@ -11,7 +11,7 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "create-dot-app": "./dist/index.js"
+    "create-dot-app": "dist/index.js"
   },
   "files": [
     "dist",
