@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import process from 'node:process'
 import { PostHog } from 'posthog-node'
 import { version } from '../package.json'
 
@@ -12,14 +13,18 @@ const client = new PostHog(
 // Generate a unique session ID for this CLI run
 const sessionId = randomUUID()
 
-export async function trackProjectCreated(template: string, projectName: string) {
+export async function trackProjectCreated(template: string) {
+  // Skip telemetry if disabled via environment variable
+  if (process.env.DISABLE_TELEMETRY === 'true') {
+    return
+  }
+
   try {
     client.capture({
       distinctId: sessionId,
       event: 'project_created',
       properties: {
         template,
-        project_name: projectName,
         cli_version: version || 'unknown',
       },
     })
@@ -31,6 +36,11 @@ export async function trackProjectCreated(template: string, projectName: string)
 }
 
 export async function shutdownAnalytics() {
+  // Skip shutdown if telemetry is disabled
+  if (process.env.DISABLE_TELEMETRY === 'true') {
+    return
+  }
+
   try {
     await client.shutdown()
   }
