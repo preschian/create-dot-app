@@ -5,8 +5,8 @@
 
 version: 2
 updates:
-  # Root and CLI directories use bun
-  - package-ecosystem: bun
+  # Root and CLI directories use npm
+  - package-ecosystem: npm
     directories:
       - "/"
       - "/cli"
