@@ -139,3 +139,4 @@ describe('CLI E2E Tests with node-pty', () => {
 - All test artifacts are automatically cleaned up after each test using Vitest's `beforeEach`/`afterEach` hooks
 - Tests use `strip-ansi` to handle colored terminal output consistently
 - Vitest provides better test organization, parallel execution, and detailed reporting
+- **Telemetry is disabled during tests** using `DISABLE_TELEMETRY=true` environment variable to prevent analytics data from test runs

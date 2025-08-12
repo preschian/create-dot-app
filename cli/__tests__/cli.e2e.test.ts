@@ -30,8 +30,9 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
     cwd: testDir,
     env: {
       ...process.env,
-      FORCE_COLOR: '0',
-      CI: '1',
+      FORCE_COLOR: '0', // Disable colors for consistent output
+      CI: '1', // Indicate we're in CI environment
+      DISABLE_TELEMETRY: 'true', // Disable analytics during tests
     },
   })
 
