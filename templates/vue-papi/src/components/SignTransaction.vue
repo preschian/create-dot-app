@@ -20,7 +20,7 @@ async function signTransaction() {
   if (!selectedAccount.value)
     return
 
-  const message = `Test from ${selectedAccount.value.address} with ${selectedAccount.value.wallet?.extensionName}`
+  const message = 'Hello from create-dot-app'
 
   await signRemarkTransaction(props.chainKey, message)
 }

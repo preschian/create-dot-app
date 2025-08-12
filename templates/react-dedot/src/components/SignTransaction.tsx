@@ -20,7 +20,7 @@ export default function SignTransaction({ chainKey }: SignTransactionProps) {
     if (!selectedAccount)
       return
 
-    const message = `Test from ${selectedAccount.address} with ${selectedAccount.wallet?.extensionName}`
+    const message = 'Hello from create-dot-app'
 
     await signRemarkTransaction(chainKey, message)
   }
