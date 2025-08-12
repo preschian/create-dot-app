@@ -25,4 +25,4 @@ dist-ssr
 *.sw?
 
 # Descriptors
-src/descriptors/*
+src/descriptors
