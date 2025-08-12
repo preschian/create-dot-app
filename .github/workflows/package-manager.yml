@@ -52,3 +52,36 @@ jobs:
       - name: Build project with ${{ matrix.package-manager }}
         working-directory: ${{ matrix.working-directory }}
         run: ${{ matrix.package-manager }} run build
+
+  deno-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # only check static site templates
+        working-directory: [
+          templates/react-dedot,
+          templates/react-papi,
+          templates/vue-dedot,
+          templates/vue-papi,
+        ]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Install dependencies with Deno
+        working-directory: ${{ matrix.working-directory }}
+        run: deno install
+
+      - name: Lint code
+        working-directory: ${{ matrix.working-directory }}
+        run: deno run lint
+
+      - name: Build project with Deno
+        working-directory: ${{ matrix.working-directory }}
+        run: deno run build
