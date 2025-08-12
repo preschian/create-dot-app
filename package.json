@@ -1,9 +1,9 @@
 {
   "name": "cda-cli",
   "version": "1.0.0",
-  "description": "",
-  "author": "",
-  "license": "ISC",
+  "description": "Scaffolding CLI for Polkadot Apps",
+  "author": "Preschian Febryantara",
+  "license": "MIT",
   "homepage": "https://github.com/preschian/create-dot-app#readme",
   "repository": {
     "type": "git",
@@ -12,7 +12,12 @@
   "bugs": {
     "url": "https://github.com/preschian/create-dot-app/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "polkadot",
+    "apps",
+    "scaffolding",
+    "cli"
+  ],
   "main": "index.js",
   "directories": {
     "doc": "docs"
