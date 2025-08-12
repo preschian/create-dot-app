@@ -10,16 +10,23 @@ updates:
     directories:
       - "/"
       - "/cli"
+      - "/templates/*"
     schedule:
       interval: "weekly"
     groups:
-      # Group all patch and minor updates together
-      patch-minor-updates:
+      # Group all patch updates together
+      patch-updates:
         applies-to: version-updates
         patterns:
           - '*'
         update-types:
           - patch
+      # Group all minor updates together
+      minor-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
           - minor
       # Group all major updates together
       major-updates:
