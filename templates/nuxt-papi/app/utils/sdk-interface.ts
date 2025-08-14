@@ -1,4 +1,4 @@
-import { Binary } from 'polkadot-api'
+import { Binary, type PolkadotSigner } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 
 export async function polkadotSigner() {
@@ -44,7 +44,7 @@ export function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
   address = '',
-  signer: any,
+  signer: PolkadotSigner,
   callbacks: {
     onTxHash: (hash: string) => void
     onFinalized: () => void
