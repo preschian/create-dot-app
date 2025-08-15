@@ -1,4 +1,3 @@
-import type { Prefix } from '~/utils/sdk'
 import { encodeAddress } from 'dedot/utils'
 
 const subscan: Record<Prefix, string> = {
