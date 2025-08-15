@@ -1,5 +1,13 @@
 # create-dot-app
 
+## 1.0.4
+
+### Patch Changes
+
+- [#91](https://github.com/preschian/create-dot-app/pull/91) [`114586f`](https://github.com/preschian/create-dot-app/commit/114586f86f844c4b1852e0cd2484441786564078) Thanks [@preschian](https://github.com/preschian)! - add nuxt-dedot
+
+- [#65](https://github.com/preschian/create-dot-app/pull/65) [`aa923fa`](https://github.com/preschian/create-dot-app/commit/aa923fa2aa618a9c95d012638a5f7873b7c2ddd4) Thanks [@preschian](https://github.com/preschian)! - add integration test
+
 ## 1.0.3
 
 ### Patch Changes
