@@ -7,7 +7,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  node-package-managers:
+  node:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -76,6 +76,10 @@ jobs:
       - name: Install dependencies with Deno
         working-directory: ${{ matrix.working-directory }}
         run: deno install
+
+      - name: Run postinstall with Deno
+        working-directory: ${{ matrix.working-directory }}
+        run: deno run postinstall
 
       - name: Lint code with Deno
         working-directory: ${{ matrix.working-directory }}
