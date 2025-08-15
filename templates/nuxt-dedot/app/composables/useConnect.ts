@@ -1,6 +1,5 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWallets } from '@talismn/connect-wallets'
-import { ref } from 'vue'
 
 const storageWallet = 'dapp:wallet'
 const storageAccount = 'dapp:account'

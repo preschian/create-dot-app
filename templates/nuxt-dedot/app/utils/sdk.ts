@@ -1,6 +1,5 @@
 import type { PaseoApi, PaseoAssetHubApi, PolkadotApi, PolkadotAssetHubApi } from '@dedot/chaintypes'
 import { DedotClient, WsProvider } from 'dedot'
-import { ref } from 'vue'
 
 const CONFIG = {
   dot: {

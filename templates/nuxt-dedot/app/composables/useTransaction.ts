@@ -1,7 +1,3 @@
-import type { Prefix } from '~/utils/sdk'
-import { ref } from 'vue'
-import { createRemarkTransaction, polkadotSigner } from '~/utils/sdk-interface'
-
 export function useTransaction() {
   const { selectedAccount } = useConnect()
 

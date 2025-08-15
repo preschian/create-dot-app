@@ -1,7 +1,3 @@
-import type { Prefix } from '~/utils/sdk'
-import { computed, onMounted, ref } from 'vue'
-import { subscribeToBlocks } from '~/utils/sdk-interface'
-
 export function useCurrentBlock(chain: Prefix) {
   const name = ref('')
   const currentBlock = ref(0)
