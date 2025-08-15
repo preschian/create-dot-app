@@ -78,6 +78,7 @@ jobs:
         run: deno install
 
       - name: Run postinstall with Deno
+        if: contains(matrix.working-directory, 'papi')
         working-directory: ${{ matrix.working-directory }}
         run: deno run postinstall
 
