@@ -15,8 +15,10 @@ jobs:
         package-manager: [npm]
         working-directory: [
           templates/react-dedot,
-          templates/react-papi,
           templates/vue-dedot,
+          templates/nuxt-dedot,
+
+          templates/react-papi,
           templates/vue-papi,
         ]
     
