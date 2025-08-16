@@ -7,6 +7,7 @@ export const templateOptions: SelectOptions<string>['options'] = [
   { value: 'react-papi', label: 'React + PAPI' },
   { value: 'vue-dedot', label: 'Vue + Dedot' },
   { value: 'vue-papi', label: 'Vue + PAPI' },
+  { value: 'nuxt-papi', label: 'Nuxt + PAPI' },
 ]
 
 export async function pickTemplate(): Promise<string> {
