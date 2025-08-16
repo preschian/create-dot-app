@@ -1,12 +1,9 @@
 import type { InjectedSigner } from 'dedot/types'
-import type { Prefix } from './sdk'
 import { getWalletBySource } from '@talismn/connect-wallets'
-import { connectedWallet } from '~/hooks/useConnect'
-import { formatPrice } from './formatters'
-import sdk from './sdk'
 
 export async function polkadotSigner(): Promise<InjectedSigner | undefined> {
-  const wallet = getWalletBySource(connectedWallet.get()?.extensionName)
+  const { connectedWallet } = useConnect()
+  const wallet = getWalletBySource(connectedWallet?.value?.extensionName)
   await wallet?.enable('CDA')
 
   return wallet?.signer

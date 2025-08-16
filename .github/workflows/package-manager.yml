@@ -7,7 +7,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  install:
+  node:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,8 +15,10 @@ jobs:
         package-manager: [npm]
         working-directory: [
           templates/react-dedot,
-          templates/react-papi,
           templates/vue-dedot,
+          templates/nuxt-dedot,
+
+          templates/react-papi,
           templates/vue-papi,
           templates/nuxt-papi,
         ]
@@ -53,3 +55,40 @@ jobs:
       - name: Build project with ${{ matrix.package-manager }}
         working-directory: ${{ matrix.working-directory }}
         run: ${{ matrix.package-manager }} run build
+
+  deno:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        working-directory: [
+          templates/react-dedot,
+          templates/react-papi,
+          templates/vue-dedot,
+          templates/vue-papi,
+        ]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Install dependencies with Deno
+        working-directory: ${{ matrix.working-directory }}
+        run: deno install
+
+      - name: Run postinstall with Deno
+        if: contains(matrix.working-directory, 'papi')
+        working-directory: ${{ matrix.working-directory }}
+        run: deno run postinstall
+
+      - name: Lint code with Deno
+        working-directory: ${{ matrix.working-directory }}
+        run: deno task lint
+
+      - name: Build project with Deno
+        working-directory: ${{ matrix.working-directory }}
+        run: deno task build

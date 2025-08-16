@@ -222,5 +222,6 @@ templates/**/bun.lock
 templates/**/pnpm-lock.yaml
 templates/**/package-lock.json
 templates/**/yarn.lock
+templates/**/deno.lock
 templates/**/src/descriptors
 templates/**/app/descriptors
