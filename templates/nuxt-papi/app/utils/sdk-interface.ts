@@ -12,11 +12,11 @@ export async function polkadotSigner() {
   return account?.polkadotSigner
 }
 
-export function subscribeToBlocks(
+export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
-  const { client } = sdk(networkKey)
+  const { client } = await sdk(networkKey)
 
   client.blocks$.subscribe(async (block) => {
     onBlock({
@@ -27,7 +27,7 @@ export function subscribeToBlocks(
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
-  const { api, client } = sdk(chainPrefix)
+  const { api, client } = await sdk(chainPrefix)
   const balance = await api.query.System.Account.getValue(address)
   const chainSpec = await client.getChainSpecData()
   const tokenDecimals = chainSpec.properties.tokenDecimals
@@ -41,7 +41,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   }
 }
 
-export function createRemarkTransaction(
+export async function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
   address = '',
@@ -52,7 +52,7 @@ export function createRemarkTransaction(
     onError: (error: string) => void
   },
 ) {
-  const { api } = sdk(chainPrefix)
+  const { api } = await sdk(chainPrefix)
 
   const remark = Binary.fromText(message)
   const tx = api.tx.System.remark({ remark })

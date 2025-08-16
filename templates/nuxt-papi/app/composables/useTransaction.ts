@@ -22,7 +22,7 @@ export function useTransaction() {
         throw new Error('No signer found')
       }
 
-      createRemarkTransaction(chainPrefix, message, selectedAccount.value.address, signer, {
+      await createRemarkTransaction(chainPrefix, message, selectedAccount.value.address, signer, {
         onTxHash: (hash) => {
           txHash.value = hash
         },
