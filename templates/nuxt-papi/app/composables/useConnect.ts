@@ -5,6 +5,11 @@ const storageWallet = 'dapp:wallet'
 const storageAccount = 'dapp:account'
 
 export function useConnect() {
+  // make sure to run this composable only on client side
+  if (import.meta.server) {
+    return {}
+  }
+
   const selectedAccount = useCookie<WalletAccount | null>(storageAccount, {
     default: () => null,
     secure: true,

@@ -1,4 +1,5 @@
-import { Binary, type PolkadotSigner } from 'polkadot-api'
+import type { PolkadotSigner } from 'polkadot-api'
+import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 
 export async function polkadotSigner() {

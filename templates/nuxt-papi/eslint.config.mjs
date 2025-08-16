@@ -1,7 +1,9 @@
-import { createConfigForNuxt } from '@nuxt/eslint-config'
+// @ts-check
+import antfu from '@antfu/eslint-config'
+import withNuxt from './.nuxt/eslint.config.mjs'
 
-export default createConfigForNuxt({}).override('nuxt/rules', {
-  rules: {
-    'vue/multi-word-component-names': 0,
-  }
-})
+export default withNuxt(
+  antfu({
+    vue: true,
+  }).toConfigs(),
+)

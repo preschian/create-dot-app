@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { chainKeys } from '~/utils/sdk'
-import { unifyAddress } from './utils/formatters'
-
 const { selectedAccount } = useConnect()
 </script>
 
