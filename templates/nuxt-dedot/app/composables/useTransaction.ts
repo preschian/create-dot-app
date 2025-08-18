@@ -1,3 +1,5 @@
+import type { Prefix } from '~/plugins/sdk.client'
+
 export function useTransaction() {
   const { selectedAccount } = useConnect()
 

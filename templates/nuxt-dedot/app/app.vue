@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { chainKeys } from './plugins/sdk.client'
+
 const { selectedAccount } = useConnect()
 </script>
 

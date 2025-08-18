@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Prefix } from '~/plugins/sdk.client'
+
 const props = defineProps<{
   chainKey: Prefix
   address?: string

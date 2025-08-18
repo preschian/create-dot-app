@@ -1,3 +1,5 @@
+import type { Prefix } from '~/plugins/sdk.client'
+
 export function useCurrentBlock(chain: Prefix) {
   const name = ref('')
   const currentBlock = ref(0)
