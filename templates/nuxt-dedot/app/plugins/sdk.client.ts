@@ -28,7 +28,7 @@ export type DedotApiFor<T extends Prefix> = Promise<DedotClient<ApiTypeFor<T>>>
 
 const clients = ref<Partial<Record<Prefix, Promise<DedotClient<ApiTypeFor<Prefix>>>>>>({})
 
-export default function sdk<T extends Prefix>(chain: T): { api: DedotApiFor<T> } {
+function sdk<T extends Prefix>(chain: T): { api: DedotApiFor<T> } {
   if (!clients.value[chain]) {
     clients.value[chain] = DedotClient.new(new WsProvider([...CONFIG[chain].providers]))
   }
@@ -37,3 +37,9 @@ export default function sdk<T extends Prefix>(chain: T): { api: DedotApiFor<T> }
     api: clients.value[chain]! as DedotApiFor<T>,
   }
 }
+
+export default defineNuxtPlugin(() => {
+  return {
+    provide: { sdk },
+  }
+})
