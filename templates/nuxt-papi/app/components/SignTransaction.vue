@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Prefix } from '~/plugins/sdk.client'
+
 const props = defineProps<{
   chainKey: Prefix
 }>()
@@ -12,7 +14,7 @@ const {
 } = useTransaction()
 
 async function signTransaction() {
-  if (!selectedAccount.value)
+  if (!selectedAccount?.value)
     return
 
   const message = 'Hello from create-dot-app'

@@ -1,3 +1,5 @@
+import type { Prefix } from '~/plugins/sdk.client'
+
 export function useTransaction() {
   const { selectedAccount } = useConnect()
 
@@ -6,7 +8,7 @@ export function useTransaction() {
   const txHash = ref('')
 
   const signRemarkTransaction = async (chainPrefix: Prefix, message: string) => {
-    if (!selectedAccount.value) {
+    if (!selectedAccount?.value) {
       result.value = 'Error: No account selected'
       return
     }
@@ -22,7 +24,7 @@ export function useTransaction() {
         throw new Error('No signer found')
       }
 
-      await createRemarkTransaction(chainPrefix, message, selectedAccount.value.address, signer, {
+      createRemarkTransaction(chainPrefix, message, selectedAccount.value.address, signer, {
         onTxHash: (hash) => {
           txHash.value = hash
         },

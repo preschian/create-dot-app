@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
+
 const connectModal = ref<HTMLDialogElement | null>(null)
 const showOtherWallets = ref(false)
 
@@ -14,10 +16,12 @@ const {
   disconnect,
 } = useConnect()
 
-function handleSelectAccount(account: typeof selectedAccount.value) {
-  if (account) {
+function handleSelectAccount(account: WalletAccount | null) {
+  if (account && selectAccount) {
     selectAccount(account)
-    connectModal.value?.close()
+    if (connectModal.value) {
+      connectModal.value.close()
+    }
   }
 }
 
@@ -33,12 +37,12 @@ function toggleOtherWallets() {
   showOtherWallets.value = !showOtherWallets.value
 }
 
-function isWalletConnected(wallet: typeof connectedWallet.value) {
-  return connectedWallet.value?.extensionName === wallet?.extensionName
+function isWalletConnected(wallet: Wallet | null) {
+  return connectedWallet?.value?.extensionName === wallet?.extensionName
 }
 
-function isAccountSelected(account: typeof selectedAccount.value) {
-  return selectedAccount.value?.address === account?.address
+function isAccountSelected(account: WalletAccount | null) {
+  return selectedAccount?.value?.address === account?.address
 }
 </script>
 
@@ -88,7 +92,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
       </div>
 
       <!-- Account Selection -->
-      <div v-if="listAccounts.length" class="mb-6">
+      <div v-if="listAccounts?.length" class="mb-6">
         <h3 class="text-xs text-gray-500 uppercase tracking-wider mb-3">
           Select Account
         </h3>
@@ -125,7 +129,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
       </div>
 
       <!-- Installed -->
-      <div v-if="installedWallets.length" class="mb-6">
+      <div v-if="installedWallets?.length" class="mb-6">
         <h3 class="text-xs text-gray-500 uppercase tracking-wider mb-3">
           Installed
         </h3>
@@ -135,7 +139,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
             :key="wallet.extensionName"
             class="card card-compact bg-base-100 border cursor-pointer hover:shadow-md transition-shadow"
             :class="isWalletConnected(wallet) ? 'border-success' : 'border-base-300 hover:border-primary'"
-            @click="connect(wallet)"
+            @click="connect?.(wallet)"
           >
             <div class="card-body items-center text-center">
               <div class="relative">
@@ -166,7 +170,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
       </div>
 
       <!-- Other Wallets -->
-      <div v-if="availableWallets.length">
+      <div v-if="availableWallets?.length">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs text-gray-500 uppercase tracking-wider">
             Other wallets

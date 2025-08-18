@@ -1,7 +1,8 @@
 import type { PolkadotClient, TypedApi } from 'polkadot-api'
 import { createClient } from 'polkadot-api'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
-// import { getWsProvider } from 'polkadot-api/ws-provider/web'
+import { getWsProvider } from 'polkadot-api/ws-provider/web'
+import { ref } from 'vue'
 import { dot, dot_asset_hub, pas, pas_asset_hub } from '~/descriptors'
 
 const config = {
@@ -28,12 +29,7 @@ export const chainKeys = Object.keys(config) as Prefix[]
 
 const clients = ref<Partial<Record<Prefix, PolkadotClient>>>({})
 
-export default async function sdk<T extends Prefix>(chain: T) {
-  const isNodeJs = typeof window === 'undefined'
-  const getWsProvider = isNodeJs
-    ? (await import('polkadot-api/ws-provider/node')).getWsProvider
-    : (await import('polkadot-api/ws-provider/web')).getWsProvider
-
+function sdk<T extends Prefix>(chain: T) {
   if (!clients.value[chain]) {
     clients.value[chain] = createClient(
       withPolkadotSdkCompat(
@@ -47,3 +43,9 @@ export default async function sdk<T extends Prefix>(chain: T) {
     client: clients.value[chain]!,
   }
 }
+
+export default defineNuxtPlugin(() => {
+  return {
+    provide: { sdk },
+  }
+})

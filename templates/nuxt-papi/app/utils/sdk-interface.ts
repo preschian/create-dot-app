@@ -1,13 +1,19 @@
 import type { PolkadotSigner } from 'polkadot-api'
+import type { Prefix } from '~/plugins/sdk.client'
 import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
+
+export function getSdk(chainPrefix: Prefix) {
+  const { $sdk } = useNuxtApp()
+  return $sdk(chainPrefix)
+}
 
 export async function polkadotSigner() {
   const { connectedWallet, selectedAccount } = useConnect()
   const selectedExtension = await connectInjectedExtension(
-    connectedWallet.value?.extensionName || '',
+    connectedWallet?.value?.extensionName || '',
   )
-  const account = selectedExtension.getAccounts().find(account => account.address === selectedAccount.value?.address)
+  const account = selectedExtension.getAccounts().find(account => account.address === selectedAccount?.value?.address)
 
   return account?.polkadotSigner
 }
@@ -16,7 +22,7 @@ export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
-  const { client } = await sdk(networkKey)
+  const { client } = await getSdk(networkKey)
 
   client.blocks$.subscribe(async (block) => {
     onBlock({
@@ -27,7 +33,7 @@ export async function subscribeToBlocks(
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
-  const { api, client } = await sdk(chainPrefix)
+  const { api, client } = await getSdk(chainPrefix)
   const balance = await api.query.System.Account.getValue(address)
   const chainSpec = await client.getChainSpecData()
   const tokenDecimals = chainSpec.properties.tokenDecimals
@@ -52,7 +58,7 @@ export async function createRemarkTransaction(
     onError: (error: string) => void
   },
 ) {
-  const { api } = await sdk(chainPrefix)
+  const { api } = await getSdk(chainPrefix)
 
   const remark = Binary.fromText(message)
   const tx = api.tx.System.remark({ remark })

@@ -1,3 +1,4 @@
+import type { Prefix } from '~/plugins/sdk.client'
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
 
 const subscan: Record<Prefix, string> = {
