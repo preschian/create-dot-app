@@ -1,5 +1,17 @@
 # create-dot-app
 
+## 1.0.4
+
+### Patch Changes
+
+- [#91](https://github.com/preschian/create-dot-app/pull/91) [`114586f`](https://github.com/preschian/create-dot-app/commit/114586f86f844c4b1852e0cd2484441786564078) Thanks [@preschian](https://github.com/preschian)! - add nuxt-dedot
+
+- [#65](https://github.com/preschian/create-dot-app/pull/65) [`aa923fa`](https://github.com/preschian/create-dot-app/commit/aa923fa2aa618a9c95d012638a5f7873b7c2ddd4) Thanks [@preschian](https://github.com/preschian)! - add integration test
+
+- [#85](https://github.com/preschian/create-dot-app/pull/85) [`d461493`](https://github.com/preschian/create-dot-app/commit/d461493f279699489df3a76e91e8d4430e23718f) Thanks [@roiLeo](https://github.com/roiLeo)! - add nuxt-papi
+
+- [#99](https://github.com/preschian/create-dot-app/pull/99) [`ffe0796`](https://github.com/preschian/create-dot-app/commit/ffe079645c1ecc80afb78c4c2209fe385381f8b3) Thanks [@preschian](https://github.com/preschian)! - support deno for base framework (non meta-framework)
+
 ## 1.0.3
 
 ### Patch Changes
