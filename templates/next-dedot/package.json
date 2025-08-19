@@ -9,18 +9,26 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "@talismn/connect-wallets": "^1.2.8",
+    "@xstate/store": "^3.8.5",
+    "dedot": "^0.15.0",
     "next": "15.4.7",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.1",
+    "@dedot/chaintypes": "^0.135.0",
     "@eslint-react/eslint-plugin": "^1.52.3",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/token-branded": "^1.2.24",
+    "@iconify/tailwind4": "^1.0.6",
     "@next/eslint-plugin-next": "^15.4.7",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "daisyui": "^5.0.50",
     "eslint": "^9.33.0",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-react-hooks": "^5.2.0",
