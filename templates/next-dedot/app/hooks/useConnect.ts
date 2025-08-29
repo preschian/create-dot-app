@@ -17,7 +17,7 @@ function getStorage(key: string) {
   return value ? JSON.parse(value) : null
 }
 
-function setStorage(key: string, value: any) {
+function setStorage(key: string, value: unknown) {
   if (typeof window === 'undefined')
     return
   localStorage.setItem(key, JSON.stringify(value))

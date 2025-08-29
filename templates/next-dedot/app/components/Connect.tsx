@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { useConnect } from '../hooks/useConnect'
 import { stripAddress } from '../utils/formatters'
@@ -67,9 +68,11 @@ export default function Connect() {
                 <div className="flex items-center gap-2">
                   <span className="icon-[mdi--wallet] w-4 h-4" />
                   <span className="hidden sm:block">{selectedAccount.name}</span>
-                  <img
-                    src={connectedWallet?.logo.src}
-                    alt={connectedWallet?.logo.alt}
+                  <Image
+                    src={connectedWallet?.logo.src || ''}
+                    alt={connectedWallet?.logo.alt || ''}
+                    width={16}
+                    height={16}
                     className="w-4 h-4"
                   />
                 </div>
@@ -170,9 +173,11 @@ export default function Connect() {
                       >
                         <div className="card-body items-center text-center">
                           <div className="relative">
-                            <img
+                            <Image
                               src={wallet.logo.src}
                               alt={wallet.logo.alt}
+                              width={48}
+                              height={48}
                               className="w-12 h-12"
                             />
                             {isWalletConnected(wallet)
@@ -245,9 +250,11 @@ export default function Connect() {
                               className="card card-compact bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all"
                             >
                               <div className="card-body items-center text-center">
-                                <img
+                                <Image
                                   src={wallet.logo.src}
                                   alt={wallet.logo.alt}
+                                  width={48}
+                                  height={48}
                                   className="w-12 h-12 opacity-60"
                                 />
                                 <div className="text-xs font-medium text-black">

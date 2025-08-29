@@ -66,6 +66,7 @@ export default function SignTransaction({ chainKey }: SignTransactionProps) {
             href={explorerDetail(chainKey, txHash)}
             target="_blank"
             className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
+            rel="noreferrer"
           >
             View on Subscan
             {' '}
