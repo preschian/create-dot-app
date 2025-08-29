@@ -1,5 +1,11 @@
 # create-dot-app
 
+## 1.0.5
+
+### Patch Changes
+
+- [#98](https://github.com/preschian/create-dot-app/pull/98) [`72bab2d`](https://github.com/preschian/create-dot-app/commit/72bab2de941d7e46775ca07604cf65fc0de60581) Thanks [@preschian](https://github.com/preschian)! - add next-dedot template
+
 ## 1.0.4
 
 ### Patch Changes
