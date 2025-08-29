@@ -33,7 +33,6 @@
     "@changesets/cli": "^2.27.1"
   },
   "workspaces": [
-    "cli",
-    "templates/*"
+    "cli"
   ]
 }
