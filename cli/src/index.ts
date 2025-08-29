@@ -86,8 +86,8 @@ async function main() {
 
     log.info(`${color.green('✓')} Done! Next steps:
     ${color.cyan(`cd ${name}`)}
-    ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install)')}
-    ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev)')}
+    ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install / deno install)')}
+    ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev / deno task dev)')}
     `)
 
     outro('Happy coding!')

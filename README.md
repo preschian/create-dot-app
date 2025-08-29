@@ -70,7 +70,14 @@ DISABLE_TELEMETRY=true npx create-dot-app@latest
 
 ## Contributing
 
-We welcome contributions! Please feel free to submit issues and pull requests.
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+
+- Development setup
+- How to add new templates
+- Testing requirements
+- Pull request process
+
+Feel free to submit issues and pull requests!
 
 ---
 
