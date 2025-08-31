@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix"
+    "lint": "next lint --fix",
+    "postinstall": "papi"
   },
   "dependencies": {
     "@talismn/connect-wallets": "^1.2.8",
