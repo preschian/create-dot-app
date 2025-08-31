@@ -11,28 +11,28 @@
   },
   "dependencies": {
     "@talismn/connect-wallets": "^1.2.8",
-    "@xstate/store": "^3.8.5",
-    "dedot": "^0.15.0",
+    "@xstate/store": "^3.9.2",
+    "dedot": "^0.15.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.2.1",
-    "@dedot/chaintypes": "^0.135.0",
-    "@eslint-react/eslint-plugin": "^1.52.4",
+    "@dedot/chaintypes": "^0.148.0",
+    "@eslint-react/eslint-plugin": "^1.52.9",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/token-branded": "^1.2.24",
+    "@iconify-json/token-branded": "^1.2.26",
     "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/vite": "^4.1.11",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react": "^5.0.0",
-    "daisyui": "^5.0.50",
-    "eslint": "^9.33.0",
+    "@tailwindcss/vite": "^4.1.12",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
+    "daisyui": "^5.0.54",
+    "eslint": "^9.34.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
-    "vite": "^7.1.2"
+    "vite": "^7.1.3"
   }
 }
