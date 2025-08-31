@@ -9,7 +9,6 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@polkadot-api/descriptors": "file:app/descriptors",
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.9.2",
     "next": "15.4.7",
