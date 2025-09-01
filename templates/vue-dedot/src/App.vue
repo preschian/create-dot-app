@@ -7,8 +7,6 @@ import { chainKeys } from '~/utils/sdk'
 import { unifyAddress } from './utils/formatters'
 
 const { selectedAccount } = useConnect()
-// eslint-disable-next-line no-console
-console.log(selectedAccount)
 </script>
 
 <template>
