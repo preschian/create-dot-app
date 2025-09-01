@@ -44,24 +44,15 @@ jobs:
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates: $CHANGED_TEMPLATES"
           
-          if [ "$CHANGED_TEMPLATES" = "[]" ] || [ -z "$CHANGED_TEMPLATES" ]; then
-            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
-          else
-            MATRIX_JSON="{"
-            MATRIX_JSON+='"include":['
-            
-            FIRST=true
-            for template in $(echo $CHANGED_TEMPLATES | jq -r '.[]'); do
-              if [ "$FIRST" = false ]; then
-                MATRIX_JSON+=','
-              fi
-              MATRIX_JSON+="{\"template\":\"$template\",\"working-directory\":\"templates/$template\"}"
-              FIRST=false
-            done
-            
-            MATRIX_JSON+=']}'
-            echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
-          fi
+          # Generate matrix for all changed templates
+          MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
+            if . == [] then 
+              {"include": []} 
+            else 
+              {"include": [.[] | {"template": ., "working-directory": "templates/\(.)"}]} 
+            end
+          ')
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
       
       - name: Set Deno matrix based on changes
         id: set-deno-matrix
@@ -69,27 +60,15 @@ jobs:
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates for Deno: $CHANGED_TEMPLATES"
           
-          if [ "$CHANGED_TEMPLATES" = "[]" ] || [ -z "$CHANGED_TEMPLATES" ]; then
-            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
-          else
-            MATRIX_JSON="{"
-            MATRIX_JSON+='"include":['
-            
-            FIRST=true
-            for template in $(echo $CHANGED_TEMPLATES | jq -r '.[]'); do
-              # Only include React and Vue templates for Deno
-              if [[ "$template" == "react-"* ]] || [[ "$template" == "vue-"* ]]; then
-                if [ "$FIRST" = false ]; then
-                  MATRIX_JSON+=','
-                fi
-                MATRIX_JSON+="{\"template\":\"$template\",\"working-directory\":\"templates/$template\"}"
-                FIRST=false
-              fi
-            done
-            
-            MATRIX_JSON+=']}'
-            echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
-          fi
+          # Generate matrix only for React and Vue templates
+          DENO_MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
+            if . == [] then 
+              {"include": []} 
+            else 
+              {"include": [.[] | select(startswith("react-") or startswith("vue-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
+            end
+          ')
+          echo "matrix=$DENO_MATRIX" >> $GITHUB_OUTPUT
 
   node:
     needs: changes
