@@ -1,5 +1,25 @@
 # create-dot-app
 
+## 1.0.5
+
+### Patch Changes
+
+- [#108](https://github.com/preschian/create-dot-app/pull/108) [`882891d`](https://github.com/preschian/create-dot-app/commit/882891d9819b37e4d66c118e5b7e13e20327f0db) Thanks [@preschian](https://github.com/preschian)! - fix: no descriptor package for next-papi
+
+- [#111](https://github.com/preschian/create-dot-app/pull/111) [`1edf861`](https://github.com/preschian/create-dot-app/commit/1edf8619533b72b1ab337f00aea2004bc31fa366) Thanks [@preschian](https://github.com/preschian)! - feat: Add Claude Code GitHub Workflow
+
+- [#105](https://github.com/preschian/create-dot-app/pull/105) [`5a1b8f6`](https://github.com/preschian/create-dot-app/commit/5a1b8f670404284d8b23c1663c5b8eafed33001a) Thanks [@preschian](https://github.com/preschian)! - upgrade deps
+
+- [#107](https://github.com/preschian/create-dot-app/pull/107) [`666764f`](https://github.com/preschian/create-dot-app/commit/666764fb7d05957cbfa99f2ed5c31942869341d4) Thanks [@preschian](https://github.com/preschian)! - add next-papi template
+
+- [#98](https://github.com/preschian/create-dot-app/pull/98) [`72bab2d`](https://github.com/preschian/create-dot-app/commit/72bab2de941d7e46775ca07604cf65fc0de60581) Thanks [@preschian](https://github.com/preschian)! - add next-dedot template
+
+- [#110](https://github.com/preschian/create-dot-app/pull/110) [`678f073`](https://github.com/preschian/create-dot-app/commit/678f0735d7244bcc392777cb488af02f2f4cedfb) Thanks [@preschian](https://github.com/preschian)! - feat: use different package for download repo
+
+- [#113](https://github.com/preschian/create-dot-app/pull/113) [`a4c2700`](https://github.com/preschian/create-dot-app/commit/a4c270004b9781e1b17eb5c93711f3e89f39b708) Thanks [@preschian](https://github.com/preschian)! - feat: enhance GitHub workflow to conditionally build templates based on changes
+
+- [#109](https://github.com/preschian/create-dot-app/pull/109) [`7065444`](https://github.com/preschian/create-dot-app/commit/70654444117b11cb8d60482fe57df01d2d673554) Thanks [@preschian](https://github.com/preschian)! - feat: include nuxt and next templates to cli
+
 ## 1.0.4
 
 ### Patch Changes
