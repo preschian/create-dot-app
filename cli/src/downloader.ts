@@ -35,7 +35,7 @@ export async function downloadTemplate({ template = 'vue-dedot', targetName = '.
         resolve()
       }
       else {
-        reject(new Error(`gitpick exited with code ${code}`))
+        reject(new Error(`Failed to download template: gitpick exited with code ${code}. This may indicate a network issue or invalid template path.`))
       }
     })
   })
