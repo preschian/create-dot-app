@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       issues: read
       id-token: write
     
@@ -56,7 +56,12 @@ jobs:
             - If a top-level comment exists, DO NOT create another one - only add inline comments
             - Only post GitHub comments - don't submit review text as messages
 
+            ADDITIONAL TASK:
+            After completing the code review, also update the PR description with a concise summary of the changes.
+            Focus on what was changed, why, key features/fixes, and any breaking changes.
+            Use `gh pr edit` to update the description. Keep it under 200 words and professional.
+
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.anthropic.com/en/docs/claude-code/sdk#command-line for available options
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr edit:*)"
