@@ -61,7 +61,7 @@ async function main() {
     }
 
     // Download template
-    await downloadTemplate(template, name)
+    await downloadTemplate({ template, targetName: name })
 
     // Update package.json with the project name
     const packageJsonPath = path.join(targetPath, 'package.json')

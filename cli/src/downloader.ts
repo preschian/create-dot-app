@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 
-export async function downloadTemplate(template: string, targetName: string): Promise<void> {
+export async function downloadTemplate({ template = 'vue-dedot', targetName = '.' }): Promise<void> {
   // Template repository configuration
   const owner = 'preschian'
   const repo = 'create-dot-app'
