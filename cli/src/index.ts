@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import path from 'node:path'
 import process from 'node:process'
-import { downloadRepo } from '@begit/core'
 import {
   cancel,
   intro,
@@ -13,6 +12,7 @@ import {
 } from '@clack/prompts'
 import fs from 'fs-extra'
 import color from 'picocolors'
+import { downloadTemplate } from './downloader.js'
 import { shutdownAnalytics, trackProjectCreated } from './posthog.js'
 import { pickTemplate } from './template-selector.js'
 
@@ -60,16 +60,8 @@ async function main() {
       return process.exit(1)
     }
 
-    // Download template using begit
-    await downloadRepo({
-      repo: {
-        owner: 'preschian',
-        name: 'create-dot-app',
-        branch: 'main',
-        subdir: `templates/${template}`,
-      },
-      dest: name,
-    })
+    // Download template
+    await downloadTemplate({ template, targetName: name })
 
     // Update package.json with the project name
     const packageJsonPath = path.join(targetPath, 'package.json')
@@ -101,6 +93,7 @@ async function main() {
 
   // Ensure analytics are sent before process exits
   await shutdownAnalytics()
+  process.exit(0)
 }
 
 main().catch(console.error)

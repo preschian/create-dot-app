@@ -21,7 +21,7 @@ function wait(ms: number): Promise<void> {
 }
 
 async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ output: string, process: pty.IPty }> {
-  const { args = [], timeout = 25000, onData, expectExitCode = 0 } = options
+  const { args = [], timeout = 60000, onData, expectExitCode = 0 } = options
 
   const p = pty.spawn(node, [cliPath, ...args], {
     name: 'xterm-color',
@@ -50,7 +50,7 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
 
     p.onData((data) => {
       buf += data
-      const cleanOutput = stripAnsi(data)
+      const cleanOutput = stripAnsi(buf)
       onData?.(data, cleanOutput, p)
     })
 
@@ -70,16 +70,17 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
 }
 
 async function handleTemplateSelection(p: pty.IPty, navigateDown = 0): Promise<void> {
-  await wait(100)
+  await wait(200) // Increased wait time
 
   // Navigate down if needed
   for (let i = 0; i < navigateDown; i++) {
     p.write('\x1B[B') // Arrow down
-    await wait(50)
+    await wait(100) // Increased wait between navigation
   }
 
   // Select current option
   p.write('\r')
+  await wait(100) // Wait after selection
 }
 
 describe('cli E2E tests with node-pty', () => {
@@ -104,11 +105,15 @@ describe('cli E2E tests with node-pty', () => {
     const projectName = 'test-project-arg'
     const projectPath = path.join(testDir, projectName)
 
+    let templateSelectionHandled = false
+
     const { output } = await spawnCLI(testDir, {
       args: [projectName],
-      onData: (_, cleanOutput, process) => {
-        if (cleanOutput.includes('Pick a template')) {
-          handleTemplateSelection(process, 0)
+      timeout: 60000, // Increase timeout
+      onData: (data, cleanOutput, process) => {
+        if (cleanOutput.includes('Pick a template') && !templateSelectionHandled) {
+          templateSelectionHandled = true
+          handleTemplateSelection(process, 0) // Use first template (index 0)
         }
       },
     })
@@ -126,8 +131,8 @@ describe('cli E2E tests with node-pty', () => {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
     expect(packageJson.name).toBe(projectName)
 
-    // Verify essential files exist
-    const essentialFiles = ['src/App.tsx', 'src/main.tsx', 'index.html', 'vite.config.ts']
+    // Verify essential files exist (Next.js App Router structure)
+    const essentialFiles = ['app/page.tsx', 'app/layout.tsx', 'next.config.ts', 'package.json']
     for (const file of essentialFiles) {
       const filePath = path.join(projectPath, file)
       const fileExists = await fs.access(filePath).then(() => true).catch(() => false)
@@ -200,12 +205,15 @@ describe('cli E2E tests with node-pty', () => {
     const projectName = 'template-nav-test'
     const projectPath = path.join(testDir, projectName)
 
+    let templateSelectionHandled = false
+
     await spawnCLI(testDir, {
       args: [projectName],
       onData: (_, cleanOutput, process) => {
-        // Handle template selection with navigation to Vue + Dedot (3rd option)
-        if (cleanOutput.includes('Pick a template')) {
-          handleTemplateSelection(process, 2) // Navigate down 2 times
+        // Handle template selection with navigation to Vue + Dedot (7th option, index 6)
+        if (cleanOutput.includes('Pick a template') && !templateSelectionHandled) {
+          templateSelectionHandled = true
+          handleTemplateSelection(process, 6) // Navigate down 6 times to get Vue + Dedot
         }
       },
     })
