@@ -10,7 +10,8 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      templates: ${{ steps.filter.outputs.changes }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      deno-matrix: ${{ steps.set-deno-matrix.outputs.matrix }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,31 +37,66 @@ jobs:
               - 'templates/vue-dedot/**'
             vue-papi:
               - 'templates/vue-papi/**'
+      
+      - name: Set matrix based on changes
+        id: set-matrix
+        run: |
+          CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
+          echo "Changed templates: $CHANGED_TEMPLATES"
+          
+          if [ "$CHANGED_TEMPLATES" = "[]" ] || [ -z "$CHANGED_TEMPLATES" ]; then
+            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
+          else
+            MATRIX_JSON="{"
+            MATRIX_JSON+='"include":['
+            
+            FIRST=true
+            for template in $(echo $CHANGED_TEMPLATES | jq -r '.[]'); do
+              if [ "$FIRST" = false ]; then
+                MATRIX_JSON+=','
+              fi
+              MATRIX_JSON+="{\"template\":\"$template\",\"working-directory\":\"templates/$template\"}"
+              FIRST=false
+            done
+            
+            MATRIX_JSON+=']}'
+            echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Set Deno matrix based on changes
+        id: set-deno-matrix
+        run: |
+          CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
+          echo "Changed templates for Deno: $CHANGED_TEMPLATES"
+          
+          if [ "$CHANGED_TEMPLATES" = "[]" ] || [ -z "$CHANGED_TEMPLATES" ]; then
+            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
+          else
+            MATRIX_JSON="{"
+            MATRIX_JSON+='"include":['
+            
+            FIRST=true
+            for template in $(echo $CHANGED_TEMPLATES | jq -r '.[]'); do
+              # Only include React and Vue templates for Deno
+              if [[ "$template" == "react-"* ]] || [[ "$template" == "vue-"* ]]; then
+                if [ "$FIRST" = false ]; then
+                  MATRIX_JSON+=','
+                fi
+                MATRIX_JSON+="{\"template\":\"$template\",\"working-directory\":\"templates/$template\"}"
+                FIRST=false
+              fi
+            done
+            
+            MATRIX_JSON+=']}'
+            echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+          fi
 
   node:
     needs: changes
-    if: ${{ needs.changes.outputs.templates != '[]' && needs.changes.outputs.templates != '' }}
+    if: ${{ needs.changes.outputs.matrix != '{"include":[]}' }}
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        template: ${{ fromJSON(needs.changes.outputs.templates) }}
-        include:
-          - template: next-dedot
-            working-directory: templates/next-dedot
-          - template: next-papi
-            working-directory: templates/next-papi
-          - template: nuxt-dedot
-            working-directory: templates/nuxt-dedot
-          - template: nuxt-papi
-            working-directory: templates/nuxt-papi
-          - template: react-dedot
-            working-directory: templates/react-dedot
-          - template: react-papi
-            working-directory: templates/react-papi
-          - template: vue-dedot
-            working-directory: templates/vue-dedot
-          - template: vue-papi
-            working-directory: templates/vue-papi
+      matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
     
     steps:
       - name: Checkout code
@@ -85,25 +121,10 @@ jobs:
 
   deno:
     needs: changes
-    if: ${{ needs.changes.outputs.templates != '[]' && needs.changes.outputs.templates != '' }}
+    if: ${{ needs.changes.outputs.deno-matrix != '{"include":[]}' }}
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        template: ${{ fromJSON(needs.changes.outputs.templates) }}
-        include:
-          - template: react-dedot
-            working-directory: templates/react-dedot
-          - template: react-papi
-            working-directory: templates/react-papi
-          - template: vue-dedot
-            working-directory: templates/vue-dedot
-          - template: vue-papi
-            working-directory: templates/vue-papi
-        exclude:
-          - template: next-dedot
-          - template: next-papi
-          - template: nuxt-dedot
-          - template: nuxt-papi
+      matrix: ${{ fromJSON(needs.changes.outputs.deno-matrix) }}
     
     steps:
       - name: Checkout code
