@@ -112,11 +112,6 @@ jobs:
             working-directory: templates/vue-dedot
           - template: vue-papi
             working-directory: templates/vue-papi
-        exclude:
-          - template: next-dedot
-          - template: next-papi
-          - template: nuxt-dedot
-          - template: nuxt-papi
     
     steps:
       - name: Checkout code

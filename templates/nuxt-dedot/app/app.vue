@@ -3,7 +3,7 @@ import { chainKeys } from './plugins/sdk.client'
 
 const { selectedAccount } = useConnect()
 // eslint-disable-next-line no-console
-console.log(selectedAccount)
+console.log(selectedAccount, 'test ci')
 </script>
 
 <template>
