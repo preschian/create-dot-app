@@ -49,9 +49,12 @@ jobs:
 
             Note: The PR branch is already checked out in the current working directory.
 
-            Use `gh pr comment` for top-level feedback.
-            Use `mcp__github_inline_comment__create_inline_comment` to highlight specific code issues.
-            Only post GitHub comments - don't submit review text as messages.
+            IMPORTANT COMMENTING RULES:
+            - Use `gh pr comment` for ONLY ONE comprehensive top-level feedback comment per PR
+            - Use `mcp__github_inline_comment__create_inline_comment` for multiple specific code issues (unlimited)
+            - Before posting a top-level comment, check if one already exists from previous runs
+            - If a top-level comment exists, DO NOT create another one - only add inline comments
+            - Only post GitHub comments - don't submit review text as messages
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.anthropic.com/en/docs/claude-code/sdk#command-line for available options
