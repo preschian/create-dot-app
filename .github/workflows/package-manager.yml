@@ -7,25 +7,62 @@ on:
     branches: [ main, develop ]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      templates: ${{ steps.filter.outputs.changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for template changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            next-dedot:
+              - 'templates/next-dedot/**'
+            next-papi:
+              - 'templates/next-papi/**'
+            nuxt-dedot:
+              - 'templates/nuxt-dedot/**'
+            nuxt-papi:
+              - 'templates/nuxt-papi/**'
+            react-dedot:
+              - 'templates/react-dedot/**'
+            react-papi:
+              - 'templates/react-papi/**'
+            vue-dedot:
+              - 'templates/vue-dedot/**'
+            vue-papi:
+              - 'templates/vue-papi/**'
+
   node:
+    needs: changes
+    if: ${{ needs.changes.outputs.templates != '[]' && needs.changes.outputs.templates != '' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         # package-manager: [npm, pnpm, bun, yarn]
         package-manager: [npm]
-        working-directory: [
-          templates/next-dedot,
-          templates/next-papi,
-
-          templates/nuxt-dedot,
-          templates/nuxt-papi,
-
-          templates/react-dedot,
-          templates/react-papi,
-
-          templates/vue-dedot,
-          templates/vue-papi,
-        ]
+        template: ${{ fromJSON(needs.changes.outputs.templates) }}
+        include:
+          - template: next-dedot
+            working-directory: templates/next-dedot
+          - template: next-papi
+            working-directory: templates/next-papi
+          - template: nuxt-dedot
+            working-directory: templates/nuxt-dedot
+          - template: nuxt-papi
+            working-directory: templates/nuxt-papi
+          - template: react-dedot
+            working-directory: templates/react-dedot
+          - template: react-papi
+            working-directory: templates/react-papi
+          - template: vue-dedot
+            working-directory: templates/vue-dedot
+          - template: vue-papi
+            working-directory: templates/vue-papi
     
     steps:
       - name: Checkout code
@@ -61,15 +98,26 @@ jobs:
         run: ${{ matrix.package-manager }} run build
 
   deno:
+    needs: changes
+    if: ${{ needs.changes.outputs.templates != '[]' && needs.changes.outputs.templates != '' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        working-directory: [
-          templates/react-dedot,
-          templates/react-papi,
-          templates/vue-dedot,
-          templates/vue-papi,
-        ]
+        template: ${{ fromJSON(needs.changes.outputs.templates) }}
+        include:
+          - template: react-dedot
+            working-directory: templates/react-dedot
+          - template: react-papi
+            working-directory: templates/react-papi
+          - template: vue-dedot
+            working-directory: templates/vue-dedot
+          - template: vue-papi
+            working-directory: templates/vue-papi
+        exclude:
+          - template: next-dedot
+          - template: next-papi
+          - template: nuxt-dedot
+          - template: nuxt-papi
     
     steps:
       - name: Checkout code
