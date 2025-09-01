@@ -3,14 +3,18 @@ import process from 'node:process'
 import { cancel, isCancel, select } from '@clack/prompts'
 
 export const templateOptions: SelectOptions<string>['options'] = [
-  { value: 'react-dedot', label: 'React + Dedot' },
-  { value: 'react-papi', label: 'React + PAPI' },
-  { value: 'vue-dedot', label: 'Vue + Dedot' },
-  { value: 'vue-papi', label: 'Vue + PAPI' },
-  { value: 'nuxt-dedot', label: 'Nuxt + Dedot' },
-  { value: 'nuxt-papi', label: 'Nuxt + PAPI' },
   { value: 'next-dedot', label: 'Next + Dedot' },
   { value: 'next-papi', label: 'Next + PAPI' },
+
+  { value: 'nuxt-dedot', label: 'Nuxt + Dedot' },
+  { value: 'nuxt-papi', label: 'Nuxt + PAPI' },
+
+  { value: 'react-dedot', label: 'React + Dedot' },
+  { value: 'react-papi', label: 'React + PAPI' },
+
+  { value: 'vue-dedot', label: 'Vue + Dedot' },
+  { value: 'vue-papi', label: 'Vue + PAPI' },
+
 ]
 
 export async function pickTemplate(): Promise<string> {
