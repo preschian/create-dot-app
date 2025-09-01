@@ -103,7 +103,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        template: ${{ fromJSON(needs.changes.outputs.templates) }}
         include:
           - template: react-dedot
             working-directory: templates/react-dedot
