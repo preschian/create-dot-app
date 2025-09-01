@@ -51,7 +51,7 @@ jobs:
             else 
               {"include": [.[] | {"template": ., "working-directory": "templates/\(.)"}]} 
             end
-          ')
+          ' || echo '{"include": []}')
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
       
       - name: Set Deno matrix based on changes
@@ -67,7 +67,7 @@ jobs:
             else 
               {"include": [.[] | select(startswith("react-") or startswith("vue-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
             end
-          ')
+          ' || echo '{"include": []}')
           echo "matrix=$DENO_MATRIX" >> $GITHUB_OUTPUT
 
   node:
