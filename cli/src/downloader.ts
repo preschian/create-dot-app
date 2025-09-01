@@ -2,6 +2,12 @@ import { spawn } from 'node:child_process'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 
+/**
+ * Downloads a template from the repository using gitpick
+ * @param options - Download configuration
+ * @param options.template - Template name (e.g., 'vue-dedot')
+ * @param options.targetName - Target directory name
+ */
 export async function downloadTemplate({ template = 'vue-dedot', targetName = '.' }): Promise<void> {
   // Template repository configuration
   const owner = 'preschian'
@@ -10,9 +16,16 @@ export async function downloadTemplate({ template = 'vue-dedot', targetName = '.
   const subdir = `templates/${template}`
 
   const repoSpecifier = `${owner}/${repo}/tree/${branch}/${subdir}`
+
   // Get gitpick binary from node_modules
-  const require = createRequire(import.meta.url)
-  const gitpickBinPath = require.resolve('gitpick/dist/index.js')
+  let gitpickBinPath: string
+  try {
+    const require = createRequire(import.meta.url)
+    gitpickBinPath = require.resolve('gitpick/dist/index.js')
+  }
+  catch {
+    throw new Error('Failed to resolve gitpick binary. Make sure gitpick is installed as a dependency.')
+  }
 
   return new Promise<void>((resolve, reject) => {
     const child = spawn(
