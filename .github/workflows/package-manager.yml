@@ -44,12 +44,17 @@ jobs:
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates: $CHANGED_TEMPLATES"
           
-          # Generate matrix for all changed templates
+          # Generate matrix for all changed templates with multiple package managers
           MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
             if . == [] then 
               {"include": []} 
             else 
-              {"include": [.[] | {"template": ., "working-directory": "templates/\(.)"}]} 
+              {"include": [
+                (.[] as $template | 
+                  ["npm", "yarn", "pnpm", "bun"] | .[] as $pm | 
+                  {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
+                )
+              ]} 
             end
           ' || echo '{"include": []}')
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
@@ -86,17 +91,33 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: Install dependencies with npm
+      - name: Setup Yarn
+        if: matrix.package-manager == 'yarn'
+        run: npm install -g yarn
+
+      - name: Setup pnpm
+        if: matrix.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Bun
+        if: matrix.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
         working-directory: ${{ matrix.working-directory }}
-        run: npm install
+        run: ${{ matrix.package-manager }} install
 
       - name: Lint code
         working-directory: ${{ matrix.working-directory }}
-        run: npm run lint
+        run: ${{ matrix.package-manager }} run lint
 
-      - name: Build project with npm
+      - name: Build project
         working-directory: ${{ matrix.working-directory }}
-        run: npm run build
+        run: ${{ matrix.package-manager }} run build
 
   deno:
     needs: changes

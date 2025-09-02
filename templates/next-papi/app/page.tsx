@@ -9,6 +9,7 @@ import { chainKeys } from './utils/sdk'
 
 export default function Home() {
   const { selectedAccount } = useConnect()
+  console.log('trigger build')
 
   return (
     <div className="min-h-screen flex flex-col justify-between">
