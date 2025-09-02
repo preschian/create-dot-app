@@ -14,7 +14,7 @@
     "dedot": "^0.15.2",
     "next": "15.4.7",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@dedot/chaintypes": "^0.146.0",
