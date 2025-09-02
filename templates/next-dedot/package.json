@@ -24,7 +24,7 @@
     "@iconify/tailwind4": "^1.0.6",
     "@next/eslint-plugin-next": "^15.5.2",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^5.0.54",
