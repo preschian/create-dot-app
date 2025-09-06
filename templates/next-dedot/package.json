@@ -17,20 +17,20 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@dedot/chaintypes": "^0.146.0",
+    "@dedot/chaintypes": "^0.151.0",
     "@eslint/eslintrc": "^3.3.1",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.26",
     "@iconify/tailwind4": "^1.0.6",
     "@next/eslint-plugin-next": "^15.5.2",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "daisyui": "^5.0.54",
-    "eslint": "^9.34.0",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "daisyui": "^5.1.7",
+    "eslint": "^9.35.0",
     "eslint-config-next": "^15.5.2",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
   }
 }
