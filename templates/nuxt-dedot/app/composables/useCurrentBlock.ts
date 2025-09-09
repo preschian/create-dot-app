@@ -8,7 +8,7 @@ export function useCurrentBlock(chain: Prefix) {
   let unsubscribe: Awaited<ReturnType<typeof subscribeToBlocks>> | undefined
 
   onMounted(async () => {
-    unsubscribe = await subscribeToBlocks(chain, async ({ blockHeight, chainName }) => {
+    unsubscribe = await subscribeToBlocks(chain, ({ blockHeight, chainName }) => {
       currentBlock.value = blockHeight
       name.value = chainName
     })
