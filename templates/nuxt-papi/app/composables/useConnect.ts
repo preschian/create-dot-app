@@ -1,5 +1,6 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWallets } from '@talismn/connect-wallets'
+import { DAPP_NAME } from '~/utils/sdk-interface'
 
 const storageWallet = 'dapp:wallet'
 const storageAccount = 'dapp:account'

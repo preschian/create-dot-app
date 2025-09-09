@@ -22,16 +22,17 @@ export async function polkadotSigner() {
   return account?.polkadotSigner
 }
 
-export function subscribeToBlocks(
+export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
   const { client } = getSdk(networkKey)
+  const chainName = await client.getChainSpecData().then(data => data.name)
 
   return client.blocks$.subscribe(async (block) => {
     onBlock({
       blockHeight: block.number,
-      chainName: await client.getChainSpecData().then(data => data.name),
+      chainName,
     })
   })
 }

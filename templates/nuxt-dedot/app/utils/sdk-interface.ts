@@ -19,22 +19,21 @@ export async function polkadotSigner(): Promise<InjectedSigner | undefined> {
   return wallet?.signer
 }
 
-export function subscribeToBlocks(
+export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
   const { api: apiInstance } = getSdk(networkKey)
+  const api = await apiInstance
+  const chainName = await api.chainSpec.chainName()
 
-  return apiInstance.then(async (api) => {
-    const unsub = await api.query.system.number(async (blockNumber) => {
-      onBlock({
-        blockHeight: Number(blockNumber.toString()),
-        chainName: await api.chainSpec.chainName(),
-      })
+  const unsub = await api.query.system.number(async (blockNumber) => {
+    onBlock({
+      blockHeight: Number(blockNumber.toString()),
+      chainName,
     })
-
-    return unsub
   })
+  return unsub
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
@@ -58,7 +57,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   }
 }
 
-export function createRemarkTransaction(
+export async function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
   address = '',
@@ -70,21 +69,20 @@ export function createRemarkTransaction(
   },
 ) {
   const { api: apiInstance } = getSdk(chainPrefix)
+  const api = await apiInstance
 
-  apiInstance.then(async (api) => {
-    const unsub = await api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
-      if (result.status.type === 'BestChainBlockIncluded') {
-        callbacks.onTxHash(result.txHash)
-      }
+  const unsub = await api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
+    if (result.status.type === 'BestChainBlockIncluded') {
+      callbacks.onTxHash(result.txHash)
+    }
 
-      if (result.status.type === 'Finalized') {
-        callbacks.onFinalized()
-        typeof unsub === 'function' && unsub()
-      }
-    }).catch((err) => {
+    if (result.status.type === 'Finalized') {
+      callbacks.onFinalized()
       typeof unsub === 'function' && unsub()
-      console.error(err, address)
-      callbacks.onError(err.message || 'Unknown error')
-    })
+    }
+  }).catch((err) => {
+    typeof unsub === 'function' && unsub()
+    console.error(err, address)
+    callbacks.onError(err.message || 'Unknown error')
   })
 }

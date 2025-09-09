@@ -5,17 +5,17 @@ export function useCurrentBlock(chain: Prefix) {
   const currentBlock = ref(0)
   const isConnected = computed(() => currentBlock.value > 0)
 
-  let unsubscribe: unknown
+  let unsubscribe: Awaited<ReturnType<typeof subscribeToBlocks>> | undefined
 
-  onMounted(() => {
-    unsubscribe = subscribeToBlocks(chain, ({ blockHeight, chainName }) => {
+  onMounted(async () => {
+    unsubscribe = await subscribeToBlocks(chain, async ({ blockHeight, chainName }) => {
       currentBlock.value = blockHeight
       name.value = chainName
     })
   })
 
   onUnmounted(() => {
-    typeof unsubscribe === 'function' && unsubscribe()
+    unsubscribe?.()
   })
 
   return {
