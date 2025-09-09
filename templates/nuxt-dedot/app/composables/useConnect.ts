@@ -37,7 +37,7 @@ export function useConnect() {
       // set connected wallet
       connectedWallet.value = wallet
 
-      await wallet.enable('CDA')
+      await wallet.enable(DAPP_NAME)
       const accounts = await wallet.getAccounts()
 
       if (accounts) {
