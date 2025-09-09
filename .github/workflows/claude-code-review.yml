@@ -55,7 +55,10 @@ jobs:
             - Before posting a top-level comment, check if one already exists from previous runs
             - If a top-level comment exists, EDIT the existing comment instead of creating a new one
             - If no top-level comment exists, create a new one with `gh pr comment`
-            - Before creating inline comments, check existing inline comments to avoid duplicates on the same line/issue
+            - Before creating ANY inline comment, ALWAYS check existing and unresolved inline comments first
+            - Use `gh pr view --json comments` to get all existing comments and check for duplicates
+            - Do NOT create inline comments on the same line/issue that already has an unresolved comment
+            - Only create new inline comments for genuinely new issues not already addressed
             - Only post GitHub comments - don't submit review text as messages
 
             ADDITIONAL TASK:
