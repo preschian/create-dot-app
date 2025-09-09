@@ -37,7 +37,7 @@ export function useConnect() {
       // Set connected wallet (automatically syncs with cookie)
       connectedWallet.value = wallet
 
-      await wallet.enable('CDA')
+      await wallet.enable(DAPP_NAME)
       const accounts = await wallet.getAccounts()
 
       if (accounts) {
