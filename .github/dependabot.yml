@@ -13,6 +13,11 @@ updates:
       - "/templates/*"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 5
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
     groups:
       all-dependencies:
         patterns:
