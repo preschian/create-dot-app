@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
+import { name } from './package.json'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -14,6 +15,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      title: name,
       htmlAttrs: {
         'data-theme': 'light',
       },

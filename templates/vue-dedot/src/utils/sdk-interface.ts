@@ -1,42 +1,49 @@
 import type { InjectedSigner } from 'dedot/types'
 import type { Prefix } from './sdk'
 import { getWalletBySource } from '@talismn/connect-wallets'
+import { formatBalance } from 'dedot/utils'
 import { connectedWallet } from '~/composables/useConnect'
-import { formatPrice } from './formatters'
+import { name } from '../../package.json'
 import sdk from './sdk'
+
+export const DAPP_NAME = name
 
 export async function polkadotSigner(): Promise<InjectedSigner | undefined> {
   const wallet = getWalletBySource(connectedWallet.value?.extensionName)
-  await wallet?.enable('CDA')
+  await wallet?.enable(DAPP_NAME)
 
   return wallet?.signer
 }
 
-export function subscribeToBlocks(
+export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
   const { api: apiInstance } = sdk(networkKey)
+  const api = await apiInstance
+  const chainName = await api.chainSpec.chainName()
 
-  apiInstance.then((api) => {
-    api.query.system.events(async () => {
-      onBlock({
-        blockHeight: await api.query.system.number(),
-        chainName: await api.chainSpec.chainName(),
-      })
-    })
+  const unsub = await api.query.system.number(async (blockHeight) => {
+    onBlock({ blockHeight, chainName })
   })
+
+  return unsub
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
   const { api: apiInstance } = sdk(chainPrefix)
   const api = await apiInstance
 
-  const balance = await api.query.system.account(address)
-  const chainSpec = await api.chainSpec.properties()
+  const [balance, chainSpec] = await Promise.all([
+    api.query.system.account(address),
+    api.chainSpec.properties(),
+  ])
   const tokenDecimals = chainSpec.tokenDecimals
   const tokenSymbol = chainSpec.tokenSymbol?.toString() || ''
-  const freeBalance = formatPrice(balance.data.free.toString(), Number(tokenDecimals))
+  const freeBalance = formatBalance(balance.data.free.toString(), {
+    decimals: Number(tokenDecimals),
+    symbol: tokenSymbol,
+  })
 
   return {
     balance: freeBalance,
@@ -44,7 +51,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   }
 }
 
-export function createRemarkTransaction(
+export async function createRemarkTransaction(
   chainPrefix: Prefix,
   message: string,
   address = '',
@@ -56,19 +63,20 @@ export function createRemarkTransaction(
   },
 ) {
   const { api: apiInstance } = sdk(chainPrefix)
+  const api = await apiInstance
 
-  apiInstance.then((api) => {
-    api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
-      if (result.status.type === 'BestChainBlockIncluded') {
-        callbacks.onTxHash(result.status.value.blockHash)
-      }
+  const unsub = await api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
+    if (result.status.type === 'BestChainBlockIncluded') {
+      callbacks.onTxHash(result.txHash)
+    }
 
-      if (result.status.type === 'Finalized') {
-        callbacks.onFinalized()
-      }
-    }).catch((err) => {
-      console.error(err, address)
-      callbacks.onError(err.message || 'Unknown error')
-    })
+    if (result.status.type === 'Finalized') {
+      callbacks.onFinalized()
+      typeof unsub === 'function' && unsub()
+    }
+  }).catch((err) => {
+    typeof unsub === 'function' && unsub()
+    console.error(err, address)
+    callbacks.onError(err.message || 'Unknown error')
   })
 }

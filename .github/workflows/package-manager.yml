@@ -51,7 +51,7 @@ jobs:
             else 
               {"include": [
                 (.[] as $template | 
-                  ["npm", "yarn", "pnpm", "bun"] | .[] as $pm | 
+                  ["npm", "bun"] | .[] as $pm | 
                   {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
                 )
               ]} 
@@ -91,15 +91,6 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: Setup Yarn
-        if: matrix.package-manager == 'yarn'
-        run: npm install -g yarn
-
-      - name: Setup pnpm
-        if: matrix.package-manager == 'pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Setup Bun
         if: matrix.package-manager == 'bun'
