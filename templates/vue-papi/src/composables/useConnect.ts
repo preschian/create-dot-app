@@ -1,6 +1,7 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWallets } from '@talismn/connect-wallets'
 import { ref } from 'vue'
+import { DAPP_NAME } from '~/utils/sdk-interface'
 
 const storageWallet = 'dapp:wallet'
 const storageAccount = 'dapp:account'
@@ -37,7 +38,7 @@ export function useConnect() {
       connectedWallet.value = wallet
       setStorage(storageWallet, wallet)
 
-      await wallet.enable('CDA')
+      await wallet.enable(DAPP_NAME)
       const accounts = await wallet.getAccounts()
 
       if (accounts) {

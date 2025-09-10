@@ -24,10 +24,7 @@ export async function subscribeToBlocks(
   const chainName = await api.chainSpec.chainName()
 
   const unsub = await api.query.system.number(async (blockHeight) => {
-    onBlock({
-      blockHeight,
-      chainName,
-    })
+    onBlock({ blockHeight, chainName })
   })
 
   return unsub

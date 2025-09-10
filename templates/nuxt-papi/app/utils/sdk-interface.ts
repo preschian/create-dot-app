@@ -30,10 +30,7 @@ export async function subscribeToBlocks(
   const chainName = await client.getChainSpecData().then(data => data.name)
 
   return client.blocks$.subscribe(async (block) => {
-    onBlock({
-      blockHeight: block.number,
-      chainName,
-    })
+    onBlock({ blockHeight: block.number, chainName })
   })
 }
 
