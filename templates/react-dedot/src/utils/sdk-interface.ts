@@ -43,7 +43,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   const freeBalance = formatBalance(balance.data.free.toString(), {
     decimals: Number(tokenDecimals),
     symbol: tokenSymbol,
-  })
+  }).replace(tokenSymbol, '')
 
   return {
     balance: freeBalance,

@@ -43,7 +43,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   const freeBalance = formatBalance(balance.data.free.toString(), {
     decimals: Number(tokenDecimals),
     symbol: tokenSymbol,
-  })
+  }).replace(tokenSymbol, '')
 
   return {
     balance: freeBalance,
@@ -75,7 +75,6 @@ export async function createRemarkTransaction(
       typeof unsub === 'function' && unsub()
     }
   }).catch((err) => {
-    typeof unsub === 'function' && unsub()
     console.error(err, address)
     callbacks.onError(err.message || 'Unknown error')
   })
