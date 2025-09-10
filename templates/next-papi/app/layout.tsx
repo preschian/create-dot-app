@@ -13,8 +13,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Next Dedot App',
-  description: 'Next.js app with Polkadot integration using Dedot',
+  title: 'Dapp Name',
 }
 
 export default function RootLayout({
