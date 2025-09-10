@@ -10,22 +10,22 @@ export function useCurrentBlock(chain: Prefix) {
 
   useEffect(() => {
     let ignore = false
+    let unsubscribe: Awaited<ReturnType<typeof subscribeToBlocks>> | undefined
 
     const initializeSubscription = async () => {
-      const unsubscribe = subscribeToBlocks(chain, ({ blockHeight, chainName }) => {
+      unsubscribe = await subscribeToBlocks(chain, ({ blockHeight, chainName }) => {
         if (!ignore) {
           setCurrentBlock(blockHeight)
           setName(chainName)
         }
       })
-
-      return unsubscribe
     }
 
     initializeSubscription()
 
     return () => {
       ignore = true
+      unsubscribe?.unsubscribe()
     }
   }, [chain])
 

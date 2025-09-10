@@ -4,7 +4,10 @@ import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { connectedWallet, selectedAccount } from '../hooks/useConnect' // Adjusted for React
 import sdk from '../utils/sdk'
-import { formatPrice } from './formatters'
+import { name } from '../../package.json'
+import { formatBalance } from '@polkadot/util'
+
+export const DAPP_NAME = name
 
 export async function polkadotSigner() {
   const selectedExtension = await connectInjectedExtension(
@@ -15,27 +18,32 @@ export async function polkadotSigner() {
   return account?.polkadotSigner
 }
 
-export function subscribeToBlocks(
+export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
   const { client } = sdk(networkKey)
+  const chainName = await client.getChainSpecData().then(data => data.name)
 
-  client.blocks$.subscribe(async (block) => {
-    onBlock({
-      blockHeight: block.number,
-      chainName: await client.getChainSpecData().then(data => data.name),
-    })
+  return client.blocks$.subscribe(async (block) => {
+    onBlock({ blockHeight: block.number, chainName })
   })
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
   const { api, client } = sdk(chainPrefix)
-  const balance = await api.query.System.Account.getValue(address)
-  const chainSpec = await client.getChainSpecData()
+
+  const [balance, chainSpec] = await Promise.all([
+    api.query.System.Account.getValue(address),
+    client.getChainSpecData(),
+  ])
   const tokenDecimals = chainSpec.properties.tokenDecimals
   const tokenSymbol = chainSpec.properties.tokenSymbol
-  const freeBalance = formatPrice(balance.data.free.toString(), tokenDecimals)
+  const freeBalance = formatBalance(balance.data.free.toString(), {
+    decimals: tokenDecimals,
+    withUnit: false,
+    forceUnit: '-',
+  })
 
   return {
     balance: freeBalance,
@@ -60,17 +68,19 @@ export function createRemarkTransaction(
   const remark = Binary.fromText(message)
   const tx = api.tx.System.remark({ remark })
 
-  tx.signSubmitAndWatch(signer).subscribe({
+  const unsub = tx.signSubmitAndWatch(signer).subscribe({
     next: (event) => {
       if (event.type === 'txBestBlocksState' && event.found) {
-        callbacks.onTxHash(event.block.hash.toString())
+        callbacks.onTxHash(event.txHash)
       }
 
       if (event.type === 'finalized') {
         callbacks.onFinalized()
+        unsub.unsubscribe()
       }
     },
     error: (err) => {
+      unsub.unsubscribe()
       console.error(err, address)
       callbacks.onError(err.message || 'Unknown error')
     },
