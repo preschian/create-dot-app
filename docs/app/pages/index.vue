@@ -3,7 +3,14 @@ import { ArrowRight, GitFork, Github, Star, Terminal } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
-const { data } = await useLazyAsyncData('github-star', () => $fetch<{ repo: { stars: number, forks: number } }>('https://ungh.cc/repos/preschian/create-dot-app'))
+const { data } = await useLazyAsyncData('github-star', async () => {
+  const [github, npm] = await Promise.all([
+    $fetch<{ repo: { stars: number, forks: number } }>('https://ungh.cc/repos/preschian/create-dot-app'),
+    $fetch<{ version: string }>('https://registry.npmjs.org/create-dot-app/latest'),
+  ])
+
+  return { repo: github.repo, version: npm.version }
+})
 </script>
 
 <template>
@@ -48,7 +55,7 @@ const { data } = await useLazyAsyncData('github-star', () => $fetch<{ repo: { st
     <section class="py-16 lg:py-24">
       <div class="container mx-auto px-4 text-center max-w-4xl">
         <Badge variant="outline" class="mb-4 border-gray-300 text-gray-700">
-          [v1.0.5] • MIT License
+          [v{{ data?.version }}] • MIT License
         </Badge>
         <div class="mb-6">
           <div class="text-4xl lg:text-5xl font-bold mb-4 text-black text-center">
