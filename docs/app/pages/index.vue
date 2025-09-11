@@ -2,17 +2,6 @@
 import { ArrowRight, GitFork, Github, Star, Terminal } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-
-// Mouse event handlers for the CTA button
-function handleMouseEnter(e: MouseEvent) {
-  const target = e.currentTarget as HTMLElement
-  target.style.backgroundColor = '#f3f4f6'
-}
-
-function handleMouseLeave(e: MouseEvent) {
-  const target = e.currentTarget as HTMLElement
-  target.style.backgroundColor = '#ffffff'
-}
 </script>
 
 <template>
@@ -311,19 +300,10 @@ function handleMouseLeave(e: MouseEvent) {
         <p class="text-lg text-gray-300 mb-6">
           Join developers building the future of Web3
         </p>
-        <button
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-11 px-8"
-          :style="{
-            backgroundColor: '#ffffff',
-            color: '#000000',
-            border: '1px solid #ffffff',
-          }"
-          @mouseenter="handleMouseEnter"
-          @mouseleave="handleMouseLeave"
-        >
+        <Button variant="secondary">
           <Terminal class="h-4 w-4 mr-2" />
           [START_BUILDING_NOW]
-        </button>
+        </Button>
       </div>
     </section>
 
