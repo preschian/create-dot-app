@@ -2,6 +2,8 @@
 import { ArrowRight, GitFork, Github, Star, Terminal } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+
+const { data } = await useLazyAsyncData('github-star', () => $fetch<{ repo: { stars: number, forks: number } }>('https://ungh.cc/repos/preschian/create-dot-app'))
 </script>
 
 <template>
@@ -21,9 +23,9 @@ import { Button } from '@/components/ui/button'
             <div class="flex items-center gap-2">
               <div class="flex items-center gap-1 text-sm text-gray-600">
                 <Star class="h-3 w-3" />
-                <span>6</span>
+                <span>{{ data?.repo.stars }}</span>
                 <GitFork class="h-3 w-3 ml-2" />
-                <span>1</span>
+                <span>{{ data?.repo.forks }}</span>
               </div>
 
               <Button
