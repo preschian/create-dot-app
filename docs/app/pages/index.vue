@@ -11,6 +11,22 @@ const { data } = await useLazyAsyncData('github-star', async () => {
 
   return { repo: github.repo, version: npm.version }
 })
+
+const copied = ref(false)
+const command = 'npx create-dot-app@latest'
+
+async function copyCommand() {
+  try {
+    await navigator.clipboard.writeText(command)
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  }
+  catch (err) {
+    console.error('Failed to copy: ', err)
+  }
+}
 </script>
 
 <template>
@@ -85,23 +101,44 @@ const { data } = await useLazyAsyncData('github-star', async () => {
         <div class="max-w-4xl mx-auto">
           <!-- Main command showcase -->
           <div class="bg-black text-white p-6 rounded-lg mb-8 relative overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-4">
-              <div class="flex space-x-2">
-                <div class="w-3 h-3 bg-red-500 rounded-full" />
-                <div class="w-3 h-3 bg-yellow-500 rounded-full" />
-                <div class="w-3 h-3 bg-green-500 rounded-full" />
+            <div class="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-4 justify-between">
+              <div class="flex items-center">
+                <div class="flex space-x-2">
+                  <div class="w-3 h-3 bg-red-500 rounded-full" />
+                  <div class="w-3 h-3 bg-yellow-500 rounded-full" />
+                  <div class="w-3 h-3 bg-green-500 rounded-full" />
+                </div>
+                <div class="ml-4 text-xs text-gray-400">
+                  Terminal
+                </div>
               </div>
-              <div class="ml-4 text-xs text-gray-400">
-                Terminal
-              </div>
+              <button
+                class="text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1"
+                :class="{ 'text-green-400': copied }"
+                @click="copyCommand"
+              >
+                <span v-if="!copied" class="icon-[mdi--content-copy]" />
+                <span v-else class="icon-[mdi--check]" />
+                <span>{{ copied ? 'Copied!' : 'Copy' }}</span>
+              </button>
             </div>
             <div class="mt-8">
               <div class="text-green-400 text-sm mb-2">
                 user@polkadot:~$
               </div>
-              <div class="text-xl font-mono mb-4">
-                <span class="text-white">npx create-dot-app@latest</span>
-                <span class="text-green-400 animate-pulse">|</span>
+              <div class="text-xl font-mono mb-4 flex items-center justify-between group">
+                <div class="flex items-center">
+                  <span class="text-white">{{ command }}</span>
+                  <span class="text-green-400 animate-pulse">|</span>
+                </div>
+                <button
+                  class="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-white p-2 rounded"
+                  :class="{ 'text-green-400 opacity-100': copied }"
+                  @click="copyCommand"
+                >
+                  <span v-if="!copied" class="icon-[mdi--content-copy]" />
+                  <span v-else class="icon-[mdi--check]" />
+                </button>
               </div>
               <div class="text-gray-400 text-sm">
                 ✓ Creating your Polkadot dApp...
