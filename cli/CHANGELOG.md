@@ -1,5 +1,13 @@
 # create-dot-app
 
+## 1.0.6
+
+### Patch Changes
+
+- [#133](https://github.com/preschian/create-dot-app/pull/133) [`4e824db`](https://github.com/preschian/create-dot-app/commit/4e824db0fdc43e96ac130af84048febddac42465) Thanks [@preschian](https://github.com/preschian)! - fix: apply some suggestions
+
+- [#136](https://github.com/preschian/create-dot-app/pull/136) [`baeefd3`](https://github.com/preschian/create-dot-app/commit/baeefd3f4bb143257562ae53cf7362bb8828ee63) Thanks [@preschian](https://github.com/preschian)! - feat: apply suggestions for react templates
+
 ## 1.0.5
 
 ### Patch Changes
