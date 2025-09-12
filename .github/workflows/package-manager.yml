@@ -1,4 +1,4 @@
-name: Package Managers
+name: Package Manager
 
 on:
   push:
@@ -51,7 +51,7 @@ jobs:
             else 
               {"include": [
                 (.[] as $template | 
-                  ["npm", "bun"] | .[] as $pm | 
+                  ["npm"] | .[] as $pm | 
                   {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
                 )
               ]} 
@@ -77,7 +77,7 @@ jobs:
 
   node:
     needs: changes
-    if: ${{ fromJSON(needs.changes.outputs.matrix).include != '[]' }}
+    if: ${{ needs.changes.outputs.matrix != '' && fromJSON(needs.changes.outputs.matrix).include[0] }}
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
@@ -86,17 +86,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 22.x
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-
-
-      - name: Setup Bun
-        if: matrix.package-manager == 'bun'
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Install dependencies
         working-directory: ${{ matrix.working-directory }}
@@ -112,7 +105,7 @@ jobs:
 
   deno:
     needs: changes
-    if: ${{ fromJSON(needs.changes.outputs.deno-matrix).include != '[]' }}
+    if: ${{ needs.changes.outputs.deno-matrix != '' && fromJSON(needs.changes.outputs.deno-matrix).include[0] }}
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.changes.outputs.deno-matrix) }}

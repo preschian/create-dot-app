@@ -1,7 +1,7 @@
 # Create Dot App
 
 [![CLI E2E Tests](https://github.com/preschian/create-dot-app/actions/workflows/cli-tests.yml/badge.svg)](https://github.com/preschian/create-dot-app/actions/workflows/cli-tests.yml)
-[![Package Managers](https://github.com/preschian/create-dot-app/actions/workflows/package-manager.yml/badge.svg)](https://github.com/preschian/create-dot-app/actions/workflows/package-manager.yml)
+[![Package Managers](https://github.com/preschian/create-dot-app/actions/workflows/package-managers.yml/badge.svg)](https://github.com/preschian/create-dot-app/actions/workflows/package-managers.yml)
 
 A command-line interface (CLI) tool designed to streamline the development process for Polkadot-based decentralized applications (dApps).
 
