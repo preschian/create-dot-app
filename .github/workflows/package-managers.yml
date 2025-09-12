@@ -1,0 +1,63 @@
+name: Package Managers
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      templates: ${{ steps.get-templates.outputs.templates }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Get template directories
+        id: get-templates
+        run: |
+          templates=$(find templates -maxdepth 2 -name "package.json" -exec dirname {} \; | sort | jq -R -s -c 'split("\n")[:-1]')
+          echo "templates=$templates" >> $GITHUB_OUTPUT
+
+  node:
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package-manager: [npm, pnpm, bun, yarn]
+        working-directory: ${{ fromJson(needs.generate-matrix.outputs.templates) }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Setup pnpm
+        if: matrix.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Bun
+        if: matrix.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies with ${{ matrix.package-manager }}
+        working-directory: ${{ matrix.working-directory }}
+        run: ${{ matrix.package-manager }} install
+
+      - name: Lint code
+        working-directory: ${{ matrix.working-directory }}
+        run: ${{ matrix.package-manager }} run lint
+
+      - name: Build project with ${{ matrix.package-manager }}
+        working-directory: ${{ matrix.working-directory }}
+        run: ${{ matrix.package-manager }} run build
