@@ -27,6 +27,7 @@
     "@iconify-json/token-branded": "^1.2.26",
     "@iconify/tailwind4": "^1.0.6",
     "daisyui": "^5.0.54",
-    "eslint": "^9.34.0"
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2"
   }
 }

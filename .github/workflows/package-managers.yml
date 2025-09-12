@@ -50,12 +50,6 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Setup Yarn
-        if: matrix.package-manager == 'yarn'
-        run: |
-          corepack enable
-          corepack prepare yarn@stable --activate
-
       - name: Install dependencies with ${{ matrix.package-manager }}
         working-directory: ${{ matrix.working-directory }}
         run: ${{ matrix.package-manager }} install
