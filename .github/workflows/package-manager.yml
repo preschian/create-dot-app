@@ -77,7 +77,7 @@ jobs:
 
   node:
     needs: changes
-    if: ${{ fromJSON(needs.changes.outputs.matrix).include != '[]' }}
+    if: ${{ needs.changes.outputs.matrix != '' && fromJSON(needs.changes.outputs.matrix).include[0] }}
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
@@ -105,7 +105,7 @@ jobs:
 
   deno:
     needs: changes
-    if: ${{ fromJSON(needs.changes.outputs.deno-matrix).include != '[]' }}
+    if: ${{ needs.changes.outputs.deno-matrix != '' && fromJSON(needs.changes.outputs.deno-matrix).include[0] }}
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.changes.outputs.deno-matrix) }}
