@@ -19,7 +19,7 @@ const copied = ref(false)
 
 const frameworks = [
   { id: 'react', name: 'React.js', template: 'react' },
-  { id: 'nextjs', name: 'Next.js', template: 'nextjs' },
+  { id: 'next', name: 'Next.js', template: 'next' },
   { id: 'vue', name: 'Vue.js', template: 'vue' },
   { id: 'nuxt', name: 'Nuxt.js', template: 'nuxt' },
 ]
