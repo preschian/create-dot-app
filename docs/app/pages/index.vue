@@ -12,12 +12,42 @@ const { data } = await useLazyAsyncData('github-star', async () => {
   return { repo: github.repo, version: npm.version }
 })
 
+// Interactive selections
+const selectedFramework = ref<string>('')
+const selectedSdk = ref<string>('')
 const copied = ref(false)
-const command = 'npx create-dot-app@latest'
+
+const frameworks = [
+  { id: 'react', name: 'React.js', template: 'react' },
+  { id: 'nextjs', name: 'Next.js', template: 'nextjs' },
+  { id: 'vue', name: 'Vue.js', template: 'vue' },
+  { id: 'nuxt', name: 'Nuxt.js', template: 'nuxt' },
+]
+
+const sdks = [
+  { id: 'dedot', name: 'Dedot', template: 'dedot' },
+  { id: 'papi', name: 'PAPI', template: 'papi' },
+]
+
+const command = computed(() => {
+  let cmd = 'npx create-dot-app@latest my-polkadot-app'
+
+  if (selectedFramework.value || selectedSdk.value) {
+    const framework = frameworks.find(f => f.id === selectedFramework.value)
+    const sdk = sdks.find(s => s.id === selectedSdk.value)
+
+    const frameworkTemplate = framework?.template || 'react'
+    const sdkTemplate = sdk?.template || 'dedot'
+
+    cmd += ` --template=${frameworkTemplate}-${sdkTemplate}`
+  }
+
+  return cmd
+})
 
 async function copyCommand() {
   try {
-    await navigator.clipboard.writeText(command)
+    await navigator.clipboard.writeText(command.value)
     copied.value = true
     setTimeout(() => {
       copied.value = false
@@ -26,6 +56,26 @@ async function copyCommand() {
   catch (err) {
     console.error('Failed to copy: ', err)
   }
+}
+
+function selectFramework(frameworkId: string) {
+  selectedFramework.value = selectedFramework.value === frameworkId ? '' : frameworkId
+}
+
+function selectSdk(sdkId: string) {
+  selectedSdk.value = selectedSdk.value === sdkId ? '' : sdkId
+}
+
+function getSelectionText() {
+  const frameworkName = selectedFramework.value
+    ? frameworks.find(f => f.id === selectedFramework.value)?.name
+    : 'Default'
+
+  const sdkName = selectedSdk.value
+    ? sdks.find(s => s.id === selectedSdk.value)?.name
+    : ''
+
+  return sdkName ? `${frameworkName} + ${sdkName}` : frameworkName
 }
 </script>
 
@@ -141,7 +191,10 @@ async function copyCommand() {
                 </button>
               </div>
               <div class="text-gray-400 text-sm">
-                ✓ Creating your Polkadot dApp...
+                <span v-if="!selectedFramework && !selectedSdk">✓ Creating your Polkadot dApp...</span>
+                <span v-else-if="selectedFramework && !selectedSdk">✓ Creating {{ frameworks.find(f => f.id === selectedFramework)?.name }} dApp...</span>
+                <span v-else-if="!selectedFramework && selectedSdk">✓ Creating dApp with {{ sdks.find(s => s.id === selectedSdk)?.name }}...</span>
+                <span v-else>✓ Creating {{ frameworks.find(f => f.id === selectedFramework)?.name }} dApp with {{ sdks.find(s => s.id === selectedSdk)?.name }}...</span>
               </div>
             </div>
           </div>
@@ -159,14 +212,20 @@ async function copyCommand() {
                   [Choose Framework]
                 </h3>
                 <div class="space-y-2">
-                  <div class="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
-                    <span>React.js / Next.js</span>
-                    <span class="text-gray-500">○</span>
-                  </div>
-                  <div class="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
-                    <span>Vue.js / Nuxt.js</span>
-                    <span class="text-gray-500">○</span>
-                  </div>
+                  <button
+                    v-for="framework in frameworks"
+                    :key="framework.id"
+                    class="flex items-center justify-between p-2 rounded text-sm w-full transition-all hover:bg-gray-100"
+                    :class="{
+                      'bg-black text-white': selectedFramework === framework.id,
+                      'bg-gray-50': selectedFramework !== framework.id,
+                    }"
+                    @click="selectFramework(framework.id)"
+                  >
+                    <span>{{ framework.name }}</span>
+                    <span v-if="selectedFramework === framework.id" class="text-green-400">●</span>
+                    <span v-else class="text-gray-500">○</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -182,14 +241,20 @@ async function copyCommand() {
                   [Select SDK]
                 </h3>
                 <div class="space-y-2">
-                  <div class="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
-                    <span>PAPI</span>
-                    <span class="text-gray-500">○</span>
-                  </div>
-                  <div class="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
-                    <span>Dedot</span>
-                    <span class="text-gray-500">○</span>
-                  </div>
+                  <button
+                    v-for="sdk in sdks"
+                    :key="sdk.id"
+                    class="flex items-center justify-between p-2 rounded text-sm w-full transition-all hover:bg-gray-100"
+                    :class="{
+                      'bg-black text-white': selectedSdk === sdk.id,
+                      'bg-gray-50': selectedSdk !== sdk.id,
+                    }"
+                    @click="selectSdk(sdk.id)"
+                  >
+                    <span>{{ sdk.name }}</span>
+                    <span v-if="selectedSdk === sdk.id" class="text-green-400">●</span>
+                    <span v-else class="text-gray-500">○</span>
+                  </button>
                 </div>
               </div>
             </div>
