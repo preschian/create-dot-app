@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowRight, GitFork, Github, Star, Terminal } from 'lucide-vue-next'
+import { ArrowRight, ExternalLink, GitFork, Github, Star, Terminal } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
@@ -66,16 +66,26 @@ function selectSdk(sdkId: string) {
   selectedSdk.value = selectedSdk.value === sdkId ? '' : sdkId
 }
 
-function getSelectionText() {
-  const frameworkName = selectedFramework.value
-    ? frameworks.find(f => f.id === selectedFramework.value)?.name
-    : 'Default'
+function getTemplateString() {
+  const framework = frameworks.find(f => f.id === selectedFramework.value)
+  const sdk = sdks.find(s => s.id === selectedSdk.value)
 
-  const sdkName = selectedSdk.value
-    ? sdks.find(s => s.id === selectedSdk.value)?.name
-    : ''
+  const frameworkTemplate = framework?.template || 'react'
+  const sdkTemplate = sdk?.template || 'dedot'
 
-  return sdkName ? `${frameworkName} + ${sdkName}` : frameworkName
+  return `${frameworkTemplate}-${sdkTemplate}`
+}
+
+function exportToCodeSandbox() {
+  const template = getTemplateString()
+  const url = `https://codesandbox.io/s/github/preschian/create-dot-app/tree/main/templates/${template}`
+  window.open(url, '_blank')
+}
+
+function exportToBolt() {
+  const template = getTemplateString()
+  const url = `https://bolt.new/github/preschian/create-dot-app/tree/main/templates/${template}`
+  window.open(url, '_blank')
 }
 </script>
 
@@ -215,7 +225,7 @@ function getSelectionText() {
                   <button
                     v-for="framework in frameworks"
                     :key="framework.id"
-                    class="flex items-center justify-between p-2 rounded text-sm w-full transition-all hover:bg-gray-100"
+                    class="flex items-center justify-between p-2 rounded text-sm w-full transition-all"
                     :class="{
                       'bg-black text-white': selectedFramework === framework.id,
                       'bg-gray-50': selectedFramework !== framework.id,
@@ -244,7 +254,7 @@ function getSelectionText() {
                   <button
                     v-for="sdk in sdks"
                     :key="sdk.id"
-                    class="flex items-center justify-between p-2 rounded text-sm w-full transition-all hover:bg-gray-100"
+                    class="flex items-center justify-between p-2 rounded text-sm w-full transition-all"
                     :class="{
                       'bg-black text-white': selectedSdk === sdk.id,
                       'bg-gray-50': selectedSdk !== sdk.id,
@@ -278,6 +288,35 @@ function getSelectionText() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Try Online -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+            <h3 class="text-lg font-semibold text-black text-center">
+              [Try Online]
+            </h3>
+            <p class="text-gray-600 text-center my-4">
+              Start coding immediately with your selected configuration
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                variant="outline"
+                class="border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent flex items-center gap-2"
+                @click="exportToCodeSandbox"
+              >
+                <ExternalLink class="h-4 w-4" />
+                [codesandbox]
+              </Button>
+
+              <Button
+                variant="outline"
+                class="border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent flex items-center gap-2"
+                @click="exportToBolt"
+              >
+                <ExternalLink class="h-4 w-4" />
+                [bolt]
+              </Button>
             </div>
           </div>
 
