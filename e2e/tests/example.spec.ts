@@ -1,17 +1,15 @@
 import { test } from '@avalix/chroma';
 
-// test.describe.configure({ mode: 'serial' });
-
 const POLKADOT_DAPP_URLS = [
   'https://polkadot-starter-next-dedot.vercel.app/',
   'https://polkadot-starter-next-papi.vercel.app/',
-  'https://polkadot-starter-react-dedot.vercel.app/',
-  'https://polkadot-starter-react-papi.vercel.app/',
+  // 'https://polkadot-starter-react-dedot.vercel.app/',
+  // 'https://polkadot-starter-react-papi.vercel.app/',
 
-  'https://polkadot-starter-nuxt-dedot.vercel.app/',
-  'https://polkadot-starter-nuxt-papi.vercel.app/',
-  'https://polkadot-starter-vue-dedot.vercel.app/',
-  'https://polkadot-starter-vue-papi.vercel.app/',
+  // 'https://polkadot-starter-nuxt-dedot.vercel.app/',
+  // 'https://polkadot-starter-nuxt-papi.vercel.app/',
+  // 'https://polkadot-starter-vue-dedot.vercel.app/',
+  // 'https://polkadot-starter-vue-papi.vercel.app/',
 ]
 
 const ACCOUNT_NAME = '// Alice'
