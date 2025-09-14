@@ -1,18 +1,40 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@avalix/chroma';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+const POLKADOT_DAPP_URL = 'https://polkadot-starter-next-dedot.vercel.app/'
+const ACCOUNT_NAME = '// Alice'
+const DOT_TEST_MNEMONIC = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk'
+const DOT_TEST_PASSWORD = 'secure123!'
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+test('sign transaction', async ({ page, importAccount, authorize, approveTx }) => {
+  await importAccount({
+    seed: DOT_TEST_MNEMONIC,
+    password: DOT_TEST_PASSWORD,
+    name: ACCOUNT_NAME,
+  })
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+  await page.goto(POLKADOT_DAPP_URL)
+  await page.waitForLoadState('networkidle')
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+  await page.getByRole('button', { name: /Connect Wallet/i }).click()
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+  const modalVisible = await page.locator('h2:has-text("CONNECT WALLET")').isVisible()
+  if (modalVisible) {
+    console.log('✅ Connect wallet modal opened')
+    // Click CONNECT button in modal
+    await page.getByRole('button', { name: /CONNECT/i }).nth(2).click()
+    console.log('🔗 Clicked CONNECT button')
+  }
+
+  await authorize()
+
+  await page.getByText(ACCOUNT_NAME).click()
+
+  await page.getByRole('button', { name: 'Sign Transaction' }).nth(3).click()
+
+  await approveTx({ password: DOT_TEST_PASSWORD })
+  await page.getByText('Processing transaction...').waitFor({ state: 'visible' })
+
+  console.log('🎉 Test completed successfully!')
+
+  await page.waitForTimeout(3000)
 });
