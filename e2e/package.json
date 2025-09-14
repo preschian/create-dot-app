@@ -6,11 +6,7 @@
     "test": "tests"
   },
   "dependencies": {
-    "@avalix/chroma": "^0.0.2",
-    "fsevents": "^2.3.2",
-    "playwright": "^1.55.0",
-    "playwright-core": "^1.55.0",
-    "undici-types": "^7.11.0"
+    "@avalix/chroma": "^0.0.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
