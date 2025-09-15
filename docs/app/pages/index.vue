@@ -263,11 +263,20 @@ function exportTo(platform: keyof typeof platforms) {
                 <button
                   v-for="framework in frameworks"
                   :key="framework.id"
-                  class="flex items-center justify-between p-3 rounded text-sm transition-colors"
+                  class="flex items-center gap-2 p-3 rounded text-sm transition-colors"
                   :class="selectionButtonClass(selectedFramework === framework.id)"
                   @click="selectFramework(framework.id)"
                 >
-                  <span>{{ framework.name }}</span>
+                  <span
+                    class="w-5 h-5 flex-shrink-0"
+                    :class="{
+                      'icon-[logos--react]': framework.id === 'react',
+                      'icon-[logos--nextjs-icon]': framework.id === 'next',
+                      'icon-[logos--vue]': framework.id === 'vue',
+                      'icon-[logos--nuxt-icon]': framework.id === 'nuxt',
+                    }"
+                  />
+                  <span class="flex-1 text-left">{{ framework.name }}</span>
                   <span v-if="selectedFramework === framework.id" class="text-white">✓</span>
                   <span v-else class="text-gray-500">○</span>
                 </button>
@@ -282,11 +291,14 @@ function exportTo(platform: keyof typeof platforms) {
                 <button
                   v-for="sdk in sdks"
                   :key="sdk.id"
-                  class="w-full flex items-center justify-between p-3 rounded text-sm transition-colors"
+                  class="w-full flex items-center gap-2 p-3 rounded text-sm transition-colors"
                   :class="selectionButtonClass(selectedSdk === sdk.id)"
                   @click="selectSdk(sdk.id)"
                 >
-                  <span>{{ sdk.name }}</span>
+                  <span
+                    class="w-5 h-5 flex-shrink-0 icon-[logos--polkadot]"
+                  />
+                  <span class="flex-1 text-left">{{ sdk.name }}</span>
                   <span v-if="selectedSdk === sdk.id" class="text-white">✓</span>
                   <span v-else class="text-gray-500">○</span>
                 </button>
