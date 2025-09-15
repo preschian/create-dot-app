@@ -20,8 +20,22 @@ async function main() {
   console.log()
   intro(color.inverse(' create-dot-app '))
 
+  // Parse command line arguments
+  const args = process.argv.slice(2)
+  let projectNameArg: string | undefined
+  let templateArg: string | undefined
+
+  // Parse arguments
+  for (const arg of args) {
+    if (arg.startsWith('--template=')) {
+      templateArg = arg.split('=')[1]
+    }
+    else if (!arg.startsWith('--')) {
+      projectNameArg = arg
+    }
+  }
+
   // Get project name from command line args or prompt
-  const projectNameArg = process.argv[2]
   let name: string
 
   if (projectNameArg) {
@@ -44,7 +58,11 @@ async function main() {
     name = nameInput
   }
 
-  const template = await pickTemplate()
+  // Get template from command line args or prompt
+  if (templateArg) {
+    log.info(`Using template: ${templateArg}`)
+  }
+  const template = await pickTemplate(templateArg)
 
   const s = spinner()
   s.start('Creating your project...')

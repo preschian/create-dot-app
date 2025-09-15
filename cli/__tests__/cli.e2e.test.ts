@@ -226,4 +226,89 @@ describe('cli E2E tests with node-pty', () => {
     const appVueExists = await fs.access(path.join(projectPath, 'src/App.vue')).then(() => true).catch(() => false)
     expect(appVueExists, 'Should create Vue project with App.vue').toBe(true)
   })
+
+  it('creates project with --template parameter', async () => {
+    const projectName = 'template-param-test'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: [projectName, '--template=nuxt-dedot'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain(`Using project name: ${projectName}`)
+    expect(output).toContain('Using template: nuxt-dedot')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+
+    // Verify it's a Nuxt project (should have nuxt.config.ts)
+    const nuxtConfigExists = await fs.access(path.join(projectPath, 'nuxt.config.ts')).then(() => true).catch(() => false)
+    expect(nuxtConfigExists, 'Should create Nuxt project with nuxt.config.ts').toBe(true)
+  })
+
+  it('handles invalid --template parameter correctly', async () => {
+    const projectName = 'invalid-template-test'
+
+    const { output } = await spawnCLI(testDir, {
+      args: [projectName, '--template=invalid-template'],
+      expectExitCode: 1,
+      timeout: 30000,
+    })
+
+    // Should contain error message about invalid template
+    expect(output).toContain('Invalid template "invalid-template"')
+    expect(output).toContain('Available templates:')
+    expect(output).toContain('next-dedot')
+    expect(output).toContain('nuxt-dedot')
+    expect(output).toContain('react-dedot')
+    expect(output).toContain('vue-dedot')
+  })
+
+  it('creates project with --template parameter only (prompts for name)', async () => {
+    const projectName = 'template-only-test'
+    const projectPath = path.join(testDir, projectName)
+
+    let askedForName = false
+
+    const { output } = await spawnCLI(testDir, {
+      args: ['--template=react-dedot'],
+      timeout: 60000,
+      onData: async (_, cleanOutput, process) => {
+        // Respond to project name prompt
+        if (cleanOutput.includes('What is your project name?') && !askedForName) {
+          askedForName = true
+          await wait(100)
+          process.write(`${projectName}\r`)
+        }
+      },
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Using template: react-dedot')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+
+    // Verify it's a React project (should have App.tsx)
+    const appTsxExists = await fs.access(path.join(projectPath, 'src/App.tsx')).then(() => true).catch(() => false)
+    expect(appTsxExists, 'Should create React project with App.tsx').toBe(true)
+  })
 })
