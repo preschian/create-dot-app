@@ -1,9 +1,9 @@
 name: Playwright Tests
 
 on:
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */14 * *'  # Run every 14 days at midnight UTC
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   test:
