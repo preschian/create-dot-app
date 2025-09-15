@@ -26,11 +26,16 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "bun run build && changeset publish",
-    "build": "bun --cwd cli run build"
+    "build": "bun --cwd cli run build",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
   "devDependencies": {
+    "@avalix/chroma": "^0.0.3",
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.1"
+    "@changesets/cli": "^2.27.1",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.4.0"
   },
   "workspaces": [
     "cli"

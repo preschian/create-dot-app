@@ -225,3 +225,11 @@ templates/**/yarn.lock
 templates/**/deno.lock
 templates/**/src/descriptors
 templates/**/app/descriptors
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+.chroma
