@@ -17,7 +17,20 @@ export const templateOptions: SelectOptions<string>['options'] = [
 
 ]
 
-export async function pickTemplate(): Promise<string> {
+export async function pickTemplate(providedTemplate?: string): Promise<string> {
+  // If a template is provided, validate it and return it
+  if (providedTemplate) {
+    const validTemplates = templateOptions.map(option => option.value)
+    if (validTemplates.includes(providedTemplate)) {
+      return providedTemplate
+    }
+    else {
+      cancel(`Invalid template "${providedTemplate}". Available templates: ${validTemplates.join(', ')}`)
+      process.exit(1)
+    }
+  }
+
+  // Otherwise, show the interactive picker
   const template = await select({
     message: 'Pick a template',
     options: templateOptions,
