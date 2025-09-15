@@ -49,23 +49,32 @@ jobs:
 
             Note: The PR branch is already checked out in the current working directory.
 
-            IMPORTANT COMMENTING RULES:
-            - CRITICAL: Only ONE top-level comment per PR is allowed
-            - ALWAYS check for existing comments first with `gh pr view --json comments`
-            - If ANY comment from claude-code-action already exists, UPDATE it using `gh pr comment --edit-last` or find the comment ID and edit it
-            - If NO previous comment exists, create ONE new comment with `gh pr comment`
-            - Do NOT create multiple comments under any circumstances
-            - Keep the comment SHORT and concise (under 200 words)
-            - Focus only on the most critical issues
-            - Do NOT use inline comments - consolidate everything into the single top-level comment
+            CRITICAL COMMENTING WORKFLOW - FOLLOW EXACTLY:
+            1. FIRST: Run `gh pr view --json comments` to check for existing Claude comments
+            2. THEN: Look for any comment with author.login matching "claude[bot]" or author.type "Bot" 
+            3. ALSO check for comments containing "Claude Code Review" in the body as a backup identifier
+            4. IF existing Claude comment found:
+               - Get the comment ID from the JSON response  
+               - Use `gh pr comment <COMMENT_ID> --edit --body "NEW_CONTENT"`
+               - DO NOT create a new comment
+            5. IF NO existing Claude comment found:
+               - Use `gh pr comment --body "CONTENT"`  
+               - Create only ONE comment
+            6. NEVER use `gh pr comment --edit-last` as it's unreliable
+            7. NEVER create multiple comments - this violates GitHub's rate limits
+            8. ALWAYS start your comment with "## Claude Code Review" for easy identification
+
+            COMMENT REQUIREMENTS:
+            - Keep under 200 words
+            - Focus on critical issues only
+            - No inline comments - single consolidated comment only
 
             ADDITIONAL TASK:
-            After completing the code review, also update the PR description with a brief summary.
-            - Keep it very SHORT and concise (under 100 words)
-            - Do NOT edit or modify the existing "## Context" section
-            - Add your summary BELOW the existing "## Context" section
-            - Focus only on key changes and critical points
-            - Use `gh pr edit` to update the description
+            After commenting, update the PR description:
+            - Use `gh pr edit --body` to append a brief summary (under 100 words)
+            - Do NOT modify existing "## Context" section
+            - Add summary BELOW existing content
+            - Focus on key changes only
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.anthropic.com/en/docs/claude-code/sdk#command-line for available options
