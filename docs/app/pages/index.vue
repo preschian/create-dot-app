@@ -303,7 +303,7 @@ function exportTo(platform: keyof typeof platforms) {
                   @click="selectSdk(sdk.id)"
                 >
                   <span
-                    class="w-5 h-5 flex-shrink-0 icon-[logos--polkadot]"
+                    class="w-5 h-5 flex-shrink-0 icon-[token-branded--polkadot]"
                   />
                   <span class="flex-1 text-left">{{ sdk.name }}</span>
                   <span v-if="selectedSdk === sdk.id" class="text-white">✓</span>
@@ -320,18 +320,18 @@ function exportTo(platform: keyof typeof platforms) {
             <p class="text-sm text-gray-600 mb-4">
               Start coding immediately with your selected configuration
             </p>
-            <div class="flex justify-center gap-4">
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-4">
               <Button
                 v-for="(url, platform) in platforms"
                 v-show="shouldShowPlatform(platform)"
                 :key="platform"
                 variant="outline"
                 :class="buttonClass"
-                class="flex items-center gap-2"
+                class="flex items-center gap-2 min-w-0 flex-shrink-0"
                 @click="exportTo(platform as keyof typeof platforms)"
               >
-                <ExternalLink class="h-4 w-4" />
-                [{{ platform }}]
+                <ExternalLink class="h-4 w-4 flex-shrink-0" />
+                <span class="whitespace-nowrap">[{{ platform }}]</span>
               </Button>
             </div>
             <div v-if="showValidationMessage" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-center">
