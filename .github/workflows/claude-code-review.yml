@@ -50,14 +50,14 @@ jobs:
             Note: The PR branch is already checked out in the current working directory.
 
             IMPORTANT COMMENTING RULES:
-            - Use `gh pr comment` for ONLY ONE concise top-level feedback comment per PR
-            - Do NOT use inline comments - consolidate all feedback into a single brief GitHub comment
-            - Keep the comment SHORT and to the point
-            - Before posting a top-level comment, check if one already exists from previous runs
-            - If a top-level comment exists, EDIT the existing comment instead of creating a new one
-            - If no top-level comment exists, create a new one with `gh pr comment`
-            - Focus on the most critical issues only - don't list every minor detail
-            - Only post GitHub comments - don't submit review text as messages
+            - CRITICAL: Only ONE top-level comment per PR is allowed
+            - ALWAYS check for existing comments first with `gh pr view --json comments`
+            - If ANY comment from claude-code-action already exists, UPDATE it using `gh pr comment --edit-last` or find the comment ID and edit it
+            - If NO previous comment exists, create ONE new comment with `gh pr comment`
+            - Do NOT create multiple comments under any circumstances
+            - Keep the comment SHORT and concise (under 200 words)
+            - Focus only on the most critical issues
+            - Do NOT use inline comments - consolidate everything into the single top-level comment
 
             ADDITIONAL TASK:
             After completing the code review, also update the PR description with a brief summary.
