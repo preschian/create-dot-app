@@ -231,3 +231,5 @@ templates/**/app/descriptors
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+.chroma
