@@ -120,6 +120,13 @@ const buttonClass = computed(() => ({
   'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed': !isExportEnabled.value,
 }))
 
+const shouldShowPlatform = computed(() => (platform: string) => {
+  if (platform === 'bolt') {
+    return selectedFramework.value === 'react' || selectedFramework.value === 'vue' || !selectedFramework.value
+  }
+  return true
+})
+
 // Optimized status message
 const statusMessage = computed(() => {
   if (!selectedFramework.value && !selectedSdk.value) {
@@ -316,6 +323,7 @@ function exportTo(platform: keyof typeof platforms) {
             <div class="flex justify-center gap-4">
               <Button
                 v-for="(url, platform) in platforms"
+                v-show="shouldShowPlatform(platform)"
                 :key="platform"
                 variant="outline"
                 :class="buttonClass"
