@@ -52,20 +52,21 @@ jobs:
             CRITICAL: YOU MUST CREATE EXACTLY ONE TOP-LEVEL COMMENT. NEVER CREATE MULTIPLE COMMENTS.
 
             MANDATORY COMMENTING WORKFLOW - NO EXCEPTIONS:
-            1. ALWAYS start by running: `gh pr view ${{ github.event.pull_request.number }} --json comments --jq '.comments[] | select(.body | contains("## Claude Code Review")) | .id'`
-            2. Store the result in a variable: EXISTING_COMMENT_ID
-            3. IF EXISTING_COMMENT_ID is not empty:
-               - Use ONLY: `gh pr comment $EXISTING_COMMENT_ID --edit --body "NEW_CONTENT"`
-               - NEVER create a new comment
-            4. IF EXISTING_COMMENT_ID is empty:
-               - Use ONLY: `gh pr comment ${{ github.event.pull_request.number }} --body "CONTENT"`
-               - Create exactly ONE comment
-            5. MANDATORY: ALL comments must start with "## Claude Code Review" header
-            6. FORBIDDEN: Never use `gh pr comment` without explicit comment ID when editing
-            7. FORBIDDEN: Never create multiple comments under any circumstances
+            1. ALWAYS start by running: `gh pr view ${{ github.event.pull_request.number }} --json comments --jq '.comments[] | select(.body | contains("## Claude Code Review")) | {id: .id, createdAt: .createdAt}'`
+            2. Store all Claude comment IDs and timestamps in variables
+            3. IF multiple Claude comments exist:
+               - Find the OLDEST comment (earliest createdAt timestamp)
+               - Delete ALL newer Claude comments using: `gh pr comment <NEW_COMMENT_ID> --delete`
+               - Edit ONLY the oldest comment: `gh pr comment <OLDEST_COMMENT_ID> --edit --body "NEW_CONTENT"`
+            4. IF exactly one Claude comment exists:
+               - Edit that comment: `gh pr comment <COMMENT_ID> --edit --body "NEW_CONTENT"`
+            5. IF no Claude comments exist:
+               - Create exactly ONE comment: `gh pr comment ${{ github.event.pull_request.number }} --body "CONTENT"`
+            6. MANDATORY: ALL comments must start with "## Claude Code Review" header
+            7. CLEANUP: Always ensure only 1 Claude comment remains after the workflow
 
             VERIFICATION STEP:
-            After commenting, run `gh pr view ${{ github.event.pull_request.number }} --json comments --jq '.comments[] | select(.body | contains("## Claude Code Review")) | length'` to verify only 1 Claude comment exists.
+            After commenting, run `gh pr view ${{ github.event.pull_request.number }} --json comments --jq '.comments[] | select(.body | contains("## Claude Code Review")) | length'` to verify exactly 1 Claude comment exists.
 
             COMMENT REQUIREMENTS:
             - Keep under 200 words
