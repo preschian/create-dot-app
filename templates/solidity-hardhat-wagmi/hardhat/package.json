@@ -10,9 +10,7 @@
     "lint": "eslint . --fix",
     "deploy": "hardhat ignition deploy ./ignition/modules/MessageBoardModule.ts --network passetHub",
     "interact": "hardhat run scripts/interact-messageboard.ts --network passetHub",
-    "accounts": "hardhat run scripts/show-accounts.ts --network passetHub",
-    "verify": "hardhat run scripts/verify-messageboard.ts --network passetHub",
-    "manual-verify": "hardhat run scripts/manual-verify.ts"
+    "accounts": "hardhat run scripts/show-accounts.ts --network passetHub"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
@@ -24,6 +22,7 @@
     "@parity/hardhat-polkadot": "0.1.9",
     "@types/minimatch": "^6.0.0",
     "eslint": "^9.35.0",
+    "run-container": "^2.0.12",
     "solc": "0.8.28"
   }
 }
