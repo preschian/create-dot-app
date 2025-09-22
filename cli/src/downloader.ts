@@ -45,14 +45,16 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
     `templates/${SOLIDITY_BASE_TEMPLATE}/README.md`,
   ]
 
-  // Download each subdirectory/file
-  for (const subdir of subdirs) {
+  // Download all subdirectories/files in parallel
+  const downloadPromises = subdirs.map(async (subdir) => {
     const repoSpecifier = `${REPO_OWNER}/${REPO_NAME}/tree/${REPO_BRANCH}/${subdir}`
     const itemName = subdir.split('/').pop()!
     const targetPath = targetName === '.' ? itemName : `${targetName}/${itemName}`
 
-    await downloadWithGitpick(repoSpecifier, targetPath)
-  }
+    return downloadWithGitpick(repoSpecifier, targetPath)
+  })
+
+  await Promise.all(downloadPromises)
 }
 
 /**
