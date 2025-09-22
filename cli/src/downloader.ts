@@ -33,7 +33,7 @@ export async function downloadTemplate({ template = 'vue-dedot', targetName = '.
  * @param options.template - Template name ('solidity-react' or 'solidity-vue')
  * @param options.targetName - Target directory name
  */
-async function downloadSolidityTemplate({ template, targetName: _targetName = '.' }): Promise<void> {
+async function downloadSolidityTemplate({ template, targetName = '.' }): Promise<void> {
   // Determine which dapp to download based on template
   const dappDir = template === 'solidity-react' ? 'dapp-react' : 'dapp-vue'
 
@@ -52,12 +52,14 @@ async function downloadSolidityTemplate({ template, targetName: _targetName = '.
     // For files, we need to handle them differently
     if (subdir.endsWith('.gitignore') || subdir.endsWith('README.md')) {
       const fileName = subdir.split('/').pop()!
-      await downloadWithGitpick(repoSpecifier, fileName)
+      const targetPath = targetName === '.' ? fileName : `${targetName}/${fileName}`
+      await downloadWithGitpick(repoSpecifier, targetPath)
     }
     else {
       // For directories, extract the directory name and download to target
       const dirName = subdir.split('/').pop()!
-      await downloadWithGitpick(repoSpecifier, dirName)
+      const targetPath = targetName === '.' ? dirName : `${targetName}/${dirName}`
+      await downloadWithGitpick(repoSpecifier, targetPath)
     }
   }
 }
