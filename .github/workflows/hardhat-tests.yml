@@ -1,0 +1,46 @@
+name: Hardhat Template Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'templates/solidity-hardhat-wagmi/hardhat/**'
+      - '.github/workflows/hardhat-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'templates/solidity-hardhat-wagmi/hardhat/**'
+      - '.github/workflows/hardhat-tests.yml'
+
+jobs:
+  hardhat-compile:
+    name: Compile Contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        working-directory: templates/solidity-hardhat-wagmi/hardhat
+        run: npm install
+
+      - name: Compile contracts
+        working-directory: templates/solidity-hardhat-wagmi/hardhat
+        run: npx hardhat compile
+
+      - name: Upload compilation artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hardhat-compilation-artifacts
+          path: |
+            templates/solidity-hardhat-wagmi/hardhat/artifacts/
+            templates/solidity-hardhat-wagmi/hardhat/cache/
+          retention-days: 3
