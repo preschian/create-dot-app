@@ -1,5 +1,17 @@
 # create-dot-app
 
+## 1.0.7
+
+### Patch Changes
+
+- [#147](https://github.com/preschian/create-dot-app/pull/147) [`2ef5182`](https://github.com/preschian/create-dot-app/commit/2ef5182d4fc7a2637b44a9a8c427069e0f6ddc7f) Thanks [@preschian](https://github.com/preschian)! - feat: add solidity template
+
+- [#150](https://github.com/preschian/create-dot-app/pull/150) [`1f641f7`](https://github.com/preschian/create-dot-app/commit/1f641f74a128ae2819166664e297b85b35ec16cc) Thanks [@preschian](https://github.com/preschian)! - fix: hardhat-polkadot deps
+
+- [#149](https://github.com/preschian/create-dot-app/pull/149) [`1818e68`](https://github.com/preschian/create-dot-app/commit/1818e6822e446f44c408afa3ae79b62d24d6a148) Thanks [@preschian](https://github.com/preschian)! - feat: download solidity template
+
+- [#151](https://github.com/preschian/create-dot-app/pull/151) [`5df76c5`](https://github.com/preschian/create-dot-app/commit/5df76c57f2972888979a224ca59b9e21f572661e) Thanks [@preschian](https://github.com/preschian)! - ci: compile hardhat
+
 ## 1.0.6
 
 ### Patch Changes
