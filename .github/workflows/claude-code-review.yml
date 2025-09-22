@@ -49,29 +49,33 @@ jobs:
 
             Note: The PR branch is already checked out in the current working directory.
 
-            CRITICAL COMMENTING WORKFLOW - FOLLOW EXACTLY:
-            1. FIRST: Run `gh pr view --json comments` to check for existing Claude comments
-            2. THEN: Look for any comment with author.login matching "claude[bot]" or author.type "Bot" 
-            3. ALSO check for comments containing "Claude Code Review" in the body as a backup identifier
-            4. IF existing Claude comment found:
-               - Get the comment ID from the JSON response  
-               - Use `gh pr comment <COMMENT_ID> --edit --body "NEW_CONTENT"`
-               - DO NOT create a new comment
-            5. IF NO existing Claude comment found:
-               - Use `gh pr comment --body "CONTENT"`  
-               - Create only ONE comment
-            6. NEVER use `gh pr comment --edit-last` as it's unreliable
-            7. NEVER create multiple comments - this violates GitHub's rate limits
-            8. ALWAYS start your comment with "## Claude Code Review" for easy identification
+            CRITICAL: YOU MUST CREATE EXACTLY ONE TOP-LEVEL COMMENT. NEVER CREATE MULTIPLE COMMENTS.
+
+            MANDATORY COMMENTING WORKFLOW - NO EXCEPTIONS:
+            1. ALWAYS start by running: `gh pr view ${{ github.event.pull_request.number }} --json comments --jq '.comments[] | select(.body | contains("## Claude Code Review")) | .id'`
+            2. Store the result in a variable: EXISTING_COMMENT_ID
+            3. IF EXISTING_COMMENT_ID is not empty:
+               - Use ONLY: `gh pr comment $EXISTING_COMMENT_ID --edit --body "NEW_CONTENT"`
+               - NEVER create a new comment
+            4. IF EXISTING_COMMENT_ID is empty:
+               - Use ONLY: `gh pr comment ${{ github.event.pull_request.number }} --body "CONTENT"`
+               - Create exactly ONE comment
+            5. MANDATORY: ALL comments must start with "## Claude Code Review" header
+            6. FORBIDDEN: Never use `gh pr comment` without explicit comment ID when editing
+            7. FORBIDDEN: Never create multiple comments under any circumstances
+
+            VERIFICATION STEP:
+            After commenting, run `gh pr view ${{ github.event.pull_request.number }} --json comments --jq '.comments[] | select(.body | contains("## Claude Code Review")) | length'` to verify only 1 Claude comment exists.
 
             COMMENT REQUIREMENTS:
             - Keep under 200 words
             - Focus on critical issues only
-            - No inline comments - single consolidated comment only
+            - Single consolidated comment only
+            - Must start with "## Claude Code Review"
 
             ADDITIONAL TASK:
             After commenting, update the PR description:
-            - Use `gh pr edit --body` to append a brief summary (under 100 words)
+            - Use `gh pr edit ${{ github.event.pull_request.number }} --body` to append a brief summary (under 100 words)
             - Do NOT modify existing "## Context" section
             - Add summary BELOW existing content
             - Focus on key changes only
