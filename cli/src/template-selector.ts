@@ -15,6 +15,8 @@ export const templateOptions: SelectOptions<string>['options'] = [
   { value: 'vue-dedot', label: 'Vue + Dedot' },
   { value: 'vue-papi', label: 'Vue + PAPI' },
 
+  { value: 'solidity-react', label: 'Solidity + React (Hardhat + Wagmi)' },
+  { value: 'solidity-vue', label: 'Solidity + Vue (Hardhat + Wagmi)' },
 ]
 
 export async function pickTemplate(providedTemplate?: string): Promise<string> {
