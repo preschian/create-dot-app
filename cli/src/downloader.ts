@@ -48,19 +48,10 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
   // Download each subdirectory/file
   for (const subdir of subdirs) {
     const repoSpecifier = `${REPO_OWNER}/${REPO_NAME}/tree/${REPO_BRANCH}/${subdir}`
+    const itemName = subdir.split('/').pop()!
+    const targetPath = targetName === '.' ? itemName : `${targetName}/${itemName}`
 
-    // For files, we need to handle them differently
-    if (subdir.endsWith('.gitignore') || subdir.endsWith('README.md')) {
-      const fileName = subdir.split('/').pop()!
-      const targetPath = targetName === '.' ? fileName : `${targetName}/${fileName}`
-      await downloadWithGitpick(repoSpecifier, targetPath)
-    }
-    else {
-      // For directories, extract the directory name and download to target
-      const dirName = subdir.split('/').pop()!
-      const targetPath = targetName === '.' ? dirName : `${targetName}/${dirName}`
-      await downloadWithGitpick(repoSpecifier, targetPath)
-    }
+    await downloadWithGitpick(repoSpecifier, targetPath)
   }
 }
 
