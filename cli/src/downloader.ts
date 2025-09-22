@@ -2,6 +2,12 @@ import { spawn } from 'node:child_process'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 
+// Template repository configuration
+const REPO_OWNER = 'preschian'
+const REPO_NAME = 'create-dot-app'
+const REPO_BRANCH = 'main'
+const SOLIDITY_BASE_TEMPLATE = 'solidity-hardhat-wagmi'
+
 /**
  * Downloads a template from the repository using gitpick
  * @param options - Download configuration
@@ -9,14 +15,52 @@ import process from 'node:process'
  * @param options.targetName - Target directory name
  */
 export async function downloadTemplate({ template = 'vue-dedot', targetName = '.' }): Promise<void> {
-  // Template repository configuration
-  const owner = 'preschian'
-  const repo = 'create-dot-app'
-  const branch = 'main'
+  // Handle Solidity templates with multiple subdirectories
+  if (template === 'solidity-react' || template === 'solidity-vue') {
+    await downloadSolidityTemplate({ template, targetName })
+    return
+  }
+
   const subdir = `templates/${template}`
+  const repoSpecifier = `${REPO_OWNER}/${REPO_NAME}/tree/${REPO_BRANCH}/${subdir}`
 
-  const repoSpecifier = `${owner}/${repo}/tree/${branch}/${subdir}`
+  await downloadWithGitpick(repoSpecifier, targetName)
+}
 
+/**
+ * Downloads Solidity template with multiple subdirectories using gitpick
+ * @param options - Download configuration
+ * @param options.template - Template name ('solidity-react' or 'solidity-vue')
+ * @param options.targetName - Target directory name
+ */
+async function downloadSolidityTemplate({ template, targetName = '.' }): Promise<void> {
+  // Determine which dapp to download based on template
+  const dappDir = template === 'solidity-react' ? 'dapp-react' : 'dapp-vue'
+
+  // Define subdirectories to download
+  const subdirs = [
+    `templates/${SOLIDITY_BASE_TEMPLATE}/${dappDir}`,
+    `templates/${SOLIDITY_BASE_TEMPLATE}/hardhat`,
+    `templates/${SOLIDITY_BASE_TEMPLATE}/.gitignore`,
+    `templates/${SOLIDITY_BASE_TEMPLATE}/README.md`,
+  ]
+
+  // Download all subdirectories/files in parallel
+  const downloadPromises = subdirs.map(async (subdir) => {
+    const repoSpecifier = `${REPO_OWNER}/${REPO_NAME}/tree/${REPO_BRANCH}/${subdir}`
+    const itemName = subdir.split('/').pop()!
+    const targetPath = targetName === '.' ? itemName : `${targetName}/${itemName}`
+
+    return downloadWithGitpick(repoSpecifier, targetPath)
+  })
+
+  await Promise.all(downloadPromises)
+}
+
+/**
+ * Downloads using gitpick with the specified repository specifier and target
+ */
+async function downloadWithGitpick(repoSpecifier: string, targetName: string): Promise<void> {
   // Get gitpick binary from node_modules
   let gitpickBinPath: string
   try {
