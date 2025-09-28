@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from '@wagmi/vue'
+import type { Chain } from '@wagmi/vue/chains'
+import { useAccount, useChainId, useChains, useReadContract, useWaitForTransactionReceipt, useWriteContract } from '@wagmi/vue'
 import { computed, ref, watch } from 'vue'
 import { MESSAGE_BOARD_ADDRESS, MessageBoardABI } from '../config/contracts'
 import { shortenAddress } from '../utils/formatters'
-import { config } from '../wagmi'
 import Balance from './Balance.vue'
 import MessageCard from './MessageCard.vue'
 
-// Get chain data from wagmi config
-const passetHub = config.chains[0] // First chain in config
-
 // Account and contract hooks
 const { address, isConnected } = useAccount()
+const chainId = useChainId()
+const chains = useChains()
+
+// Get the connected chain instead of using config
+const connectedChain = computed(() => {
+  return chains.value.find((chain: Chain) => chain.id === chainId.value) || chains.value[0]
+})
 const { writeContract, data: writeData, isPending: isWritePending, error: writeError } = useWriteContract()
 
 // Common contract config
@@ -212,10 +216,10 @@ watch(isConfirmed, (confirmed) => {
                   Network
                 </div>
                 <div class="text-sm text-gray-800">
-                  {{ passetHub.name }}
+                  {{ connectedChain.name }}
                 </div>
                 <div class="text-xs text-gray-500 mt-1">
-                  Chain ID: {{ passetHub.id }}
+                  Chain ID: {{ connectedChain.id }}
                 </div>
               </div>
 

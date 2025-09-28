@@ -1,17 +1,22 @@
+import type { Chain } from 'wagmi/chains'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
+import { useAccount, useChainId, useChains, useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 import { MESSAGE_BOARD_ADDRESS, MessageBoardABI } from '../config/contracts'
 import { shortenAddress } from '../utils/formatters'
-import { config } from '../wagmi'
 import Balance from './Balance'
 import MessageCard from './MessageCard'
-
-// Get chain data from wagmi config
-const passetHub = config.chains[0] // First chain in config
 
 export default function Content() {
   // Account and contract hooks
   const { address, isConnected } = useAccount()
+  const chainId = useChainId()
+  const chains = useChains()
+
+  // Get the connected chain instead of using config
+  const connectedChain = useMemo(() => {
+    return chains.find((chain: Chain) => chain.id === chainId) || chains[0]
+  }, [chains, chainId])
+
   const { writeContract, data: writeData, isPending: isWritePending, error: writeError } = useWriteContract()
 
   // Common contract config
@@ -96,11 +101,28 @@ export default function Content() {
 
   // Watch for successful transaction and refresh data
   useEffect(() => {
-    if (isConfirmed) {
-      refetchMessages()
-      showToastNotification('Message posted successfully!')
+    let ignore = false
+    let timeoutId: NodeJS.Timeout | null = null
+
+    async function handleSuccess() {
+      if (isConfirmed && !ignore) {
+        refetchMessages()
+        setToastMessage('Message posted successfully!')
+        setShowToast(true)
+        timeoutId = setTimeout(() => {
+          if (!ignore)
+            setShowToast(false)
+        }, 3000)
+      }
     }
-  }, [isConfirmed, refetchMessages, showToastNotification])
+
+    handleSuccess()
+    return () => {
+      ignore = true
+      if (timeoutId)
+        clearTimeout(timeoutId)
+    }
+  }, [isConfirmed, refetchMessages])
 
   return (
     <div className="bg-gray-50">
@@ -229,12 +251,12 @@ export default function Content() {
                     Network
                   </div>
                   <div className="text-sm text-gray-800">
-                    {passetHub.name}
+                    {connectedChain.name}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
                     Chain ID:
                     {' '}
-                    {passetHub.id}
+                    {connectedChain.id}
                   </div>
                 </div>
 

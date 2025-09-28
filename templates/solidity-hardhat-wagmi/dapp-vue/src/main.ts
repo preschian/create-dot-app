@@ -3,7 +3,7 @@ import { WagmiPlugin } from '@wagmi/vue'
 import { createApp } from 'vue'
 
 import App from './App.vue'
-import { config } from './wagmi'
+import { config } from './config/wagmi'
 import './style.css'
 
 const app = createApp(App)

@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { useAccount, useChainId, useConnect, useDisconnect } from '@wagmi/vue'
+import type { Connector } from '@wagmi/vue'
+import type { Chain } from '@wagmi/vue/chains'
+import { useAccount, useChainId, useChains, useConnect, useConnectorClient, useDisconnect } from '@wagmi/vue'
 import { computed, ref } from 'vue'
+import { ensurePaseoTestnet } from '../utils/chain'
 import { shortenAddress } from '../utils/formatters'
 
 // Popular wallets for when no connectors are available
@@ -19,19 +22,22 @@ const popularWallets = [
 
 const connectModal = ref<HTMLDialogElement | null>(null)
 const chainId = useChainId()
+const chains = useChains()
 const { connect, connectors, error, status } = useConnect()
 const { disconnect } = useDisconnect()
 const { address, isConnected, connector } = useAccount()
+const { data: connectorClient } = useConnectorClient()
+
+// Get the connected chain instead of using config
+const connectedChain = computed(() => {
+  return chains.value.find((chain: Chain) => chain.id === chainId.value) || chains.value[0]
+})
 
 // Filter connectors to show only MetaMask and Talisman
 const filteredConnectors = computed(() => {
   return connectors.filter((connector) => {
-    const name = connector.name.toLowerCase()
     const id = connector.id.toLowerCase()
-    return name.includes('metamask')
-      || name.includes('talisman')
-      || id.includes('metamask')
-      || id.includes('talisman')
+    return id.includes('metamask') || id.includes('talisman')
   })
 })
 
@@ -43,9 +49,26 @@ function closeConnectModal() {
   connectModal.value?.close()
 }
 
-function handleConnect(connector: any) {
-  connect({ connector, chainId: chainId.value })
-  closeConnectModal()
+async function handleConnect(connector: Connector) {
+  try {
+    // Connect first to get the client
+    connect({ connector, chainId: connectedChain.value.id })
+    closeConnectModal()
+
+    // Add chain after connection if client is available
+    if (connectorClient.value) {
+      try {
+        await ensurePaseoTestnet(connectorClient.value)
+      }
+      catch (err) {
+        console.error('Failed to add chain:', err)
+      }
+    }
+  }
+  catch (err) {
+    console.error('Failed to connect:', err)
+    closeConnectModal()
+  }
 }
 
 function handleDisconnect() {
@@ -92,9 +115,14 @@ function handleDisconnect() {
     <div class="modal-box max-w-md">
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-medium text-black uppercase tracking-wider">
-          CONNECT WALLET
-        </h2>
+        <div>
+          <h2 class="text-lg font-medium text-black uppercase tracking-wider">
+            CONNECT WALLET
+          </h2>
+          <p class="text-xs text-gray-500 mt-1">
+            Network: {{ connectedChain.name }}
+          </p>
+        </div>
         <button class="btn btn-sm btn-circle btn-ghost" @click="closeConnectModal">
           <span class="icon-[mdi--close] w-4 h-4" />
         </button>
