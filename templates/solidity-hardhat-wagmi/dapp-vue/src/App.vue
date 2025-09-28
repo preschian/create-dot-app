@@ -12,17 +12,17 @@ createAppKit({
   projectId,
   themeMode: 'light',
   features: {
-    // at the moment, email and social are not supported
-    // connectMethodsOrder: ['email', 'social', 'wallet'],
+    // connectMethodsOrder: ['social', 'wallet'],
+    // at the moment, only wallet is supported
     connectMethodsOrder: ['wallet'],
   },
   featuredWalletIds: [
-    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
-    'e0c2e199712878ed272e2c170b585baa0ff0eb50b07521ca586ebf7aeeffc598',
+    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+    'e0c2e199712878ed272e2c170b585baa0ff0eb50b07521ca586ebf7aeeffc598', // Talisman
   ],
   includeWalletIds: [
-    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
-    'e0c2e199712878ed272e2c170b585baa0ff0eb50b07521ca586ebf7aeeffc598',
+    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+    'e0c2e199712878ed272e2c170b585baa0ff0eb50b07521ca586ebf7aeeffc598', // Talisman
   ],
 })
 </script>
