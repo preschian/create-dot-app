@@ -4,17 +4,24 @@ import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
 export const passetHub = {
   id: 420420422,
-  name: 'Passet Hub',
+  name: 'Paseo PassetHub',
   nativeCurrency: {
-    name: 'PAS',
+    name: 'Paseo Token',
     symbol: 'PAS',
-    decimals: 12,
+    decimals: 18,
+  },
+  blockExplorers: {
+    default: {
+      name: 'Blockscout',
+      url: 'https://blockscout-passet-hub.parity-testnet.parity.io/',
+    },
   },
   rpcUrls: {
     default: {
       http: ['https://testnet-passet-hub-eth-rpc.polkadot.io'],
     },
   },
+  testnet: true,
 } as const satisfies Chain
 
 export const projectId = import.meta.env.VITE_PROJECT_ID || 'b56e18d47c72ab683b10814fe9495694' // this is a public projectId only to use on localhost
