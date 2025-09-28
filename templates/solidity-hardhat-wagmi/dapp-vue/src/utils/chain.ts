@@ -1,60 +1,19 @@
+import type { Client } from 'viem'
+import { addChain, switchChain } from 'viem/actions'
 import { passetHub } from '../config/wagmi'
 
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string, params?: any[] }) => Promise<any>
-    }
-  }
-}
-
-export async function addPaseoTestnet(): Promise<boolean> {
-  if (!window.ethereum) {
-    throw new Error('No Ethereum provider found')
-  }
-
+export async function ensurePaseoTestnet(client: Client): Promise<void> {
   try {
-    await window.ethereum.request({
-      method: 'wallet_addEthereumChain',
-      params: [{
-        chainId: `0x${passetHub.id.toString(16)}`,
-        chainName: passetHub.name,
-        nativeCurrency: passetHub.nativeCurrency,
-        rpcUrls: passetHub.rpcUrls.default.http,
-        blockExplorerUrls: [passetHub.blockExplorers.default.url],
-      }],
-    })
-    return true
+    // Try to switch to the chain first
+    await switchChain(client, { id: passetHub.id })
   }
   catch (error) {
-    if ((error as any)?.code === 4902) {
-      throw error
-    }
-    else if ((error as any)?.code === -32002) {
-      throw new Error('Chain addition request is already pending. Please check your wallet.')
+    // If chain doesn't exist, add it
+    if (error instanceof Error && (('code' in error && error.code === 4902) || error.name === 'ChainNotConfiguredError')) {
+      await addChain(client, { chain: passetHub })
     }
     else {
       throw error
     }
-  }
-}
-
-export async function ensurePaseoTestnet(): Promise<boolean> {
-  if (!window.ethereum) {
-    throw new Error('No Ethereum provider found')
-  }
-
-  try {
-    await window.ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: `0x${passetHub.id.toString(16)}` }],
-    })
-    return true
-  }
-  catch (error) {
-    if ((error as any)?.code === 4902) {
-      return await addPaseoTestnet()
-    }
-    throw error
   }
 }

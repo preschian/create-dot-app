@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Connector } from '@wagmi/vue'
-import { useAccount, useChainId, useConnect, useDisconnect } from '@wagmi/vue'
+import { useAccount, useChainId, useConnect, useConnectorClient, useDisconnect } from '@wagmi/vue'
 import { computed, ref } from 'vue'
 import { ensurePaseoTestnet } from '../utils/chain'
 import { shortenAddress } from '../utils/formatters'
@@ -24,6 +24,7 @@ const chainId = useChainId()
 const { connect, connectors, error, status } = useConnect()
 const { disconnect } = useDisconnect()
 const { address, isConnected, connector } = useAccount()
+const { data: connectorClient } = useConnectorClient()
 
 // Filter connectors to show only MetaMask and Talisman
 const filteredConnectors = computed(() => {
@@ -47,16 +48,22 @@ function closeConnectModal() {
 
 async function handleConnect(connector: Connector) {
   try {
-    // First ensure the Paseo testnet is added to the wallet
-    await ensurePaseoTestnet()
-    // Then connect with the specific chain
+    // Connect first to get the client
     connect({ connector, chainId: chainId.value })
     closeConnectModal()
+
+    // Add chain after connection if client is available
+    if (connectorClient.value) {
+      try {
+        await ensurePaseoTestnet(connectorClient.value)
+      }
+      catch (err) {
+        console.error('Failed to add chain:', err)
+      }
+    }
   }
   catch (err) {
-    console.error('Failed to add Paseo testnet or connect:', err)
-    // Still try to connect even if adding the chain fails
-    connect({ connector, chainId: chainId.value })
+    console.error('Failed to connect:', err)
     closeConnectModal()
   }
 }
