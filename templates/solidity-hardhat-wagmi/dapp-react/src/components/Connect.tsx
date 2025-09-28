@@ -1,5 +1,7 @@
+import type { Chain } from 'wagmi/chains'
 import { useMemo, useRef } from 'react'
-import { useAccount, useChainId, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useChainId, useChains, useConnect, useConnectorClient, useDisconnect } from 'wagmi'
+import { ensurePaseoTestnet } from '../utils/chain'
 import { shortenAddress } from '../utils/formatters'
 
 // Popular wallets for when no connectors are available
@@ -19,19 +21,22 @@ const popularWallets = [
 export default function Connect() {
   const connectModalRef = useRef<HTMLDialogElement>(null)
   const chainId = useChainId()
+  const chains = useChains()
   const { connect, connectors, error, status } = useConnect()
   const { disconnect } = useDisconnect()
   const { address, isConnected, connector } = useAccount()
+  const { data: connectorClient } = useConnectorClient()
+
+  // Get the connected chain instead of using config
+  const connectedChain = useMemo(() => {
+    return chains.find((chain: Chain) => chain.id === chainId) || chains[0]
+  }, [chains, chainId])
 
   // Filter connectors to show only MetaMask and Talisman
   const filteredConnectors = useMemo(() => {
     return connectors.filter((connector) => {
-      const name = connector.name.toLowerCase()
       const id = connector.id.toLowerCase()
-      return name.includes('metamask')
-        || name.includes('talisman')
-        || id.includes('metamask')
-        || id.includes('talisman')
+      return id.includes('metamask') || id.includes('talisman')
     })
   }, [connectors])
 
@@ -43,9 +48,26 @@ export default function Connect() {
     connectModalRef.current?.close()
   }
 
-  function handleConnect(connector: any) {
-    connect({ connector, chainId })
-    closeConnectModal()
+  async function handleConnect(connector: any) {
+    try {
+      // Connect first to get the client
+      connect({ connector, chainId: connectedChain.id as any })
+      closeConnectModal()
+
+      // Add chain after connection if client is available
+      if (connectorClient) {
+        try {
+          await ensurePaseoTestnet(connectorClient)
+        }
+        catch (err) {
+          console.error('Failed to add chain:', err)
+        }
+      }
+    }
+    catch (err) {
+      console.error('Failed to connect:', err)
+      closeConnectModal()
+    }
   }
 
   function handleDisconnect() {
@@ -106,9 +128,16 @@ export default function Connect() {
         <div className="modal-box max-w-md">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-medium text-black uppercase tracking-wider">
-              CONNECT WALLET
-            </h2>
+            <div>
+              <h2 className="text-lg font-medium text-black uppercase tracking-wider">
+                CONNECT WALLET
+              </h2>
+              <p className="text-xs text-gray-500 mt-1">
+                Network:
+                {' '}
+                {connectedChain.name}
+              </p>
+            </div>
             <button type="button" className="btn btn-sm btn-circle btn-ghost" onClick={closeConnectModal}>
               <span className="icon-[mdi--close] w-4 h-4" />
             </button>

@@ -1,19 +1,26 @@
 import type { Chain } from 'wagmi/chains'
 import { createConfig, createStorage, http } from 'wagmi'
 
-const passetHub = {
+export const passetHub = {
   id: 420420422,
-  name: 'Passet Hub',
+  name: 'Paseo PassetHub',
   nativeCurrency: {
-    name: 'PAS',
+    name: 'Paseo Token',
     symbol: 'PAS',
-    decimals: 12,
+    decimals: 18,
+  },
+  blockExplorers: {
+    default: {
+      name: 'Blockscout',
+      url: 'https://blockscout-passet-hub.parity-testnet.parity.io/',
+    },
   },
   rpcUrls: {
     default: {
       http: ['https://testnet-passet-hub-eth-rpc.polkadot.io'],
     },
   },
+  testnet: true,
 } as const satisfies Chain
 
 export const config = createConfig({
@@ -23,9 +30,3 @@ export const config = createConfig({
     [passetHub.id]: http(),
   },
 })
-
-declare module 'wagmi' {
-  interface Register {
-    config: typeof config
-  }
-}
