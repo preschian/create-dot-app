@@ -3,7 +3,7 @@ import { createAppKit } from '@reown/appkit/vue'
 import Content from './components/Content.vue'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
-import { networks, projectId, wagmiAdapter } from './config/reown'
+import { networks, projectId, wagmiAdapter } from './config/wagmi'
 
 // Initialize AppKit
 createAppKit({
