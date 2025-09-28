@@ -3,11 +3,13 @@ import { WagmiPlugin } from '@wagmi/vue'
 import { createApp } from 'vue'
 
 import App from './App.vue'
-import { config } from './wagmi'
+import { wagmiAdapter } from './config/reown'
 import './style.css'
 
 const app = createApp(App)
 
-app.use(WagmiPlugin, { config }).use(VueQueryPlugin, {})
+app
+  .use(WagmiPlugin, { config: wagmiAdapter.wagmiConfig })
+  .use(VueQueryPlugin, {})
 
 app.mount('#app')

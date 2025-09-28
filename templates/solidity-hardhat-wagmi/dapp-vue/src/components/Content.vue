@@ -2,13 +2,10 @@
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from '@wagmi/vue'
 import { computed, ref, watch } from 'vue'
 import { MESSAGE_BOARD_ADDRESS, MessageBoardABI } from '../config/contracts'
+import { passetHub } from '../config/reown'
 import { shortenAddress } from '../utils/formatters'
-import { config } from '../wagmi'
 import Balance from './Balance.vue'
 import MessageCard from './MessageCard.vue'
-
-// Get chain data from wagmi config
-const passetHub = config.chains[0] // First chain in config
 
 // Account and contract hooks
 const { address, isConnected } = useAccount()
