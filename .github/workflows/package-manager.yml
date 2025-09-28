@@ -37,6 +37,10 @@ jobs:
               - 'templates/vue-dedot/**'
             vue-papi:
               - 'templates/vue-papi/**'
+            solidity-react:
+              - 'templates/solidity-hardhat-wagmi/dapp-react/**'
+            solidity-vue:
+              - 'templates/solidity-hardhat-wagmi/dapp-vue/**'
       
       - name: Set matrix based on changes
         id: set-matrix
@@ -65,12 +69,12 @@ jobs:
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates for Deno: $CHANGED_TEMPLATES"
           
-          # Generate matrix only for React and Vue templates
+          # Generate matrix only for React, Vue and Solidity templates
           DENO_MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
             if . == [] then 
               {"include": []} 
             else 
-              {"include": [.[] | select(startswith("react-") or startswith("vue-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
+              {"include": [.[] | select(startswith("react-") or startswith("vue-") or startswith("solidity-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
             end
           ' || echo '{"include": []}')
           echo "matrix=$DENO_MATRIX" >> $GITHUB_OUTPUT
