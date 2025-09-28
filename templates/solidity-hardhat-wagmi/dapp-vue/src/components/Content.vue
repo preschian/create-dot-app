@@ -2,8 +2,8 @@
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from '@wagmi/vue'
 import { computed, ref, watch } from 'vue'
 import { MESSAGE_BOARD_ADDRESS, MessageBoardABI } from '../config/contracts'
+import { config } from '../config/wagmi'
 import { shortenAddress } from '../utils/formatters'
-import { config } from '../wagmi'
 import Balance from './Balance.vue'
 import MessageCard from './MessageCard.vue'
 

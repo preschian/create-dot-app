@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Connector } from '@wagmi/vue'
 import { useAccount, useChainId, useConnect, useDisconnect } from '@wagmi/vue'
 import { computed, ref } from 'vue'
+import { ensurePaseoTestnet } from '../utils/chain'
 import { shortenAddress } from '../utils/formatters'
 
 // Popular wallets for when no connectors are available
@@ -43,9 +45,20 @@ function closeConnectModal() {
   connectModal.value?.close()
 }
 
-function handleConnect(connector: any) {
-  connect({ connector, chainId: chainId.value })
-  closeConnectModal()
+async function handleConnect(connector: Connector) {
+  try {
+    // First ensure the Paseo testnet is added to the wallet
+    await ensurePaseoTestnet()
+    // Then connect with the specific chain
+    connect({ connector, chainId: chainId.value })
+    closeConnectModal()
+  }
+  catch (err) {
+    console.error('Failed to add Paseo testnet or connect:', err)
+    // Still try to connect even if adding the chain fails
+    connect({ connector, chainId: chainId.value })
+    closeConnectModal()
+  }
 }
 
 function handleDisconnect() {
@@ -92,9 +105,14 @@ function handleDisconnect() {
     <div class="modal-box max-w-md">
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-medium text-black uppercase tracking-wider">
-          CONNECT WALLET
-        </h2>
+        <div>
+          <h2 class="text-lg font-medium text-black uppercase tracking-wider">
+            CONNECT WALLET
+          </h2>
+          <p class="text-xs text-gray-500 mt-1">
+            Network: Paseo Testnet (Passet Hub)
+          </p>
+        </div>
         <button class="btn btn-sm btn-circle btn-ghost" @click="closeConnectModal">
           <span class="icon-[mdi--close] w-4 h-4" />
         </button>
