@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Connector } from '@wagmi/vue'
-import { useAccount, useChainId, useConnect, useConnectorClient, useDisconnect } from '@wagmi/vue'
+import type { Chain } from '@wagmi/vue/chains'
+import { useAccount, useChainId, useChains, useConnect, useConnectorClient, useDisconnect } from '@wagmi/vue'
 import { computed, ref } from 'vue'
 import { ensurePaseoTestnet } from '../utils/chain'
 import { shortenAddress } from '../utils/formatters'
@@ -21,20 +22,22 @@ const popularWallets = [
 
 const connectModal = ref<HTMLDialogElement | null>(null)
 const chainId = useChainId()
+const chains = useChains()
 const { connect, connectors, error, status } = useConnect()
 const { disconnect } = useDisconnect()
 const { address, isConnected, connector } = useAccount()
 const { data: connectorClient } = useConnectorClient()
 
+// Get the connected chain instead of using config
+const connectedChain = computed(() => {
+  return chains.value.find((chain: Chain) => chain.id === chainId.value) || chains.value[0]
+})
+
 // Filter connectors to show only MetaMask and Talisman
 const filteredConnectors = computed(() => {
   return connectors.filter((connector) => {
-    const name = connector.name.toLowerCase()
     const id = connector.id.toLowerCase()
-    return name.includes('metamask')
-      || name.includes('talisman')
-      || id.includes('metamask')
-      || id.includes('talisman')
+    return id.includes('metamask') || id.includes('talisman')
   })
 })
 
@@ -49,7 +52,7 @@ function closeConnectModal() {
 async function handleConnect(connector: Connector) {
   try {
     // Connect first to get the client
-    connect({ connector, chainId: chainId.value })
+    connect({ connector, chainId: connectedChain.value.id })
     closeConnectModal()
 
     // Add chain after connection if client is available
@@ -117,7 +120,7 @@ function handleDisconnect() {
             CONNECT WALLET
           </h2>
           <p class="text-xs text-gray-500 mt-1">
-            Network: Paseo Testnet (Passet Hub)
+            Network: {{ connectedChain.name }}
           </p>
         </div>
         <button class="btn btn-sm btn-circle btn-ghost" @click="closeConnectModal">
