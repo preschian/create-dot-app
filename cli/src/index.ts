@@ -13,7 +13,7 @@ import {
 import fs from 'fs-extra'
 import color from 'picocolors'
 import { downloadTemplate } from './downloader.js'
-import { shutdownAnalytics, trackProjectCreated } from './posthog.js'
+import { trackProjectCreated } from './posthog.js'
 import { pickTemplate } from './template-selector.js'
 
 async function main() {
@@ -51,7 +51,6 @@ async function main() {
 
     if (isCancel(nameInput)) {
       cancel('Operation cancelled')
-      await shutdownAnalytics()
       return process.exit(0)
     }
 
@@ -74,7 +73,6 @@ async function main() {
     if (await fs.pathExists(targetPath)) {
       s.stop('Directory already exists')
       cancel(`Directory "${name}" already exists`)
-      await shutdownAnalytics()
       return process.exit(1)
     }
 
@@ -105,12 +103,9 @@ async function main() {
   catch (error) {
     s.stop('Failed to create project')
     cancel(`Failed to create project: ${error}`)
-    await shutdownAnalytics()
     return process.exit(1)
   }
 
-  // Ensure analytics are sent before process exits
-  await shutdownAnalytics()
   process.exit(0)
 }
 
