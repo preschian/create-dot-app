@@ -1,5 +1,15 @@
 # create-dot-app
 
+## 1.0.8
+
+### Patch Changes
+
+- [#159](https://github.com/preschian/create-dot-app/pull/159) [`05dca5f`](https://github.com/preschian/create-dot-app/commit/05dca5f6cb7e06c0715e0723bb898976b678f8d9) Thanks [@preschian](https://github.com/preschian)! - feat: implement comprehensive MessageBoard smart contract
+
+- [#154](https://github.com/preschian/create-dot-app/pull/154) [`ffa99ee`](https://github.com/preschian/create-dot-app/commit/ffa99ee5154cbb520d0cada97065dc0cecfe6885) Thanks [@preschian](https://github.com/preschian)! - feat: Add custom chain support with dynamic detection and auto-switching
+
+- [#158](https://github.com/preschian/create-dot-app/pull/158) [`bd846c8`](https://github.com/preschian/create-dot-app/commit/bd846c8aadaeac8d4a216740f25589f00c82a5e9) Thanks [@preschian](https://github.com/preschian)! - refactor(cli): simplify analytics handling
+
 ## 1.0.7
 
 ### Patch Changes
