@@ -3,8 +3,8 @@ import process from 'node:process'
 import hre from 'hardhat'
 
 async function main() {
-  // Get the deployed contract address
-  const contractAddress = '0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d'
+  // Put the deployed contract address here
+  const contractAddress = '0xaB7B4c595d3cE8C85e16DA86630f2fc223B05057'
 
   // Get the contract factory and attach to deployed contract
   const MessageBoard = await hre.ethers.getContractFactory('MessageBoard')
@@ -42,54 +42,64 @@ async function main() {
     const totalMessages = await messageBoard.getTotalMessages()
     console.log(`\n2. Total messages sent: ${totalMessages}`)
 
-    // Get current message count
-    const currentCount = await messageBoard.getCurrentMessageCount()
-    console.log(`Current messages stored: ${currentCount}`)
-
     // Get all messages
-    console.log('\n3. All messages (newest first):')
+    console.log('\n3. All messages:')
     const allMessages = await messageBoard.getAllMessages()
 
     for (let i = 0; i < allMessages.length; i++) {
       const msg = allMessages[i]
-      if (msg.sender !== '0x0000000000000000000000000000000000000000') {
-        const date = new Date(Number(msg.timestamp) * 1000)
-        console.log(`[${i + 1}] ${msg.sender}: "${msg.content}" (${date.toLocaleString()})`)
-      }
+      const date = new Date(Number(msg.timestamp) * 1000)
+      console.log(`[${i + 1}] ${msg.sender}: "${msg.content}" (${date.toLocaleString()})`)
     }
 
     // Get specific message
-    console.log('\n4. Getting specific message (index 0 - newest):')
-    const latestMessage = await messageBoard.getMessage(0)
-    const date = new Date(Number(latestMessage.timestamp) * 1000)
-    console.log(`Sender: ${latestMessage.sender}`)
-    console.log(`Content: "${latestMessage.content}"`)
+    console.log('\n4. Getting specific message (index 0):')
+    const firstMessage = await messageBoard.getMessage(0)
+    const date = new Date(Number(firstMessage.timestamp) * 1000)
+    console.log(`Sender: ${firstMessage.sender}`)
+    console.log(`Content: "${firstMessage.content}"`)
     console.log(`Timestamp: ${date.toLocaleString()}`)
 
-    // Test the 8-message limit by posting more messages
-    console.log('\n5. Testing 8-message limit...')
-    for (let i = 5; i <= 10; i++) {
+    // Test posting more messages
+    console.log('\n5. Posting more messages...')
+    for (let i = 5; i <= 8; i++) {
       console.log(`Posting test message ${i}...`)
       tx = await messageBoard.postMessage(`Test message ${i}`)
       await tx.wait()
       console.log(`✓ Message ${i} posted`)
     }
 
-    console.log('\n6. After posting 10 total messages:')
+    console.log('\n6. After posting 8 total messages:')
     const finalTotal = await messageBoard.getTotalMessages()
-    const finalCount = await messageBoard.getCurrentMessageCount()
     console.log(`Total messages sent: ${finalTotal}`)
-    console.log(`Current messages stored: ${finalCount}`)
 
-    console.log('\nAll messages after limit test (should show only last 8):')
+    // Test getLatestMessages function
+    console.log('\n7. Testing getLatestMessages function:')
+    console.log('\nLatest 3 messages:')
+    const latest3 = await messageBoard.getLatestMessages(3)
+
+    for (let i = 0; i < latest3.length; i++) {
+      const msg = latest3[i]
+      const date = new Date(Number(msg.timestamp) * 1000)
+      console.log(`[${i + 1}] ${msg.sender}: "${msg.content}" (${date.toLocaleString()})`)
+    }
+
+    console.log('\nLatest 5 messages:')
+    const latest5 = await messageBoard.getLatestMessages(5)
+
+    for (let i = 0; i < latest5.length; i++) {
+      const msg = latest5[i]
+      const date = new Date(Number(msg.timestamp) * 1000)
+      console.log(`[${i + 1}] ${msg.sender}: "${msg.content}" (${date.toLocaleString()})`)
+    }
+
+    console.log('\nAll messages (using getAllMessages):')
     const finalMessages = await messageBoard.getAllMessages()
 
     for (let i = 0; i < finalMessages.length; i++) {
       const msg = finalMessages[i]
-      if (msg.sender !== '0x0000000000000000000000000000000000000000') {
-        const date = new Date(Number(msg.timestamp) * 1000)
-        console.log(`[${i + 1}] ${msg.sender}: "${msg.content}" (${date.toLocaleString()})`)
-      }
+      const date = new Date(Number(msg.timestamp) * 1000)
+      console.log(`[${i + 1}] ${msg.sender}: "${msg.content}" (${date.toLocaleString()})`)
     }
   }
   catch (error) {
