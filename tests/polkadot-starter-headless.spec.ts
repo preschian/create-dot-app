@@ -1,4 +1,4 @@
-import { test } from '@avalix/chroma';
+import { createWalletTest } from '@avalix/chroma';
 
 const POLKADOT_DAPP_URLS = [
   'https://polkadot-starter-vue-dedot.vercel.app/',
@@ -8,6 +8,10 @@ const POLKADOT_DAPP_URLS = [
 const ACCOUNT_NAME = '// Alice'
 const DOT_TEST_MNEMONIC = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk'
 const DOT_TEST_PASSWORD = 'secure123!'
+
+const test = createWalletTest({
+  headless: true,
+})
 
 test.describe.configure({ mode: 'serial' });
 
