@@ -56,7 +56,13 @@ jobs:
               {"include": [
                 (.[] as $template | 
                   ["npm"] | .[] as $pm | 
-                  {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
+                  if $template == "solidity-react" then
+                    {"template": $template, "working-directory": "templates/solidity-hardhat-wagmi/dapp-react", "package-manager": $pm}
+                  elif $template == "solidity-vue" then
+                    {"template": $template, "working-directory": "templates/solidity-hardhat-wagmi/dapp-vue", "package-manager": $pm}
+                  else
+                    {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
+                  end
                 )
               ]} 
             end
@@ -69,12 +75,12 @@ jobs:
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates for Deno: $CHANGED_TEMPLATES"
           
-          # Generate matrix only for React, Vue and Solidity templates
+          # Generate matrix only for React and Vue templates (excluding Solidity templates)
           DENO_MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
             if . == [] then 
               {"include": []} 
             else 
-              {"include": [.[] | select(startswith("react-") or startswith("vue-") or startswith("solidity-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
+              {"include": [.[] | select((startswith("react-") or startswith("vue-")) and (startswith("solidity-") | not)) | {"template": ., "working-directory": "templates/\(.)"}]} 
             end
           ' || echo '{"include": []}')
           echo "matrix=$DENO_MATRIX" >> $GITHUB_OUTPUT
