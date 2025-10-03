@@ -12,7 +12,8 @@ const walletInfo = useWalletInfo()
   <div class="flex items-center gap-2">
     <button class="btn btn-outline btn-sm font-mono" @click="open()">
       <div v-if="accountData.isConnected" class="flex items-center gap-2">
-        <img :src="walletInfo.walletInfo?.icon" :alt="walletInfo.walletInfo?.name" class="size-4">
+        <img v-if="walletInfo.walletInfo?.icon" :src="walletInfo.walletInfo.icon" :alt="walletInfo.walletInfo?.name" class="size-4">
+        <span v-else class="icon-[mdi--wallet] w-4 h-4" />
         <span v-if="accountData.address">{{ shortenAddress(accountData.address) }}</span>
       </div>
       <div v-else class="flex items-center gap-2">
