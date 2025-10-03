@@ -16,10 +16,11 @@ const test = createWalletTest({
 test.describe.configure({ mode: 'serial' });
 
 POLKADOT_DAPP_URLS.forEach((url) => {
-  test(`sign transaction on ${url}`, async ({ page, importAccount, authorize, approveTx }) => {
+  test(`sign transaction on ${url}`, async ({ page, wallets }) => {
   console.log(`🧪 Testing ${url}`)
   
-  await importAccount({
+  const wallet = wallets['polkadot-js']
+  await wallet.importMnemonic({
     seed: DOT_TEST_MNEMONIC,
     password: DOT_TEST_PASSWORD,
     name: ACCOUNT_NAME,
@@ -38,14 +39,14 @@ POLKADOT_DAPP_URLS.forEach((url) => {
     console.log('🔗 Clicked CONNECT button')
   }
 
-  await authorize()
+  await wallet.authorize()
 
   await page.getByText(ACCOUNT_NAME).click()
 
   await page.getByRole('button', { name: 'Sign Transaction' }).nth(3).click()
   
   if (url.includes('papi')) await page.waitForTimeout(3000)
-  await approveTx({ password: DOT_TEST_PASSWORD })
+  await wallet.approveTx({ password: DOT_TEST_PASSWORD })
   await page.getByText('Processing transaction...').waitFor({ state: 'visible' })
 
   console.log(`🎉 Test completed successfully for ${url}!`)
