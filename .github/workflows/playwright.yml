@@ -32,6 +32,9 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     
+    - name: Prepare tests
+      run: bun run test:prepare
+    
     - name: Run headless tests
       run: npx playwright test tests/polkadot-starter-headless.spec.ts --reporter=html
     
@@ -73,6 +76,9 @@ jobs:
     
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    
+    - name: Prepare tests
+      run: bun run test:prepare
     
     - name: Run headed tests
       run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npx playwright test tests/polkadot-starter-headed.spec.ts --reporter=html
