@@ -1,9 +1,6 @@
 import { createWalletTest } from '@avalix/chroma';
 
-const POLKADOT_DAPP_URLS = [
-  'https://polkadot-starter-vue-dedot.vercel.app/',
-  'https://polkadot-starter-vue-papi.vercel.app/',
-]
+const POLKADOT_DAPP_URL = 'https://polkadot-starter-vue-dedot.vercel.app/'
 
 const ACCOUNT_NAME = '// Alice'
 const DOT_TEST_MNEMONIC = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk'
@@ -15,17 +12,21 @@ const test = createWalletTest({
 
 test.describe.configure({ mode: 'serial' });
 
-POLKADOT_DAPP_URLS.forEach((url) => {
-  test(`sign transaction on ${url}`, async ({ page, importAccount, authorize, approveTx }) => {
-  console.log(`🧪 Testing ${url}`)
-  
-  await importAccount({
+test.beforeAll(async ({ wallets }) => {
+  const wallet = wallets['polkadot-js']
+  await wallet.importMnemonic({
     seed: DOT_TEST_MNEMONIC,
     password: DOT_TEST_PASSWORD,
     name: ACCOUNT_NAME,
   })
+})
 
-  await page.goto(url)
+test(`sign transaction on ${POLKADOT_DAPP_URL}`, async ({ page, wallets }) => {
+  console.log(`🧪 Testing ${POLKADOT_DAPP_URL}`)
+  
+  const wallet = wallets['polkadot-js']
+
+  await page.goto(POLKADOT_DAPP_URL)
   await page.waitForLoadState('networkidle')
 
   await page.getByRole('button', { name: /Connect Wallet/i }).click()
@@ -38,18 +39,17 @@ POLKADOT_DAPP_URLS.forEach((url) => {
     console.log('🔗 Clicked CONNECT button')
   }
 
-  await authorize()
+  await wallet.authorize()
 
   await page.getByText(ACCOUNT_NAME).click()
 
   await page.getByRole('button', { name: 'Sign Transaction' }).nth(3).click()
   
-  if (url.includes('papi')) await page.waitForTimeout(3000)
-  await approveTx({ password: DOT_TEST_PASSWORD })
+  if (POLKADOT_DAPP_URL.includes('papi')) await page.waitForTimeout(3000)
+  await wallet.approveTx({ password: DOT_TEST_PASSWORD })
   await page.getByText('Processing transaction...').waitFor({ state: 'visible' })
 
-  console.log(`🎉 Test completed successfully for ${url}!`)
+  console.log(`🎉 Test completed successfully for ${POLKADOT_DAPP_URL}!`)
 
   await page.waitForTimeout(3000)
-  })
 })
