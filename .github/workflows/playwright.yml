@@ -1,12 +1,13 @@
 name: Playwright Tests
 
 on:
+  pull_request:
   schedule:
     - cron: '0 0 */14 * *'  # Run every 14 days at midnight UTC
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
-  test:
+  test-headless:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     
@@ -31,19 +32,67 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     
-    - name: Run Playwright tests
-      run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npx playwright test --reporter=html
+    - name: Prepare tests
+      run: bun run test:prepare
+    
+    - name: Run headless tests
+      run: npx playwright test tests/polkadot-starter-headless.spec.ts --reporter=html
     
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: playwright-report
+        name: playwright-report-headless
         path: playwright-report/
         retention-days: 30
     
     - uses: actions/upload-artifact@v4
       if: failure()
       with:
-        name: playwright-test-results
+        name: playwright-test-results-headless
+        path: test-results/
+        retention-days: 30
+
+  test-headed:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    env:
+      CI: true
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+    
+    - name: Install dependencies
+      run: bun install
+    
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    
+    - name: Prepare tests
+      run: bun run test:prepare
+    
+    - name: Run headed tests
+      run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npx playwright test tests/polkadot-starter-headed.spec.ts --reporter=html
+    
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report-headed
+        path: playwright-report/
+        retention-days: 30
+    
+    - uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: playwright-test-results-headed
         path: test-results/
         retention-days: 30

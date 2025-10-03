@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --fix",
+    "compile": "hardhat compile",
     "deploy": "hardhat ignition deploy ./ignition/modules/MessageBoardModule.ts --network passetHub",
     "interact": "hardhat run scripts/interact-messageboard.ts --network passetHub",
     "accounts": "hardhat run scripts/show-accounts.ts --network passetHub"
@@ -20,7 +21,6 @@
   "devDependencies": {
     "@antfu/eslint-config": "^5.3.0",
     "@parity/hardhat-polkadot": "0.1.9",
-    "@types/minimatch": "^6.0.0",
     "eslint": "^9.35.0",
     "fs-xattr": "^0.4.0",
     "run-container": "^2.0.12",

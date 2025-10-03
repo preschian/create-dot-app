@@ -29,22 +29,7 @@ export async function trackProjectCreated(template: string) {
       },
     })
   }
-  catch (error) {
+  catch {
     // Silently fail analytics to not disrupt user experience
-    console.debug('Analytics tracking failed:', error)
-  }
-}
-
-export async function shutdownAnalytics() {
-  // Skip shutdown if telemetry is disabled
-  if (process.env.DISABLE_TELEMETRY === 'true') {
-    return
-  }
-
-  try {
-    await client.shutdown()
-  }
-  catch (error) {
-    console.debug('Analytics shutdown failed:', error)
   }
 }
