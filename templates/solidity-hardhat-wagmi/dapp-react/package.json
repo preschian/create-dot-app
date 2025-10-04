@@ -33,6 +33,7 @@
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
+    "minimatch": "^10.0.3",
     "typescript": "^5.9.2",
     "vite": "^7.1.7"
   }
