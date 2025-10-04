@@ -1,5 +1,7 @@
 import { spawn } from 'node:child_process'
+import { writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
+import { join } from 'node:path'
 import process from 'node:process'
 
 // Template repository configuration
@@ -37,7 +39,7 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
   // Determine which dapp to download based on template
   const dappDir = template === 'solidity-react' ? 'dapp-react' : 'dapp-vue'
 
-  // Define subdirectories to download
+  // Define subdirectories to download (excluding package.json, we'll create it dynamically)
   const subdirs = [
     `templates/${SOLIDITY_BASE_TEMPLATE}/${dappDir}`,
     `templates/${SOLIDITY_BASE_TEMPLATE}/hardhat`,
@@ -55,6 +57,38 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
   })
 
   await Promise.all(downloadPromises)
+
+  // Create custom package.json with only the selected dapp workspace
+  await createSolidityPackageJson({ dappDir, targetName })
+}
+
+/**
+ * Creates a custom package.json for Solidity template with appropriate workspaces
+ * @param options - Configuration
+ * @param options.dappDir - The dapp directory name ('dapp-react' or 'dapp-vue')
+ * @param options.targetName - Target directory name
+ */
+async function createSolidityPackageJson({ dappDir, targetName = '.' }): Promise<void> {
+  const packageJson = {
+    name: 'solidity-hardhat-wagmi',
+    version: '1.0.0',
+    private: true,
+    description: 'A comprehensive full-stack Polkadot development template featuring Hardhat for Solidity smart contract development and modern frontend applications with Wagmi integration.',
+    main: 'index.js',
+    scripts: {
+      test: 'echo "Error: no test specified" && exit 1',
+    },
+    keywords: [],
+    author: '',
+    license: 'MIT',
+    workspaces: [
+      'hardhat',
+      dappDir,
+    ],
+  }
+
+  const packageJsonPath = targetName === '.' ? 'package.json' : join(targetName, 'package.json')
+  await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`)
 }
 
 /**
