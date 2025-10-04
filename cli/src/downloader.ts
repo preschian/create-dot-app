@@ -39,7 +39,7 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
   // Determine which dapp to download based on template
   const dappDir = template === 'solidity-react' ? 'dapp-react' : 'dapp-vue'
 
-  // Define subdirectories to download (excluding package.json, we'll create it dynamically)
+  // Define subdirectories to download
   const subdirs = [
     `templates/${SOLIDITY_BASE_TEMPLATE}/${dappDir}`,
     `templates/${SOLIDITY_BASE_TEMPLATE}/hardhat`,

@@ -42,37 +42,54 @@ The template includes a **MessageBoard** contract that demonstrates:
 ### Prerequisites
 
 - Node.js 18+ 
-- npm or yarn package manager
+- npm, yarn, or bun package manager
+
+### Installation
+
+This project uses monorepo structure with workspaces. Install all dependencies from the root directory:
+
+```bash
+# Install all workspace dependencies
+npm install
+```
 
 ### 1. Smart Contract Development
 
 ```bash
-cd hardhat
-npm install
-
 # Deploy to Polkadot Asset Hub testnet
-npm run deploy
+npm run deploy -w hardhat
 
 # Interact with deployed contract
-npm run interact
+npm run interact -w hardhat
 
 # Verify contract
+npm run verify -w hardhat
+```
+
+Or navigate to the hardhat directory:
+
+```bash
+cd hardhat
+npm run deploy
+npm run interact
 npm run verify
 ```
 
-### 2. React Frontend
+### 2. Frontend Development
+
+Run the frontend application (React or Vue based on your selection):
 
 ```bash
-cd dapp-react
-npm install
-npm run dev
+# From root directory
+npm run dev -w dapp-react
+# or
+npm run dev -w dapp-vue
 ```
 
-### 3. Vue Frontend
+Or navigate to the frontend directory:
 
 ```bash
-cd dapp-vue
-npm install
+cd dapp-react  # or dapp-vue
 npm run dev
 ```
 
@@ -102,18 +119,24 @@ Both React and Vue applications include:
 
 ## Available Scripts
 
+You can run scripts from the root directory using the `-w` flag or navigate to the specific workspace.
+
 ### Hardhat
-- `npm run deploy` - Deploy contracts to testnet
-- `npm run interact` - Run interaction scripts
-- `npm run verify` - Verify deployed contracts
-- `npm run accounts` - Show account information
-- `npm run lint` - Run ESLint
+- `npm run deploy -w hardhat` - Deploy contracts to testnet
+- `npm run interact -w hardhat` - Run interaction scripts
+- `npm run verify -w hardhat` - Verify deployed contracts
+- `npm run accounts -w hardhat` - Show account information
+- `npm run lint -w hardhat` - Run ESLint
 
 ### Frontend (React/Vue)
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+- `npm run dev -w dapp-react` - Start React dev server
+- `npm run dev -w dapp-vue` - Start Vue dev server
+- `npm run build -w dapp-react` - Build React for production
+- `npm run build -w dapp-vue` - Build Vue for production
+- `npm run preview -w dapp-react` - Preview React production build
+- `npm run preview -w dapp-vue` - Preview Vue production build
+- `npm run lint -w dapp-react` - Run ESLint for React
+- `npm run lint -w dapp-vue` - Run ESLint for Vue
 
 ## Technology Stack
 
