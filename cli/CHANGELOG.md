@@ -1,5 +1,13 @@
 # create-dot-app
 
+## 1.0.9
+
+### Patch Changes
+
+- [#164](https://github.com/preschian/create-dot-app/pull/164) [`ed4bef1`](https://github.com/preschian/create-dot-app/commit/ed4bef16fa0caa4beefc65eee3adacb5100b3cbf) Thanks [@preschian](https://github.com/preschian)! - feat: generate dynamic package.json for solidity templates
+
+- [#166](https://github.com/preschian/create-dot-app/pull/166) [`8b03ebb`](https://github.com/preschian/create-dot-app/commit/8b03ebb088c1d9dffacafbe49ad30f8102656c2c) Thanks [@preschian](https://github.com/preschian)! - feat: add GitHub Actions workflow and monorepo setup for Solidity template
+
 ## 1.0.8
 
 ### Patch Changes
