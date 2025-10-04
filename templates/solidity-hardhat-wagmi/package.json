@@ -1,0 +1,27 @@
+{
+  "name": "solidity-hardhat-wagmi-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A comprehensive full-stack Polkadot development template featuring Hardhat for Solidity smart contract development and modern frontend applications with Wagmi integration.",
+  "workspaces": [
+    "hardhat",
+    "dapp-react",
+    "dapp-vue"
+  ],
+  "scripts": {
+    "compile": "npm run compile -w hardhat",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:hardhat": "npm run lint -w hardhat",
+    "lint:react": "npm run lint -w dapp-react",
+    "lint:vue": "npm run lint -w dapp-vue",
+    "build:react": "npm run build -w dapp-react",
+    "build:vue": "npm run build -w dapp-vue",
+    "build:dapps": "npm run build --workspaces --if-present",
+    "dev:react": "npm run dev -w dapp-react",
+    "dev:vue": "npm run dev -w dapp-vue"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
+

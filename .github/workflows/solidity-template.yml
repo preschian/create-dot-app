@@ -1,0 +1,80 @@
+name: Solidity Template Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'templates/solidity-hardhat-wagmi/**'
+      - '.github/workflows/solidity-template.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'templates/solidity-hardhat-wagmi/**'
+      - '.github/workflows/solidity-template.yml'
+
+jobs:
+  monorepo-test:
+    name: Monorepo - Full Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install all workspace dependencies
+        working-directory: templates/solidity-hardhat-wagmi
+        run: npm install
+
+      - name: Compile contracts
+        working-directory: templates/solidity-hardhat-wagmi
+        run: npm run compile
+
+      - name: Lint all workspaces
+        working-directory: templates/solidity-hardhat-wagmi
+        run: npm run lint
+
+      - name: Build all dapps
+        working-directory: templates/solidity-hardhat-wagmi
+        run: npm run build:dapps
+
+  individual-test:
+    name: ${{ matrix.workspace }} - Individual Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        workspace: [hardhat, dapp-react, dapp-vue]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        working-directory: templates/solidity-hardhat-wagmi/${{ matrix.workspace }}
+        run: npm install
+
+      - name: Compile contracts (hardhat only)
+        if: matrix.workspace == 'hardhat'
+        working-directory: templates/solidity-hardhat-wagmi/${{ matrix.workspace }}
+        run: npm run compile
+
+      - name: Lint
+        working-directory: templates/solidity-hardhat-wagmi/${{ matrix.workspace }}
+        run: npm run lint
+
+      - name: Build (dapps only)
+        if: matrix.workspace != 'hardhat'
+        working-directory: templates/solidity-hardhat-wagmi/${{ matrix.workspace }}
+        run: npm run build
+

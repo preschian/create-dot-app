@@ -74,17 +74,21 @@ async function createSolidityPackageJson({ dappDir, targetName = '.' }): Promise
     version: '1.0.0',
     private: true,
     description: 'A comprehensive full-stack Polkadot development template featuring Hardhat for Solidity smart contract development and modern frontend applications with Wagmi integration.',
-    main: 'index.js',
-    scripts: {
-      test: 'echo "Error: no test specified" && exit 1',
-    },
-    keywords: [],
-    author: '',
-    license: 'MIT',
     workspaces: [
       'hardhat',
       dappDir,
     ],
+    scripts: {
+      'compile': 'npm run compile -w hardhat',
+      'lint': 'npm run lint --workspaces --if-present',
+      'lint:hardhat': 'npm run lint -w hardhat',
+      [`lint:${dappDir}`]: `npm run lint -w ${dappDir}`,
+      [`build:${dappDir}`]: `npm run build -w ${dappDir}`,
+      [`dev:${dappDir}`]: `npm run dev -w ${dappDir}`,
+    },
+    keywords: [],
+    author: '',
+    license: 'MIT',
   }
 
   const packageJsonPath = targetName === '.' ? 'package.json' : join(targetName, 'package.json')
