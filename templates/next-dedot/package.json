@@ -11,13 +11,13 @@
   "dependencies": {
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.9.2",
-    "dedot": "^0.16.0",
-    "next": "15.5.2",
+    "dedot": "^0.17.0",
+    "next": "15.5.4",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },
   "devDependencies": {
-    "@dedot/chaintypes": "^0.152.0",
+    "@dedot/chaintypes": "^0.156.0",
     "@eslint/eslintrc": "^3.3.1",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.26",
