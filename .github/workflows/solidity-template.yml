@@ -14,9 +14,12 @@ on:
 
 jobs:
   monorepo-test:
-    name: Monorepo - Full Test
+    name: Monorepo - ${{ matrix.dapp }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      matrix:
+        dapp: [dapp-react, dapp-vue]
 
     steps:
       - name: Checkout code
@@ -26,6 +29,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
+      - name: Create package.json for monorepo testing
+        working-directory: templates/solidity-hardhat-wagmi
+        run: |
+          cat > package.json << 'EOF'
+          {
+            "name": "solidity-hardhat-wagmi-template",
+            "version": "1.0.0",
+            "private": true,
+            "workspaces": [
+              "hardhat",
+              "${{ matrix.dapp }}"
+            ],
+            "scripts": {
+              "compile": "npm run compile -w hardhat",
+              "lint": "npm run lint --workspaces --if-present",
+              "build:dapp": "npm run build -w ${{ matrix.dapp }}"
+            }
+          }
+          EOF
 
       - name: Install all workspace dependencies
         working-directory: templates/solidity-hardhat-wagmi
@@ -39,9 +62,9 @@ jobs:
         working-directory: templates/solidity-hardhat-wagmi
         run: npm run lint
 
-      - name: Build all dapps
+      - name: Build dapp
         working-directory: templates/solidity-hardhat-wagmi
-        run: npm run build:dapps
+        run: npm run build:dapp
 
   individual-test:
     name: ${{ matrix.workspace }} - Individual Test
