@@ -86,6 +86,9 @@ async function createSolidityPackageJson({ dappDir, targetName = '.' }): Promise
       [`build:${dappDir}`]: `npm run build -w ${dappDir}`,
       [`dev:${dappDir}`]: `npm run dev -w ${dappDir}`,
     },
+    overrides: {
+      'lru-cache': '^11.1.0',
+    },
     keywords: [],
     author: '',
     license: 'MIT',

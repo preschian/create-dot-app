@@ -46,6 +46,9 @@ jobs:
               "compile": "npm run compile -w hardhat",
               "lint": "npm run lint --workspaces --if-present",
               "build:dapp": "npm run build -w ${{ matrix.dapp }}"
+            },
+            "overrides": {
+              "lru-cache": "^11.1.0"
             }
           }
           EOF
