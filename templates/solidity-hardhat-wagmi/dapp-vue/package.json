@@ -10,6 +10,8 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@reown/appkit": "^1.8.7",
+    "@reown/appkit-adapter-wagmi": "^1.8.7",
     "@tailwindcss/vite": "^4.1.13",
     "@tanstack/vue-query": "^5.90.2",
     "@wagmi/vue": "^0.2.11",
@@ -28,6 +30,6 @@
     "eslint": "^9.36.0",
     "minimatch": "^10.0.3",
     "vite": "^7.1.7",
-    "vue-tsc": "^3.0.8"
+    "vue-tsc": "^3.1.0"
   }
 }
