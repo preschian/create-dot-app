@@ -37,10 +37,6 @@ jobs:
               - 'templates/vue-dedot/**'
             vue-papi:
               - 'templates/vue-papi/**'
-            solidity-react:
-              - 'templates/solidity-hardhat-wagmi/dapp-react/**'
-            solidity-vue:
-              - 'templates/solidity-hardhat-wagmi/dapp-vue/**'
       
       - name: Set matrix based on changes
         id: set-matrix
@@ -56,13 +52,7 @@ jobs:
               {"include": [
                 (.[] as $template | 
                   ["npm"] | .[] as $pm | 
-                  if $template == "solidity-react" then
-                    {"template": $template, "working-directory": "templates/solidity-hardhat-wagmi/dapp-react", "package-manager": $pm}
-                  elif $template == "solidity-vue" then
-                    {"template": $template, "working-directory": "templates/solidity-hardhat-wagmi/dapp-vue", "package-manager": $pm}
-                  else
-                    {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
-                  end
+                  {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
                 )
               ]} 
             end
@@ -75,12 +65,12 @@ jobs:
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates for Deno: $CHANGED_TEMPLATES"
           
-          # Generate matrix only for React and Vue templates (excluding Solidity templates)
+          # Generate matrix only for React and Vue templates
           DENO_MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
             if . == [] then 
               {"include": []} 
             else 
-              {"include": [.[] | select((startswith("react-") or startswith("vue-")) and (startswith("solidity-") | not)) | {"template": ., "working-directory": "templates/\(.)"}]} 
+              {"include": [.[] | select(startswith("react-") or startswith("vue-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
             end
           ' || echo '{"include": []}')
           echo "matrix=$DENO_MATRIX" >> $GITHUB_OUTPUT
