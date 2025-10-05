@@ -12,7 +12,7 @@ updates:
       - "/cli"
       - "/templates/*"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
     cooldown:
       default-days: 5
       semver-major-days: 30
