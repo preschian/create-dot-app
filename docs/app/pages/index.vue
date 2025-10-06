@@ -20,10 +20,10 @@ const showValidationMessage = ref(false)
 const validationMessage = ref('')
 
 const frameworks = [
-  { id: 'react', name: 'React.js', template: 'react' },
+  { id: 'react', name: 'React', template: 'react' },
   { id: 'next', name: 'Next.js', template: 'next' },
   { id: 'vue', name: 'Vue.js', template: 'vue' },
-  { id: 'nuxt', name: 'Nuxt.js', template: 'nuxt' },
+  { id: 'nuxt', name: 'Nuxt', template: 'nuxt' },
 ]
 
 const sdks = [
