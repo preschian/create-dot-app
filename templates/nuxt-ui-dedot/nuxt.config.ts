@@ -1,4 +1,3 @@
-import tailwindcss from '@tailwindcss/vite'
 import { name } from './package.json'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -14,7 +13,7 @@ export default defineNuxtConfig({
   },
 
   ui: {
-    colorMode: false
+    colorMode: false,
   },
 
   app: {
@@ -27,7 +26,4 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
-  vite: {
-    plugins: [tailwindcss()],
-  },
 })

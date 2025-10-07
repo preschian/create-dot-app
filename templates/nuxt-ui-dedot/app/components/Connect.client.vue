@@ -16,7 +16,6 @@ const {
   disconnect,
 } = useConnect()
 
-
 function handleSelectAccount(account: WalletAccount | null) {
   if (account && selectAccount) {
     selectAccount(account)
@@ -57,8 +56,8 @@ function isAccountSelected(account: WalletAccount | null) {
       v-if="selectedAccount"
       color="neutral"
       variant="outline"
-      @click="disconnect"
       icon="i-mdi-logout"
+      @click="disconnect"
     />
 
     <template #body>
@@ -110,13 +109,13 @@ function isAccountSelected(account: WalletAccount | null) {
             :class="isWalletConnected(wallet) ? 'border-success' : 'border-neutral-300 hover:border-primary'"
             @click="connect?.(wallet)"
           >
-            <UAvatar                   
+            <UAvatar
               :src="wallet.logo.src"
-              :alt="wallet.logo.alt" 
+              :alt="wallet.logo.alt"
               size="3xl"
               :chip="{
-                inset: isWalletConnected(wallet)
-              }" 
+                inset: isWalletConnected(wallet),
+              }"
             />
             <div class="text-xs font-medium text-black">
               {{ wallet.title }}
@@ -175,4 +174,3 @@ function isAccountSelected(account: WalletAccount | null) {
     </template>
   </UModal>
 </template>
-

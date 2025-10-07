@@ -8,7 +8,7 @@ const { selectedAccount } = useConnect()
   <UApp>
     <div class="min-h-screen flex flex-col justify-between">
       <Header />
-  
+
       <!-- Hero Section -->
       <section class="bg-white py-16 hidden sm:block">
         <div class="container mx-auto px-4 text-center">
@@ -21,7 +21,7 @@ const { selectedAccount } = useConnect()
           </p>
         </div>
       </section>
-  
+
       <!-- Account Cards -->
       <main class="container mx-auto py-8 space-y-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
@@ -33,7 +33,7 @@ const { selectedAccount } = useConnect()
           </div>
         </div>
       </main>
-  
+
       <Footer />
     </div>
   </UApp>
