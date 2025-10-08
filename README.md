@@ -8,10 +8,10 @@ A command-line interface (CLI) tool designed to streamline the development proce
 ## Features
 
 ### 🚀 Multiple Frontend Framework Support
-- **React.js**
+- **React**
 - **Vue.js**
 - **Next.js**
-- **Nuxt.js**
+- **Nuxt**
 
 ### 🔗 Dual SDK Integration Support
 - **[PAPI](https://papi.how/)**
