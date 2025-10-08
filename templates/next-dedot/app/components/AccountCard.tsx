@@ -66,7 +66,7 @@ export default function AccountCard({ chainKey, address }: AccountCardProps) {
           <div className="pt-3 border-t border-gray-100">
             <div className="grid grid-cols-2 gap-2 mb-3">
               <a href={buyTokenUrl(chainKey, address)} target="_blank" rel="noopener noreferrer" className="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
-                Funds Token
+                Get Tokens
               </a>
               <a href={explorerAccount(chainKey, address)} target="_blank" rel="noopener noreferrer" className="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
                 <span className="icon-[mdi--open-in-new]" />
