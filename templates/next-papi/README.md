@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js PAPI Template
 
-## Getting Started
+A modern **Next.js 15 + TypeScript + React 19** template for building Polkadot decentralized applications (dApps) using the PAPI SDK.
 
-First, run the development server:
+## 🚀 Features
+
+- **Next.js 15** with App Router and Turbopack
+- **React 19** for modern UI development
+- **TypeScript** for type safety
+- **PAPI SDK** integration for Polkadot blockchain interaction
+- **TailwindCSS 4 + DaisyUI** for beautiful UI components
+- **Wallet Connection** support via Talisman Connect
+- **Iconify** icons integration
+- Pre-configured for **multiple Polkadot chains**
+
+## 🔗 SDK Information
+
+This template uses **PAPI (Polkadot API)** - a modern, type-safe SDK for interacting with Polkadot-based blockchains.
+
+📚 **PAPI Documentation**: https://papi.how/
+
+### Configuration Files:
+- **`app/utils/sdk.ts`** - Configures which chains to connect to and manages chain endpoints. You can modify supported networks and RPC providers here.
+- **`app/utils/sdk-interface.ts`** - Provides high-level functions for onchain SDK calls.
+
+## 🌐 Supported Chains
+
+The template comes pre-configured for:
+- **Polkadot** (DOT) - Main network
+- **Polkadot Asset Hub** - Asset management
+- **Paseo** (PAS) - Testnet
+- **Paseo Asset Hub** - Testnet asset management
+
+## 🛠️ Getting Started
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+app/
+├── components/     # React components
+├── hooks/          # Custom React hooks
+├── utils/          # Utility functions and SDK setup
+├── globals.css     # Global styles
+├── layout.tsx      # Root layout component
+└── page.tsx        # Main page component
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔧 Adding Custom Networks
 
-## Learn More
+### Step 1: Generate Chain Descriptors
 
-To learn more about Next.js, take a look at the following resources:
+PAPI requires type descriptors for each chain. Generate them using the PAPI CLI:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Add a new chain using a WebSocket endpoint
+npx papi add your_chain -w wss://your-rpc-endpoint.io
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Or use a well-known chain name
+npx papi add kusama -n ksmcc3
 
-## Deploy on Vercel
+# Generate descriptors (automatically runs on postinstall)
+npx papi
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This creates type-safe descriptors in `@polkadot-api/descriptors` that you can import.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Step 2: Configure Your Chain
+
+Edit `app/utils/sdk.ts` to add your chain configuration:
+
+```typescript
+import { yourChain } from '@polkadot-api/descriptors'
+
+const CONFIG = {
+  // ... existing chains
+  your_chain: {
+    descriptor: yourChain,
+    providers: ['wss://your-rpc-endpoint.io'],
+  },
+}
+```
+
+You can add multiple RPC endpoints for fallback support:
+
+```typescript
+const CONFIG = {
+  dot: {
+    descriptor: polkadot,
+    providers: [
+      'wss://rpc.polkadot.io',
+      'wss://polkadot-rpc.dwellir.com'
+    ],
+  },
+}
+```
+
+📖 For more details, see the [PAPI Codegen documentation](https://papi.how/codegen).
+
+## 📚 Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [PAPI Documentation](https://papi.how/)
+- [Polkadot Developer Portal](https://wiki.polkadot.network/)
