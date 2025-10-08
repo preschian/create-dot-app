@@ -1,9 +1,9 @@
 'use client'
 
-import AccountCard from './components/AccountCard'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import { useConnect } from './hooks/useConnect'
+import AccountCard from './components/account-card'
+import Footer from './components/footer'
+import Header from './components/header'
+import { useConnect } from './hooks/use-connect'
 import { unifyAddress } from './utils/formatters'
 import { chainKeys } from './utils/sdk'
 

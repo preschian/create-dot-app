@@ -1,7 +1,7 @@
 import type { InjectedSigner } from 'dedot/types'
 import type { Prefix } from './sdk'
 import { getWalletBySource } from '@talismn/connect-wallets'
-import { connectedWallet } from '../hooks/useConnect'
+import { connectedWallet } from '../hooks/use-connect'
 import sdk from './sdk'
 import { name } from '../../package.json'
 import { formatBalance } from 'dedot/utils'

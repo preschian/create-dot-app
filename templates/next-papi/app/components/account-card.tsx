@@ -1,10 +1,10 @@
 'use client'
 
 import type { Prefix } from '../utils/sdk'
-import { useCurrentBlock } from '../hooks/useCurrentBlock'
+import { useCurrentBlock } from '../hooks/use-current-block'
 import { buyTokenUrl, explorerAccount } from '../utils/formatters'
-import Balance from './Balance'
-import SignTransaction from './SignTransaction'
+import Balance from './balance'
+import SignTransaction from './sign-transaction'
 
 interface AccountCardProps {
   chainKey: Prefix

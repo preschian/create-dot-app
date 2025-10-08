@@ -1,6 +1,6 @@
 'use client'
 
-import Connect from './Connect'
+import Connect from './connect'
 
 export default function Header() {
   return (

@@ -3,7 +3,7 @@
 import type { Prefix } from '../utils/sdk'
 import { useState } from 'react'
 import { createRemarkTransaction, polkadotSigner } from '../utils/sdk-interface'
-import { useConnect } from './useConnect'
+import { useConnect } from './use-connect'
 
 export function useTransaction() {
   const { selectedAccount } = useConnect()

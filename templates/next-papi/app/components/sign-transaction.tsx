@@ -1,8 +1,8 @@
 'use client'
 
 import type { Prefix } from '../utils/sdk'
-import { useConnect } from '../hooks/useConnect'
-import { useTransaction } from '../hooks/useTransaction'
+import { useConnect } from '../hooks/use-connect'
+import { useTransaction } from '../hooks/use-transaction'
 import { explorerDetail } from '../utils/formatters'
 
 interface SignTransactionProps {
