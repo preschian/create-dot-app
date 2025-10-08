@@ -2,7 +2,7 @@ import type { HardhatUserConfig } from 'hardhat/config'
 import process from 'node:process'
 import * as dotenv from 'dotenv'
 import '@nomicfoundation/hardhat-toolbox'
-import '@parity/hardhat-polkadot'
+import '@parity/hardhat-polkadot-resolc'
 
 // Load environment variables from .env.development file
 // Override with .env file if it exists
@@ -11,18 +11,6 @@ dotenv.config({ path: ['.env.development', '.env'], override: true })
 // https://docs.polkadot.com/develop/smart-contracts/dev-environments/hardhat/
 const config: HardhatUserConfig = {
   solidity: '0.8.28',
-  resolc: {
-    compilerSource: 'npm',
-    settings: {
-      optimizer: {
-        enabled: true,
-        parameters: 'z',
-        fallbackOz: true,
-        runs: 200,
-      },
-      // standardJson: true,
-    },
-  },
   networks: {
     hardhat: {
       polkavm: true,
