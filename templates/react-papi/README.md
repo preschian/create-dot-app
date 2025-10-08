@@ -59,4 +59,59 @@ src/
 └── App.tsx         # Main application component
 ```
 
-Learn more about React development in the [React Documentation](https://react.dev/).
+## 🔧 Adding Custom Networks
+
+### Step 1: Generate Chain Descriptors
+
+PAPI requires type descriptors for each chain. Generate them using the PAPI CLI:
+
+```bash
+# Add a new chain using a WebSocket endpoint
+npx papi add your_chain -w wss://your-rpc-endpoint.io
+
+# Or use a well-known chain name
+npx papi add kusama -n ksmcc3
+
+# Generate descriptors (automatically runs on postinstall)
+npx papi
+```
+
+This creates type-safe descriptors in `@polkadot-api/descriptors` that you can import.
+
+### Step 2: Configure Your Chain
+
+Edit `src/utils/sdk.ts` to add your chain configuration:
+
+```typescript
+import { yourChain } from '@polkadot-api/descriptors'
+
+const CONFIG = {
+  // ... existing chains
+  your_chain: {
+    descriptor: yourChain,
+    providers: ['wss://your-rpc-endpoint.io'],
+  },
+}
+```
+
+You can add multiple RPC endpoints for fallback support:
+
+```typescript
+const CONFIG = {
+  dot: {
+    descriptor: polkadot,
+    providers: [
+      'wss://rpc.polkadot.io',
+      'wss://polkadot-rpc.dwellir.com'
+    ],
+  },
+}
+```
+
+📖 For more details, see the [PAPI Codegen documentation](https://papi.how/codegen).
+
+## 📚 Learn More
+
+- [React Documentation](https://react.dev/)
+- [PAPI Documentation](https://papi.how/)
+- [Polkadot Developer Portal](https://wiki.polkadot.network/)

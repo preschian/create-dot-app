@@ -57,4 +57,40 @@ src/
 └── App.vue         # Main application component
 ```
 
-Learn more about Vue 3 development in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## 🔧 Adding Custom Networks
+
+To add more networks or change RPC providers, edit `src/utils/sdk.ts`:
+
+```typescript
+import type { YourChainApi } from '@dedot/chaintypes'
+
+const CONFIG = {
+  // ... existing chains
+  your_chain: {
+    providers: ['wss://your-rpc-endpoint.io'],
+    apiType: {} as YourChainApi,
+  },
+}
+```
+
+You can add multiple RPC endpoints for fallback support:
+
+```typescript
+const CONFIG = {
+  dot: {
+    providers: [
+      'wss://rpc.polkadot.io',
+      'wss://polkadot-rpc.dwellir.com'
+    ],
+    apiType: {} as PolkadotApi,
+  },
+}
+```
+
+📖 For more details on connecting to networks, see the [Dedot documentation](https://docs.dedot.dev/getting-started/connect-to-network).
+
+## 📚 Learn More
+
+- [Vue 3 Documentation](https://vuejs.org/guide/typescript/overview.html#project-setup)
+- [Dedot Documentation](https://docs.dedot.dev/)
+- [Polkadot Developer Portal](https://wiki.polkadot.network/)

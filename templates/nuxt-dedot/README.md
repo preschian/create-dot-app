@@ -58,4 +58,40 @@ app/
 └── app.vue         # Main application component
 ```
 
-Learn more about Nuxt 3 development in the [Nuxt Documentation](https://nuxt.com/docs/getting-started/introduction).
+## 🔧 Adding Custom Networks
+
+To add more networks or change RPC providers, edit `app/utils/sdk.ts`:
+
+```typescript
+import type { YourChainApi } from '@dedot/chaintypes'
+
+const CONFIG = {
+  // ... existing chains
+  your_chain: {
+    providers: ['wss://your-rpc-endpoint.io'],
+    apiType: {} as YourChainApi,
+  },
+}
+```
+
+You can add multiple RPC endpoints for fallback support:
+
+```typescript
+const CONFIG = {
+  dot: {
+    providers: [
+      'wss://rpc.polkadot.io',
+      'wss://polkadot-rpc.dwellir.com'
+    ],
+    apiType: {} as PolkadotApi,
+  },
+}
+```
+
+📖 For more details on connecting to networks, see the [Dedot documentation](https://docs.dedot.dev/getting-started/connect-to-network).
+
+## 📚 Learn More
+
+- [Nuxt Documentation](https://nuxt.com/docs/getting-started/introduction)
+- [Dedot Documentation](https://docs.dedot.dev/)
+- [Polkadot Developer Portal](https://wiki.polkadot.network/)

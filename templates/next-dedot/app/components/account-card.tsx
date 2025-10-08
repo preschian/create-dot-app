@@ -1,10 +1,10 @@
 'use client'
 
 import type { Prefix } from '../utils/sdk'
-import { useCurrentBlock } from '../hooks/useCurrentBlock'
+import { useCurrentBlock } from '../hooks/use-current-block'
 import { buyTokenUrl, explorerAccount } from '../utils/formatters'
-import Balance from './Balance'
-import SignTransaction from './SignTransaction'
+import Balance from './balance'
+import SignTransaction from './sign-transaction'
 
 interface AccountCardProps {
   chainKey: Prefix
@@ -66,7 +66,7 @@ export default function AccountCard({ chainKey, address }: AccountCardProps) {
           <div className="pt-3 border-t border-gray-100">
             <div className="grid grid-cols-2 gap-2 mb-3">
               <a href={buyTokenUrl(chainKey, address)} target="_blank" rel="noopener noreferrer" className="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
-                Funds Token
+                Get Tokens
               </a>
               <a href={explorerAccount(chainKey, address)} target="_blank" rel="noopener noreferrer" className="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
                 <span className="icon-[mdi--open-in-new]" />

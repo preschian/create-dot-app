@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useRef, useState } from 'react'
-import { useConnect } from '../hooks/useConnect'
+import { useConnect } from '../hooks/use-connect'
 import { stripAddress } from '../utils/formatters'
 
 export default function Connect() {

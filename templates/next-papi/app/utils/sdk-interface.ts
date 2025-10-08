@@ -2,7 +2,7 @@ import type { PolkadotSigner } from 'polkadot-api'
 import type { Prefix } from '../utils/sdk'
 import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
-import { connectedWallet, selectedAccount } from '../hooks/useConnect' // Adjusted for React
+import { connectedWallet, selectedAccount } from '../hooks/use-connect'
 import sdk from '../utils/sdk'
 import { name } from '../../package.json'
 import { formatBalance } from '@polkadot/util'

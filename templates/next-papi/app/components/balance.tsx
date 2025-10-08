@@ -18,13 +18,21 @@ export default function Balance({ address, chainKey }: BalanceProps) {
       return
     }
 
+    let ignore = false
+
     const fetchBalance = async () => {
       const { balance, symbol } = await getBalance(chainKey, address)
-      setBalance(balance)
-      setSymbol(symbol)
+      if (!ignore) {
+        setBalance(balance)
+        setSymbol(symbol)
+      }
     }
 
     fetchBalance()
+
+    return () => {
+      ignore = true
+    }
   }, [address, chainKey])
 
   return (

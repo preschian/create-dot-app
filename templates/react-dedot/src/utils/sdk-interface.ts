@@ -72,7 +72,9 @@ export async function createRemarkTransaction(
 
     if (result.status.type === 'Finalized') {
       callbacks.onFinalized()
-      typeof unsub === 'function' && unsub()
+
+      if (typeof unsub === 'function')
+        unsub()
     }
   }).catch((err) => {
     console.error(err, address)
