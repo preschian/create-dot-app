@@ -1,4 +1,4 @@
-import type { PassetHubApi } from '../types/passet-hub'
+import type { PassetHubApi } from '../generated-types/passet-hub'
 import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
 

@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "types:contract": "dedot typink -m ../contract/target/ink/flipper.json -o ./src/types/contract",
-    "types:chain": "dedot chaintypes -w wss://testnet-passet-hub.polkadot.io -o ./src/types",
+    "types:contract": "dedot typink -m ../contract/target/ink/flipper.json -o ./src/generated-types/contract",
+    "types:chain": "dedot chaintypes -w wss://testnet-passet-hub.polkadot.io -o ./src/generated-types",
     "types:all": "npm run types:contract && npm run types:chain && npm run lint",
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
