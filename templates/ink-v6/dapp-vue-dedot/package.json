@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "contract:types": "rm -rf ./generated-types && dedot typink -m ../contract/target/ink/flipper.json -o ./generated-types && npm run lint",
+    "contract:types": "rm -rf ./src/generated-types && dedot typink -m ../contract/target/ink/flipper.json -o ./src/generated-types && npm run lint",
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
