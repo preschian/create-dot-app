@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@plugin "@iconify/tailwind4";
+@plugin "daisyui";
+
+.container {
+  max-width: 1200px;
+}
+
+/* to enable dark mode, remove data-theme="light" from html tag */
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --depth: 0;
+}
+
+@keyframes flash-highlight {
+  0% {
+    background-color: rgb(187 247 208);
+    transform: scale(1.05);
+  }
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}
+
+.block-highlight {
+  animation: flash-highlight 1s ease-out;
+  display: inline-block;
+}

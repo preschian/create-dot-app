@@ -1,0 +1,34 @@
+{
+  "name": "vue-dedot",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "contract:types": "rm -rf ./generated-types && dedot typink -m ../contract/target/ink/flipper.json -o ./generated-types && npm run lint",
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --fix"
+  },
+  "dependencies": {
+    "@talismn/connect-wallets": "^1.2.8",
+    "dedot": "^0.18.2",
+    "vue": "^3.5.22"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^5.4.1",
+    "@dedot/chaintypes": "^0.161.0",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/token-branded": "^1.2.29",
+    "@iconify/tailwind4": "^1.0.6",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "daisyui": "^5.1.29",
+    "eslint": "^9.37.0",
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.9",
+    "vue-tsc": "^3.0.9"
+  }
+}
