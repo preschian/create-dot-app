@@ -1,0 +1,13 @@
+{
+  "name": "ink-v6",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "contract:build": "pop build ./contract",
+    "contract:deploy": "pop up ./contract --use-wallet --args false --url wss://testnet-passet-hub.polkadot.io"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
