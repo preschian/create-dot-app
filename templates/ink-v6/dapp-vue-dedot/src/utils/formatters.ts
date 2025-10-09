@@ -2,10 +2,7 @@ import type { Prefix } from '~/utils/sdk'
 import { encodeAddress } from 'dedot/utils'
 
 const subscan: Record<Prefix, string> = {
-  dot: 'https://polkadot.subscan.io',
-  dot_asset_hub: 'https://assethub-polkadot.subscan.io',
-  pas: 'https://paseo.subscan.io',
-  pas_asset_hub: 'https://assethub-paseo.subscan.io',
+  passethub: 'https://passet-hub-paseo.subscan.io',
 }
 
 export function unifyAddress(address: string) {
@@ -30,20 +27,10 @@ export function explorerDetail(chain: Prefix, hash: string): string {
   return url.toString()
 }
 
-export function buyTokenUrl(chainKey: Prefix, address?: string) {
-  if (chainKey === 'dot' || chainKey === 'dot_asset_hub') {
-    const url = new URL('https://checkout.banxa.com')
-    url.searchParams.set('coinType', 'DOT')
-    url.searchParams.set('blockchain', 'DOT')
-    url.searchParams.set('walletAddress', address || '')
-    url.searchParams.set('orderType', 'BUY')
-
-    return url.toString()
-  }
-
+export function buyTokenUrl(chainKey: Prefix) {
   const faucetUrl = new URL('https://faucet.polkadot.io/')
 
-  if (chainKey === 'pas_asset_hub') {
+  if (chainKey === 'passethub') {
     faucetUrl.searchParams.set('parachain', '1000')
   }
 

@@ -1,23 +1,11 @@
-import type { PaseoApi, PaseoAssetHubApi, PolkadotApi, PolkadotAssetHubApi } from '@dedot/chaintypes'
+import type { PassetHubApi } from '../types/passet-hub'
 import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
 
 const CONFIG = {
-  dot: {
-    providers: ['wss://dot-rpc.stakeworld.io'],
-    apiType: {} as PolkadotApi,
-  },
-  dot_asset_hub: {
-    providers: ['wss://dot-rpc.stakeworld.io/assethub'],
-    apiType: {} as PolkadotAssetHubApi,
-  },
-  pas: {
-    providers: ['wss://pas-rpc.stakeworld.io'],
-    apiType: {} as PaseoApi,
-  },
-  pas_asset_hub: {
-    providers: ['wss://pas-rpc.stakeworld.io/assethub'],
-    apiType: {} as PaseoAssetHubApi,
+  passethub: {
+    providers: ['wss://testnet-passet-hub.polkadot.io'],
+    apiType: {} as PassetHubApi,
   },
 } as const
 
