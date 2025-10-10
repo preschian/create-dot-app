@@ -67,7 +67,7 @@ export async function createRemarkTransaction(
 
   const unsub = await api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
     if (result.status.type === 'BestChainBlockIncluded') {
-      callbacks.onTxHash(result.txHash)
+      callbacks.onTxHash(result.status.value.blockHash.toString())
     }
 
     if (result.status.type === 'Finalized') {

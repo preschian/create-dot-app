@@ -52,7 +52,7 @@ async function signTransaction() {
         {{ txHash }}
       </div>
       <a
-        :href="explorerDetail(chainKey, txHash)"
+        :href="explorerDetail(txHash)"
         target="_blank"
         class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
       >

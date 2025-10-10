@@ -20,15 +20,15 @@ const { selectedAccount } = useConnect()
           <span>App Starter</span>
         </h1>
         <p class="text-xl text-gray-600 font-mono flex items-center justify-center gap-2">
-          <span>Powered by</span>
+          <span>Powered by Polkadot</span>
           <span class="icon-[token-branded--polkadot] animate-spin" style="animation-duration: 16s;" />
         </p>
       </div>
     </section>
 
     <!-- Account Cards -->
-    <main class="container mx-auto py-8 space-y-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+    <main class="container mx-auto py-8 space-y-8 w-1/2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <div v-for="chainKey in chainKeys" :key="chainKey">
           <AccountCard
             :chain-key="chainKey"
