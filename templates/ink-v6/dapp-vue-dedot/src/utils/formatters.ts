@@ -1,11 +1,13 @@
-import type { Prefix } from '~/utils/sdk'
+import type { Prefix } from './sdk'
+import { CHAIN_CONFIG } from './sdk'
 
 export function stripAddress(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`
 }
 
-export function explorerDetail(hash: string): string {
-  const url = `https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Ftestnet-passet-hub.polkadot.io#/explorer/query/${hash}`
+export function explorerDetail(hash: string, chainKey: Prefix): string {
+  const rpc = CHAIN_CONFIG[chainKey].providers[0]
+  const url = `https://polkadot.js.org/apps/?rpc=${rpc}#/explorer/query/${hash}`
   return url
 }
 

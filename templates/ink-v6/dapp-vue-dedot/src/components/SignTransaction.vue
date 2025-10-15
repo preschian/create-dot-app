@@ -52,11 +52,11 @@ async function signTransaction() {
         {{ txHash }}
       </div>
       <a
-        :href="explorerDetail(txHash)"
+        :href="explorerDetail(txHash, chainKey)"
         target="_blank"
         class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
       >
-        View on Subscan <span class="icon-[mdi--open-in-new]" />
+        View on Explorer <span class="icon-[mdi--open-in-new]" />
       </a>
     </div>
 
