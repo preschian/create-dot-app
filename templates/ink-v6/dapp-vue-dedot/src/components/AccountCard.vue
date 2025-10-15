@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
 import { useCurrentBlock } from '~/composables/useCurrentBlock'
-import { buyTokenUrl, explorerAccount } from '~/utils/formatters'
+import { buyTokenUrl } from '~/utils/formatters'
 import Balance from './Balance.vue'
 import SignTransaction from './SignTransaction.vue'
 
@@ -63,12 +63,11 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
       <!-- Quick Actions Row -->
       <div class="pt-3 border-t border-gray-100">
         <div class="grid grid-cols-2 gap-2 mb-3">
-          <a :href="buyTokenUrl(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
+          <a :href="buyTokenUrl(chainKey)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider w-full">
             Get Tokens
           </a>
-          <a :href="explorerAccount(chainKey, address)" target="_blank" class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
-            <span class="icon-[mdi--open-in-new]" />
-            Explorer
+          <a class="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
+            Something
           </a>
         </div>
 
