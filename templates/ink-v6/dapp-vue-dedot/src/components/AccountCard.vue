@@ -70,19 +70,16 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
 
           <!-- Actions Section -->
           <div class="border-t border-gray-100 pt-6 space-y-3">
-            <!-- Quick Actions Row -->
-            <div class="grid grid-cols-2 gap-3">
-              <a :href="buyTokenUrl()" target="_blank" class="btn btn-sm btn-outline btn-neutral uppercase tracking-wider w-full">
-                Get Tokens
-              </a>
-              <a class="btn btn-sm btn-outline btn-neutral uppercase tracking-wider">
-                Something
-              </a>
-            </div>
-
-            <!-- Transaction Component -->
-            <div v-if="isConnected">
-              <SignTransaction :chain-key="chainKey" :address="address" />
+            <!-- Transaction Component with Get Tokens -->
+            <div v-if="isConnected" class="flex items-center gap-3">
+              <div class="flex-1">
+                <SignTransaction :chain-key="chainKey" :address="address" />
+              </div>
+              <div class="tooltip" data-tip="Get Tokens">
+                <a :href="buyTokenUrl()" target="_blank" class="btn btn-sm btn-outline btn-neutral btn-square">
+                  <span class="icon-[mdi--wallet-plus] text-lg" />
+                </a>
+              </div>
             </div>
 
             <!-- Disconnected state -->

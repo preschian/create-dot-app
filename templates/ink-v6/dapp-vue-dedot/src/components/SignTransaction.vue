@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
+import { ref } from 'vue'
 import { useConnect } from '~/composables/useConnect'
 import { useContractTransaction } from '~/composables/useContractTransaction'
 import { explorerDetail } from '~/utils/formatters'
@@ -16,40 +17,69 @@ const {
   txHash,
   flipContractValue,
 } = useContractTransaction(props.chainKey, props.address)
+
+const showResult = ref(true)
+const showTxHash = ref(true)
+
+async function handleFlip() {
+  showResult.value = true
+  showTxHash.value = true
+  await flipContractValue()
+}
+
+function closeResult() {
+  showResult.value = false
+}
+
+function closeTxHash() {
+  showTxHash.value = false
+}
 </script>
 
 <template>
   <div>
-    <!-- Status -->
-    <div v-if="isProcessing" role="alert" class="alert alert-info mb-4">
-      <span class="icon-[mdi--loading] animate-spin" />
-      <span>
-        Processing transaction...
-      </span>
-    </div>
-
-    <!-- Result -->
-    <div v-if="result" role="alert" class="alert mb-4" :class="result.includes('Error') ? 'alert-error' : 'alert-success'">
-      <span v-if="result.includes('Error')" class="icon-[mdi--alert-circle]" />
-      <span v-else class="icon-[mdi--check-circle]" />
-      <span>{{ result }}</span>
-    </div>
-
-    <!-- Transaction Hash Link -->
-    <div v-if="txHash" class="mb-4 p-3 border border-gray-200">
-      <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">
-        Transaction Hash
+    <!-- Floating Toast Notifications -->
+    <div class="toast toast-bottom toast-end z-50">
+      <!-- Processing State -->
+      <div v-if="isProcessing" role="alert" class="alert alert-info shadow-lg">
+        <span class="icon-[mdi--loading] animate-spin" />
+        <span>Processing transaction...</span>
       </div>
-      <div class="text-sm text-gray-800 font-mono break-all mb-2 truncate">
-        {{ txHash }}
+
+      <!-- Result State -->
+      <div v-if="result && !isProcessing && showResult" role="alert" class="alert shadow-lg" :class="result.includes('Error') ? 'alert-error' : 'alert-success'">
+        <span v-if="result.includes('Error')" class="icon-[mdi--alert-circle]" />
+        <span v-else class="icon-[mdi--check-circle]" />
+        <span>{{ result }}</span>
+        <button class="btn btn-xs btn-ghost btn-square" @click="closeResult">
+          <span class="icon-[mdi--close]" />
+        </button>
       </div>
-      <a
-        :href="explorerDetail(txHash, chainKey)"
-        target="_blank"
-        class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
-      >
-        View on Explorer <span class="icon-[mdi--open-in-new]" />
-      </a>
+
+      <!-- Transaction Hash Toast -->
+      <div v-if="txHash && showTxHash" role="alert" class="alert alert-neutral shadow-lg">
+        <div class="flex flex-col gap-2 w-full">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="icon-[mdi--link-variant]" />
+              <span class="text-xs uppercase tracking-wider">Transaction Hash</span>
+            </div>
+            <button class="btn btn-xs btn-ghost btn-square" @click="closeTxHash">
+              <span class="icon-[mdi--close]" />
+            </button>
+          </div>
+          <div class="text-xs font-mono break-all">
+            {{ txHash }}
+          </div>
+          <a
+            :href="explorerDetail(txHash, chainKey)"
+            target="_blank"
+            class="inline-flex items-center gap-1 text-xs hover:underline"
+          >
+            View on Explorer <span class="icon-[mdi--open-in-new]" />
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- Action -->
@@ -57,7 +87,7 @@ const {
       v-if="selectedAccount"
       :disabled="isProcessing"
       class="btn btn-sm btn-neutral w-full uppercase tracking-wider"
-      @click="flipContractValue"
+      @click="handleFlip"
     >
       <span v-if="isProcessing" class="icon-[mdi--loading] animate-spin" />
       <span v-else class="icon-[mdi--toggle-switch]" />
