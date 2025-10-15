@@ -1,11 +1,9 @@
 import type { FlipperContractApi } from '~/generated-types/contract/flipper'
 import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
-import { onUnmounted, ref } from 'vue'
+import { ref } from 'vue'
+import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
 import sdk from '~/utils/sdk'
-import contractMetadata from '../../../contract/target/ink/contract.json'
-
-const CONTRACT_ADDRESS = '0xf4c151d281edc887666d53307174207856be8371'
 
 export function useContractQuery(chainKey: Prefix, address?: string) {
   const contractValue = ref<boolean | null>(null)
@@ -23,9 +21,15 @@ export function useContractQuery(chainKey: Prefix, address?: string) {
       const { api: apiInstance } = sdk(chainKey)
       const api = await apiInstance
 
-      const contract = new Contract(api as any, contractMetadata, CONTRACT_ADDRESS, {
-        defaultCaller: address,
-      }) as Contract<FlipperContractApi>
+      const contractAddress = getContractAddress(chainKey)
+      const contractMetadata = getContractMetadata(chainKey)
+
+      const contract = new Contract<FlipperContractApi>(
+        api as any,
+        contractMetadata,
+        contractAddress,
+        { defaultCaller: address },
+      )
 
       const result = await contract.query.get()
 
@@ -41,8 +45,6 @@ export function useContractQuery(chainKey: Prefix, address?: string) {
       isLoading.value = false
     }
   }
-
-  onUnmounted(() => {})
 
   return {
     contractValue,

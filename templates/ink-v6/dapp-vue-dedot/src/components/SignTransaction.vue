@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
 import { useConnect } from '~/composables/useConnect'
-import { useTransaction } from '~/composables/useTransaction'
+import { useContractTransaction } from '~/composables/useContractTransaction'
 import { explorerDetail } from '~/utils/formatters'
 
 const props = defineProps<{
   chainKey: Prefix
+  address?: string
 }>()
 
 const { selectedAccount } = useConnect()
@@ -13,17 +14,8 @@ const {
   isProcessing,
   result,
   txHash,
-  signRemarkTransaction,
-} = useTransaction()
-
-async function signTransaction() {
-  if (!selectedAccount.value)
-    return
-
-  const message = 'Hello from create-dot-app'
-
-  await signRemarkTransaction(props.chainKey, message)
-}
+  flipContractValue,
+} = useContractTransaction(props.chainKey, props.address)
 </script>
 
 <template>
@@ -65,10 +57,11 @@ async function signTransaction() {
       v-if="selectedAccount"
       :disabled="isProcessing"
       class="btn btn-sm btn-neutral w-full uppercase tracking-wider"
-      @click="signTransaction"
+      @click="flipContractValue"
     >
       <span v-if="isProcessing" class="icon-[mdi--loading] animate-spin" />
-      {{ isProcessing ? 'Processing...' : 'Sign Transaction' }}
+      <span v-else class="icon-[mdi--toggle-switch]" />
+      {{ isProcessing ? 'Processing...' : 'Flip Contract Value' }}
     </button>
 
     <div v-else class="flex items-center justify-center gap-2 text-xs text-gray-500">

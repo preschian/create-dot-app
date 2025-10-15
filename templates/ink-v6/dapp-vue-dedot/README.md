@@ -26,10 +26,7 @@ This template uses **Dedot** - a Polkadot SDK for JavaScript/TypeScript that pro
 ## 🌐 Supported Chains
 
 The template comes pre-configured for:
-- **Polkadot** (DOT) - Main network
-- **Polkadot Asset Hub** - Asset management
-- **Paseo** (PAS) - Testnet
-- **Paseo Asset Hub** - Testnet asset management
+- **Passet Hub** - Polkadot Asset Hub Testnet
 
 ## 🛠️ Getting Started
 
@@ -81,13 +78,13 @@ The template includes a `ContractData.vue` component that demonstrates how to qu
 Example usage:
 
 ```typescript
-import { Contract } from 'dedot/contracts'
 import type { FlipperContractApi } from '~/generated-types/contract/flipper'
+import { Contract } from 'dedot/contracts'
 import contractMetadata from '../../../contract/target/ink/contract.json'
 
 const contract = new Contract<FlipperContractApi>(
-  api, 
-  contractMetadata, 
+  api,
+  contractMetadata,
   CONTRACT_ADDRESS,
   { defaultCaller: address }
 )

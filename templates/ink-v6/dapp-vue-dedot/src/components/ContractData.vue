@@ -24,8 +24,8 @@ watch(() => props.address, (newAddress) => {
 </script>
 
 <template>
-  <div class="border-t border-gray-100 pt-3 mt-3">
-    <div class="flex items-center justify-between mb-2">
+  <div>
+    <div class="flex items-center justify-between mb-3">
       <div class="text-xs text-gray-500 uppercase tracking-wider">
         Contract Value
       </div>
@@ -40,24 +40,24 @@ watch(() => props.address, (newAddress) => {
       </button>
     </div>
 
-    <div v-if="isLoading && contractValue === null" class="flex items-center gap-2 text-sm text-gray-500">
+    <div v-if="isLoading && contractValue === null" class="flex items-center gap-2 text-sm text-gray-400 py-2">
       <span class="icon-[mdi--loading] animate-spin" />
       Loading...
     </div>
 
-    <div v-else-if="error" class="text-sm text-red-600">
+    <div v-else-if="error" class="text-sm text-red-600 py-2">
       {{ error }}
     </div>
 
-    <div v-else-if="contractValue !== null" class="font-light text-black text-lg">
-      <div class="flex items-center gap-2">
-        <span v-if="contractValue" class="icon-[mdi--toggle-switch] text-green-600 text-2xl" />
-        <span v-else class="icon-[mdi--toggle-switch-off] text-gray-400 text-2xl" />
-        <span class="font-mono">{{ contractValue ? 'TRUE' : 'FALSE' }}</span>
+    <div v-else-if="contractValue !== null">
+      <div class="flex items-center gap-3">
+        <span v-if="contractValue" class="icon-[mdi--toggle-switch] text-green-600 text-3xl" />
+        <span v-else class="icon-[mdi--toggle-switch-off] text-gray-400 text-3xl" />
+        <span class="font-mono font-light text-black text-xl">{{ contractValue ? 'TRUE' : 'FALSE' }}</span>
       </div>
     </div>
 
-    <div v-else class="text-sm text-gray-400">
+    <div v-else class="text-sm text-gray-400 py-2">
       No data
     </div>
   </div>

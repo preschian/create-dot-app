@@ -26,14 +26,14 @@ const { selectedAccount } = useConnect()
     </section>
 
     <!-- Account Cards -->
-    <main class="container mx-auto py-8 space-y-8 w-1/2">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div v-for="chainKey in chainKeys" :key="chainKey">
-          <AccountCard
-            :chain-key="chainKey"
-            :address="selectedAccount?.address || undefined"
-          />
-        </div>
+    <main class="container mx-auto py-8 flex justify-center">
+      <div class="flex flex-col gap-4 w-full max-w-2xl">
+        <AccountCard
+          v-for="chainKey in chainKeys"
+          :key="chainKey"
+          :chain-key="chainKey"
+          :address="selectedAccount?.address || undefined"
+        />
       </div>
     </main>
 

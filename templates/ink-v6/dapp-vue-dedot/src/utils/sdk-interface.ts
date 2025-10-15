@@ -80,3 +80,8 @@ export async function createRemarkTransaction(
     callbacks.onError(err.message || 'Unknown error')
   })
 }
+
+export async function getClient(chainPrefix: Prefix) {
+  const { api: apiInstance } = sdk(chainPrefix)
+  return await apiInstance
+}

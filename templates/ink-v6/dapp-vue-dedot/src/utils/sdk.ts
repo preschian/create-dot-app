@@ -1,5 +1,4 @@
 import type { PassetHubApi } from '../generated-types/passet-hub'
-import type { PopApi } from '../generated-types/pop'
 import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
 
@@ -7,10 +6,6 @@ export const CHAIN_CONFIG = {
   passethub: {
     providers: ['wss://testnet-passet-hub.polkadot.io'],
     apiType: {} as PassetHubApi,
-  },
-  pop: {
-    providers: ['wss://rpc1.paseo.popnetwork.xyz'],
-    apiType: {} as PopApi,
   },
 } as const
 

@@ -11,12 +11,8 @@ export function explorerDetail(hash: string, chainKey: Prefix): string {
   return url
 }
 
-export function buyTokenUrl(chainKey: Prefix) {
-  if (chainKey === 'passethub') {
-    const faucetUrl = new URL('https://faucet.polkadot.io/')
-    faucetUrl.searchParams.set('parachain', '1111')
-    return faucetUrl.toString()
-  }
-
-  return 'https://learn.onpop.io/contracts/guides/bridge-tokens-to-pop-network'
+export function buyTokenUrl() {
+  const faucetUrl = new URL('https://faucet.polkadot.io/')
+  faucetUrl.searchParams.set('parachain', '1111')
+  return faucetUrl.toString()
 }

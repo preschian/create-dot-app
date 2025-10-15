@@ -5,9 +5,8 @@
   "private": true,
   "scripts": {
     "types:contract": "dedot typink -m ../contract/target/ink/flipper.json -o ./src/generated-types/contract",
-    "types:chain:passet-hub": "dedot chaintypes -w wss://testnet-passet-hub.polkadot.io -o ./src/generated-types",
-    "types:chain:pop": "dedot chaintypes -w wss://rpc1.paseo.popnetwork.xyz -o ./src/generated-types",
-    "types:all": "npm run types:contract && npm run types:chain:passet-hub && npm run types:chain:pop && npm run lint",
+    "types:chain": "dedot chaintypes -w wss://testnet-passet-hub.polkadot.io -o ./src/generated-types",
+    "types:all": "npm run types:contract && npm run types:chain && npm run lint",
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
