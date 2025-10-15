@@ -3,6 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { useCurrentBlock } from '~/composables/useCurrentBlock'
 import { buyTokenUrl } from '~/utils/formatters'
 import Balance from './Balance.vue'
+import ContractData from './ContractData.vue'
 import SignTransaction from './SignTransaction.vue'
 
 const props = defineProps<{
@@ -47,6 +48,7 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
       <!-- Balance (when address exists) -->
       <div v-if="address">
         <Balance :key="address" :address="address" :chain-key="chainKey" />
+        <ContractData :key="address" :address="address" :chain-key="chainKey" />
       </div>
 
       <!-- Connect Wallet Message (when no address) -->

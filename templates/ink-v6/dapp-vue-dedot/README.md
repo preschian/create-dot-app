@@ -7,6 +7,7 @@ A modern **Vue 3 + TypeScript + Vite** template for building Polkadot decentrali
 - **Vue 3** with `<script setup>` composition API
 - **TypeScript** for type safety
 - **Dedot SDK** integration for Polkadot blockchain interaction
+- **Smart Contract Support** - Query and interact with ink! smart contracts
 - **TailwindCSS + DaisyUI** for beautiful UI components
 - **Wallet Connection** support via Talisman Connect
 - **Iconify** icons integration
@@ -50,12 +51,62 @@ npm run preview
 
 ```
 src/
-├── components/     # Vue components
-├── composables/    # Vue composition functions
-├── utils/          # Utility functions and SDK setup
-├── style.css       # Global styles
-└── App.vue         # Main application component
+├── components/         # Vue components
+│   ├── AccountCard.vue
+│   ├── Balance.vue
+│   ├── ContractData.vue     # Smart contract query display
+│   └── SignTransaction.vue
+├── composables/        # Vue composition functions
+│   ├── useConnect.ts
+│   ├── useContractQuery.ts  # Smart contract query logic
+│   ├── useCurrentBlock.ts
+│   └── useTransaction.ts
+├── generated-types/    # Auto-generated types from chains and contracts
+├── utils/              # Utility functions and SDK setup
+├── style.css          # Global styles
+└── App.vue            # Main application component
 ```
+
+## 📜 Smart Contract Integration
+
+This template includes support for querying ink! smart contracts using Dedot's contract API.
+
+### Querying Contract Data
+
+The template includes a `ContractData.vue` component that demonstrates how to query smart contract state. See the implementation in:
+
+- **`src/composables/useContractQuery.ts`** - Contains the contract query logic
+- **`src/components/ContractData.vue`** - Displays the contract data in the UI
+
+Example usage:
+
+```typescript
+import { Contract } from 'dedot/contracts'
+import type { FlipperContractApi } from '~/generated-types/contract/flipper'
+import contractMetadata from '../../../contract/target/ink/contract.json'
+
+const contract = new Contract<FlipperContractApi>(
+  api, 
+  contractMetadata, 
+  CONTRACT_ADDRESS,
+  { defaultCaller: address }
+)
+
+const result = await contract.query.get()
+const value = result.data // boolean value from flipper contract
+```
+
+### Generating Contract Types
+
+To generate TypeScript types from your ink! contract metadata:
+
+```bash
+npm run types:contract
+```
+
+This will generate type-safe APIs in `src/generated-types/contract/` based on your contract's JSON metadata.
+
+📖 For more details on smart contract integration, see the [Dedot Smart Contracts documentation](https://docs.dedot.dev/smart-contracts/queries).
 
 ## 🔧 Adding Custom Networks
 
