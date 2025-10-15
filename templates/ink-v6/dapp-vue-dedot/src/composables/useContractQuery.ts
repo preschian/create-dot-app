@@ -1,14 +1,23 @@
 import type { FlipperContractApi } from '~/generated-types/contract/flipper'
 import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
 import { getClient } from '~/utils/sdk-interface'
 
+const STORAGE_KEY = 'contract_value'
+
 export function useContractQuery(chainKey: Prefix, address?: string) {
-  const contractValue = ref<boolean | null>(null)
+  const storedValue = localStorage.getItem(`${STORAGE_KEY}_${chainKey}`)
+  const contractValue = ref<boolean | null>(storedValue !== null ? JSON.parse(storedValue) : null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
+
+  watch(contractValue, (newValue) => {
+    if (newValue !== null) {
+      localStorage.setItem(`${STORAGE_KEY}_${chainKey}`, JSON.stringify(newValue))
+    }
+  })
 
   async function queryContractValue() {
     if (!address)

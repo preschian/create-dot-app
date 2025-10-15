@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { getBalance } from '~/utils/sdk-interface'
 
 const props = defineProps<{
@@ -8,8 +8,20 @@ const props = defineProps<{
   chainKey: Prefix
 }>()
 
-const balance = ref('')
-const symbol = ref('')
+const STORAGE_KEY = 'balance'
+
+const storageKey = `${STORAGE_KEY}_${props.chainKey}`
+const storedData = localStorage.getItem(storageKey)
+const initialData = storedData ? JSON.parse(storedData) : { balance: '', symbol: '' }
+
+const balance = ref(initialData.balance)
+const symbol = ref(initialData.symbol)
+
+watch([balance, symbol], ([newBalance, newSymbol]) => {
+  if (newBalance && newSymbol) {
+    localStorage.setItem(storageKey, JSON.stringify({ balance: newBalance, symbol: newSymbol }))
+  }
+})
 
 onMounted(async () => {
   if (!props.address) {

@@ -48,7 +48,7 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
         <!-- Balance Section -->
         <div class="border-t border-gray-100 pt-6">
           <div v-if="address">
-            <Balance :key="address" :address="address" :chain-key="chainKey" />
+            <Balance :key="`${address}_${currentBlock}`" :address="address" :chain-key="chainKey" />
           </div>
 
           <div v-else class="flex flex-col items-center py-6">
@@ -64,7 +64,7 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
       <div class="p-6">
         <div v-if="address" class="space-y-6">
           <!-- Contract Data -->
-          <div>
+          <div :key="currentBlock">
             <ContractData :key="address" :address="address" :chain-key="chainKey" />
           </div>
 

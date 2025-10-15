@@ -46,7 +46,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
         .signAndSend(address, { signer }, ({ status }) => {
           if (status.type === 'BestChainBlockIncluded' || status.type === 'Finalized') {
             txHash.value = status.value.blockHash.toString()
-            result.value = `Transaction ${status.type === 'Finalized' ? 'finalized' : 'included'}!`
+            result.value = `Transaction ${status.type === 'Finalized' ? 'finalized' : 'submitted'}!`
             isProcessing.value = false
           }
         })

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
 import { useContractQuery } from '~/composables/useContractQuery'
 
 const props = defineProps<{
@@ -12,12 +12,6 @@ const { contractValue, isLoading, error, queryContractValue } = useContractQuery
 
 onMounted(() => {
   if (props.address) {
-    queryContractValue()
-  }
-})
-
-watch(() => props.address, (newAddress) => {
-  if (newAddress) {
     queryContractValue()
   }
 })
@@ -40,9 +34,9 @@ watch(() => props.address, (newAddress) => {
       </button>
     </div>
 
-    <div v-if="isLoading && contractValue === null" class="flex items-center gap-2 text-sm text-gray-400 py-2">
-      <span class="icon-[mdi--loading] animate-spin" />
-      Loading...
+    <div v-if="isLoading && contractValue === null" class="flex items-center gap-3 h-12">
+      <span class="icon-[mdi--loading] animate-spin text-3xl text-gray-400" />
+      <span class="font-mono font-light text-gray-400 text-xl">Loading...</span>
     </div>
 
     <div v-else-if="error" class="text-sm text-red-600 py-2">
@@ -50,7 +44,7 @@ watch(() => props.address, (newAddress) => {
     </div>
 
     <div v-else-if="contractValue !== null">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 h-12">
         <span v-if="contractValue" class="icon-[mdi--toggle-switch] text-green-600 text-3xl" />
         <span v-else class="icon-[mdi--toggle-switch-off] text-gray-400 text-3xl" />
         <span class="font-mono font-light text-black text-xl">{{ contractValue ? 'TRUE' : 'FALSE' }}</span>
