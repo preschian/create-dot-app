@@ -8,6 +8,11 @@ import sdk from './sdk'
 
 export const DAPP_NAME = name
 
+export async function getClient(chainPrefix: Prefix) {
+  const { api: apiInstance } = sdk(chainPrefix)
+  return await apiInstance
+}
+
 export async function polkadotSigner(): Promise<InjectedSigner | undefined> {
   const wallet = getWalletBySource(connectedWallet.value?.extensionName)
   await wallet?.enable(DAPP_NAME)
@@ -19,8 +24,7 @@ export async function subscribeToBlocks(
   networkKey: Prefix,
   onBlock: (data: { blockHeight: number, chainName: string }) => void,
 ) {
-  const { api: apiInstance } = sdk(networkKey)
-  const api = await apiInstance
+  const api = await getClient(networkKey)
   const chainName = await api.chainSpec.chainName()
 
   const unsub = await api.query.system.number(async (blockHeight) => {
@@ -31,8 +35,7 @@ export async function subscribeToBlocks(
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
-  const { api: apiInstance } = sdk(chainPrefix)
-  const api = await apiInstance
+  const api = await getClient(chainPrefix)
 
   const [balance, chainSpec] = await Promise.all([
     api.query.system.account(address),
@@ -49,39 +52,4 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
     balance: freeBalance,
     symbol: tokenSymbol,
   }
-}
-
-export async function createRemarkTransaction(
-  chainPrefix: Prefix,
-  message: string,
-  address = '',
-  signer: InjectedSigner,
-  callbacks: {
-    onTxHash: (hash: string) => void
-    onFinalized: () => void
-    onError: (error: string) => void
-  },
-) {
-  const { api: apiInstance } = sdk(chainPrefix)
-  const api = await apiInstance
-
-  const unsub = await api.tx.system.remark(message).signAndSend(address, { signer }, (result) => {
-    if (result.status.type === 'BestChainBlockIncluded') {
-      callbacks.onTxHash(result.status.value.blockHash.toString())
-    }
-
-    if (result.status.type === 'Finalized') {
-      callbacks.onFinalized()
-      if (typeof unsub === 'function')
-        unsub()
-    }
-  }).catch((err) => {
-    console.error(err, address)
-    callbacks.onError(err.message || 'Unknown error')
-  })
-}
-
-export async function getClient(chainPrefix: Prefix) {
-  const { api: apiInstance } = sdk(chainPrefix)
-  return await apiInstance
 }

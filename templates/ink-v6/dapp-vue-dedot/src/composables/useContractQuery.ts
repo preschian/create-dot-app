@@ -3,7 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
 import { ref } from 'vue'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
-import sdk from '~/utils/sdk'
+import { getClient } from '~/utils/sdk-interface'
 
 export function useContractQuery(chainKey: Prefix, address?: string) {
   const contractValue = ref<boolean | null>(null)
@@ -18,9 +18,7 @@ export function useContractQuery(chainKey: Prefix, address?: string) {
     error.value = null
 
     try {
-      const { api: apiInstance } = sdk(chainKey)
-      const api = await apiInstance
-
+      const api = await getClient(chainKey)
       const contractAddress = getContractAddress(chainKey)
       const contractMetadata = getContractMetadata(chainKey)
 

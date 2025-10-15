@@ -3,8 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
 import { ref } from 'vue'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
-import sdk from '~/utils/sdk'
-import { polkadotSigner } from '~/utils/sdk-interface'
+import { getClient, polkadotSigner } from '~/utils/sdk-interface'
 import { useConnect } from './useConnect'
 
 export function useContractTransaction(chainKey: Prefix, address?: string) {
@@ -31,9 +30,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
         return
       }
 
-      const { api: apiInstance } = sdk(chainKey)
-      const api = await apiInstance
-
+      const api = await getClient(chainKey)
       const contractAddress = getContractAddress(chainKey)
       const contractMetadata = getContractMetadata(chainKey)
 
