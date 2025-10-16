@@ -3,7 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { ref } from 'vue'
 import { useConnect } from '~/composables/useConnect'
 import { useContractTransaction } from '~/composables/useContractTransaction'
-import { explorerDetail } from '~/utils/formatters'
+import { explorerDetail, stripAddress } from '~/utils/formatters'
 
 const props = defineProps<{
   chainKey: Prefix
@@ -58,27 +58,23 @@ function closeTxHash() {
 
       <!-- Transaction Hash Toast -->
       <div v-if="txHash && showTxHash" role="alert" class="alert alert-neutral shadow-lg">
-        <div class="flex flex-col gap-2 w-full">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="icon-[mdi--link-variant]" />
-              <span class="text-xs uppercase tracking-wider">Transaction Hash</span>
-            </div>
-            <button class="btn btn-xs btn-ghost btn-square" @click="closeTxHash">
-              <span class="icon-[mdi--close]" />
-            </button>
-          </div>
-          <div class="text-xs font-mono break-all">
-            {{ txHash }}
-          </div>
-          <a
-            :href="explorerDetail(txHash, chainKey)"
-            target="_blank"
-            class="inline-flex items-center gap-1 text-xs hover:underline"
-          >
-            View on Explorer <span class="icon-[mdi--open-in-new]" />
-          </a>
+        <div class="flex items-center gap-2">
+          <span class="icon-[mdi--link-variant]" />
+          <span class="text-xs uppercase tracking-wider">Transaction Hash</span>
         </div>
+        <div class="text-xs font-mono break-all">
+          {{ stripAddress(txHash) }}
+        </div>
+        <a
+          :href="explorerDetail(txHash, chainKey)"
+          target="_blank"
+          class="inline-flex items-center gap-1 text-xs hover:underline"
+        >
+          View on Explorer <span class="icon-[mdi--open-in-new]" />
+        </a>
+        <button class="btn btn-xs btn-ghost btn-square" @click="closeTxHash">
+          <span class="icon-[mdi--close]" />
+        </button>
       </div>
     </div>
 
