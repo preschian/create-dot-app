@@ -1,33 +1,18 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
-  const value = ref<T>(initialValue)
-
   const stored = localStorage.getItem(key)
-  if (stored) {
-    value.value = JSON.parse(stored) as T
-  }
+  const value = ref<T>(stored ? JSON.parse(stored) : initialValue)
 
-  watch(value, (newValue) => {
-    if (newValue === null) {
-      localStorage.removeItem(key)
-    }
-    else {
-      localStorage.setItem(key, JSON.stringify(newValue))
-    }
-  }, { deep: true })
-
-  function setItem(newValue: T) {
+  const setItem = (newValue: T) => {
     value.value = newValue
+    localStorage.setItem(key, JSON.stringify(newValue))
   }
 
-  function removeItem() {
-    value.value = null as unknown as T
+  const removeItem = () => {
+    value.value = initialValue
+    localStorage.removeItem(key)
   }
 
-  return {
-    value,
-    setItem,
-    removeItem,
-  }
+  return { value, setItem, removeItem }
 }

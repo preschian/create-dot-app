@@ -1,7 +1,7 @@
 import type { Prefix } from '~/utils/sdk'
 import { formatBalance } from '@polkadot/util'
 import { computed, onMounted } from 'vue'
-import { config, sdk } from '~/utils/sdk'
+import sdk, { CHAIN_CONFIG } from '~/utils/sdk'
 import { useLocalStorage } from './useLocalStorage'
 
 export function useBalance(chainKey: Prefix, address?: string) {
@@ -15,7 +15,7 @@ export function useBalance(chainKey: Prefix, address?: string) {
       return
 
     const { client } = sdk(chainKey)
-    const typedApi = client.getTypedApi(config[chainKey].descriptor)
+    const typedApi = client.getTypedApi(CHAIN_CONFIG[chainKey].descriptor)
 
     const [balance, chainSpec] = await Promise.all([
       typedApi.query.System.Account.getValue(address),

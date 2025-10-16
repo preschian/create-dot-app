@@ -8,25 +8,25 @@ import { ref } from 'vue'
 import { passet } from '~/descriptors'
 import { name } from '../../package.json'
 
-export const DAPP_NAME = name
-
-export const config = {
-  passet: {
+export const CHAIN_CONFIG = {
+  passethub: {
     descriptor: passet,
     providers: ['wss://testnet-passet-hub.polkadot.io'],
   },
 } as const
 
-export type Prefix = keyof typeof config
-export const chainKeys = Object.keys(config) as Prefix[]
+export type Prefix = keyof typeof CHAIN_CONFIG
+export const chainKeys = Object.keys(CHAIN_CONFIG) as Prefix[]
+
+export const DAPP_NAME = name
 
 const clients = ref<Partial<Record<Prefix, PolkadotClient>>>({})
 
-export function sdk<T extends Prefix>(chain: T) {
+export default function sdk<T extends Prefix>(chain: T) {
   if (!clients.value[chain]) {
     clients.value[chain] = createClient(
       withPolkadotSdkCompat(
-        getWsProvider(config[chain].providers[0]),
+        getWsProvider(CHAIN_CONFIG[chain].providers[0]),
       ),
     )
   }
@@ -48,5 +48,3 @@ export async function polkadotSigner(extensionName: string, address: string): Pr
     return undefined
   }
 }
-
-export default sdk
