@@ -21,7 +21,8 @@ This template uses **Dedot** - a Polkadot SDK for JavaScript/TypeScript that pro
 
 ### Configuration Files:
 - **`src/utils/sdk.ts`** - Configures which chains to connect to and manages chain endpoints. You can modify supported networks and RPC providers here.
-- **`src/utils/sdk-interface.ts`** - Provides high-level functions for onchain SDK calls.
+- **`src/utils/contract-config.ts`** - Smart contract configuration and metadata.
+- **`src/utils/formatters.ts`** - Utility functions for formatting data.
 
 ## 🌐 Supported Chains
 
@@ -56,8 +57,9 @@ src/
 ├── composables/        # Vue composition functions
 │   ├── useConnect.ts
 │   ├── useContractQuery.ts  # Smart contract query logic
+│   ├── useContractTransaction.ts
 │   ├── useCurrentBlock.ts
-│   └── useTransaction.ts
+│   └── useLocalStorage.ts
 ├── generated-types/    # Auto-generated types from chains and contracts
 ├── utils/              # Utility functions and SDK setup
 ├── style.css          # Global styles
