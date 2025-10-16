@@ -53,7 +53,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
       const unsub = tx.signSubmitAndWatch(signer).subscribe({
         next: (event) => {
           if (event.type === 'txBestBlocksState' && event.found) {
-            txHash.value = event.txHash
+            txHash.value = event.block.hash
           }
 
           if (event.type === 'finalized') {
