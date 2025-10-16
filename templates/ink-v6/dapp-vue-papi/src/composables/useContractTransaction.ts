@@ -2,7 +2,7 @@ import type { Prefix } from '~/utils/sdk'
 import { ref } from 'vue'
 import { contracts } from '~/descriptors'
 import { getContractAddress } from '~/utils/contract-config'
-import { polkadotSigner, sdk } from '~/utils/sdk'
+import sdk, { polkadotSigner } from '~/utils/sdk'
 import { useConnect } from './useConnect'
 
 export function useContractTransaction(chainKey: Prefix, address?: string) {
@@ -53,7 +53,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
       const unsub = tx.signSubmitAndWatch(signer).subscribe({
         next: (event) => {
           if (event.type === 'txBestBlocksState' && event.found) {
-            txHash.value = event.txHash
+            txHash.value = event.block.hash
           }
 
           if (event.type === 'finalized') {
