@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
+import { ref } from 'vue'
 import { useConnect } from '~/composables/useConnect'
-import { useTransaction } from '~/composables/useTransaction'
-import { explorerDetail } from '~/utils/formatters'
+import { useContractTransaction } from '~/composables/useContractTransaction'
+import { explorerDetail, stripAddress } from '~/utils/formatters'
 
 const props = defineProps<{
   chainKey: Prefix
+  address?: string
 }>()
 
 const { selectedAccount } = useConnect()
@@ -13,51 +15,67 @@ const {
   isProcessing,
   result,
   txHash,
-  signRemarkTransaction,
-} = useTransaction()
+  flipContractValue,
+} = useContractTransaction(props.chainKey, props.address)
 
-async function signTransaction() {
-  if (!selectedAccount.value)
-    return
+const showResult = ref(true)
+const showTxHash = ref(true)
 
-  const message = 'Hello from create-dot-app'
+async function handleFlip() {
+  showResult.value = true
+  showTxHash.value = true
+  await flipContractValue()
+}
 
-  await signRemarkTransaction(props.chainKey, message)
+function closeResult() {
+  showResult.value = false
+}
+
+function closeTxHash() {
+  showTxHash.value = false
 }
 </script>
 
 <template>
   <div>
-    <!-- Status -->
-    <div v-if="isProcessing" role="alert" class="alert alert-info mb-4">
-      <span class="icon-[mdi--loading] animate-spin" />
-      <span>
-        Processing transaction...
-      </span>
-    </div>
-
-    <!-- Result -->
-    <div v-if="result" role="alert" class="alert mb-4" :class="result.includes('Error') ? 'alert-error' : 'alert-success'">
-      <span v-if="result.includes('Error')" class="icon-[mdi--alert-circle]" />
-      <span v-else class="icon-[mdi--check-circle]" />
-      <span>{{ result }}</span>
-    </div>
-
-    <!-- Transaction Hash Link -->
-    <div v-if="txHash" class="mb-4 p-3 border border-gray-200">
-      <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">
-        Transaction Hash
+    <!-- Floating Toast Notifications -->
+    <div class="toast toast-bottom toast-end z-50">
+      <!-- Processing State -->
+      <div v-if="isProcessing" role="alert" class="alert alert-info shadow-lg">
+        <span class="icon-[mdi--loading] animate-spin" />
+        <span>Processing transaction...</span>
       </div>
-      <div class="text-sm text-gray-800 font-mono break-all mb-2 truncate">
-        {{ txHash }}
+
+      <!-- Result State -->
+      <div v-if="result && !isProcessing && showResult" role="alert" class="alert shadow-lg" :class="result.includes('Error') ? 'alert-error' : 'alert-success'">
+        <span v-if="result.includes('Error')" class="icon-[mdi--alert-circle]" />
+        <span v-else class="icon-[mdi--check-circle]" />
+        <span>{{ result }}</span>
+        <button class="btn btn-xs btn-ghost btn-square" @click="closeResult">
+          <span class="icon-[mdi--close]" />
+        </button>
       </div>
-      <a
-        :href="explorerDetail(chainKey, txHash)"
-        target="_blank"
-        class="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
-      >
-        View on Subscan <span class="icon-[mdi--open-in-new]" />
-      </a>
+
+      <!-- Transaction Hash Toast -->
+      <div v-if="txHash && showTxHash" role="alert" class="alert alert-neutral shadow-lg">
+        <div class="flex items-center gap-2">
+          <span class="icon-[mdi--link-variant]" />
+          <span class="text-xs uppercase tracking-wider">Transaction Hash</span>
+        </div>
+        <div class="text-xs font-mono break-all">
+          {{ stripAddress(txHash) }}
+        </div>
+        <a
+          :href="explorerDetail(txHash, chainKey)"
+          target="_blank"
+          class="inline-flex items-center gap-1 text-xs hover:underline"
+        >
+          View on Explorer <span class="icon-[mdi--open-in-new]" />
+        </a>
+        <button class="btn btn-xs btn-ghost btn-square" @click="closeTxHash">
+          <span class="icon-[mdi--close]" />
+        </button>
+      </div>
     </div>
 
     <!-- Action -->
@@ -65,10 +83,11 @@ async function signTransaction() {
       v-if="selectedAccount"
       :disabled="isProcessing"
       class="btn btn-sm btn-neutral w-full uppercase tracking-wider"
-      @click="signTransaction"
+      @click="handleFlip"
     >
       <span v-if="isProcessing" class="icon-[mdi--loading] animate-spin" />
-      {{ isProcessing ? 'Processing...' : 'Sign Transaction' }}
+      <span v-else class="icon-[mdi--toggle-switch]" />
+      {{ isProcessing ? 'Processing...' : 'Flip Contract Value' }}
     </button>
 
     <div v-else class="flex items-center justify-center gap-2 text-xs text-gray-500">

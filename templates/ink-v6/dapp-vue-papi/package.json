@@ -6,9 +6,8 @@
   "scripts": {
     "contract:build": "pop build ./contract",
     "contract:deploy": "pop up ./contract --use-wallet --args false --url wss://testnet-passet-hub.polkadot.io",
-    "dapp:add-chain": "papi add -w wss://testnet-passet-hub.polkadot.io passet",
-    "dapp:add-contract": "papi ink add ./contract/target/ink/flipper.json",
-    "dapp:all": "npm run dapp:add-chain && npm run dapp:add-contract",
+    "add-chain": "papi add -w wss://testnet-passet-hub.polkadot.io passet",
+    "add-contract": "papi ink add ./contract/target/ink/flipper.json",
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",

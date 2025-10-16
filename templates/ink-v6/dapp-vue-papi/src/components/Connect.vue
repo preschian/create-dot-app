@@ -25,18 +25,6 @@ function handleSelectAccount(account: typeof selectedAccount.value) {
   }
 }
 
-function openConnectModal() {
-  connectModal.value?.showModal()
-}
-
-function closeConnectModal() {
-  connectModal.value?.close()
-}
-
-function toggleOtherWallets() {
-  showOtherWallets.value = !showOtherWallets.value
-}
-
 function isWalletConnected(wallet: typeof connectedWallet.value) {
   return connectedWallet.value?.extensionName === wallet?.extensionName
 }
@@ -51,7 +39,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
   <div class="flex items-center gap-2">
     <button
       class="btn btn-outline btn-sm font-mono"
-      @click="openConnectModal"
+      @click="connectModal?.showModal()"
     >
       <div v-if="!selectedAccount" class="flex items-center gap-2">
         <span class="icon-[mdi--wallet] w-4 h-4" />
@@ -86,7 +74,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
         <h2 class="text-lg font-medium text-black uppercase tracking-wider">
           CONNECT WALLET
         </h2>
-        <button class="btn btn-sm btn-circle btn-ghost" @click="closeConnectModal">
+        <button class="btn btn-sm btn-circle btn-ghost" @click="connectModal?.close()">
           <span class="icon-[mdi--close]" />
         </button>
       </div>
@@ -175,7 +163,7 @@ function isAccountSelected(account: typeof selectedAccount.value) {
           <h3 class="text-xs text-gray-500 uppercase tracking-wider">
             Other wallets
           </h3>
-          <button class="btn btn-ghost btn-sm" @click="toggleOtherWallets">
+          <button class="btn btn-ghost btn-sm" @click="showOtherWallets = !showOtherWallets">
             {{ showOtherWallets ? 'Hide' : 'Show' }}
             <span :class="showOtherWallets ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'" />
           </button>

@@ -4,7 +4,6 @@ import Footer from '~/components/Footer.vue'
 import Header from '~/components/Header.vue'
 import { useConnect } from '~/composables/useConnect'
 import { chainKeys } from '~/utils/sdk'
-import { unifyAddress } from './utils/formatters'
 
 const { selectedAccount } = useConnect()
 </script>
@@ -20,21 +19,21 @@ const { selectedAccount } = useConnect()
           <span>App Starter</span>
         </h1>
         <p class="text-xl text-gray-600 font-mono flex items-center justify-center gap-2">
-          <span>Powered by</span>
+          <span>Powered by Polkadot</span>
           <span class="icon-[token-branded--polkadot] animate-spin" style="animation-duration: 16s;" />
         </p>
       </div>
     </section>
 
     <!-- Account Cards -->
-    <main class="container mx-auto py-8 space-y-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <div v-for="chainKey in chainKeys" :key="chainKey">
-          <AccountCard
-            :chain-key="chainKey"
-            :address="selectedAccount?.address ? unifyAddress(selectedAccount.address) : undefined"
-          />
-        </div>
+    <main class="container mx-auto py-8 flex justify-center">
+      <div class="flex flex-col gap-4 w-full max-w-2xl">
+        <AccountCard
+          v-for="chainKey in chainKeys"
+          :key="chainKey"
+          :chain-key="chainKey"
+          :address="selectedAccount?.address || undefined"
+        />
       </div>
     </main>
 

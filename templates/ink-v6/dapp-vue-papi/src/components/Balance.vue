@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
-import { onMounted, ref } from 'vue'
-import { getBalance } from '~/utils/sdk-interface'
+import { useBalance } from '~/composables/useBalance'
 
 const props = defineProps<{
   address?: string
   chainKey: Prefix
 }>()
 
-const balance = ref('')
-const symbol = ref('')
-
-onMounted(async () => {
-  if (!props.address) {
-    return
-  }
-
-  const freeBalance = await getBalance(props.chainKey, props.address)
-  balance.value = freeBalance.balance
-  symbol.value = freeBalance.symbol
-})
+const { balance, symbol } = useBalance(props.chainKey, props.address)
 </script>
 
 <template>
