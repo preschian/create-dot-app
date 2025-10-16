@@ -1,0 +1,41 @@
+{
+  "name": "dapp-vue-papi",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "contract:build": "pop build ./contract",
+    "contract:deploy": "pop up ./contract --use-wallet --args false --url wss://testnet-passet-hub.polkadot.io",
+    "dapp:add-chain": "papi add -w wss://testnet-passet-hub.polkadot.io passet",
+    "dapp:add-contract": "papi ink add ./contract/target/ink/flipper.json",
+    "dapp:all": "npm run dapp:add-chain && npm run dapp:add-contract",
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --fix",
+    "postinstall": "papi"
+  },
+  "dependencies": {
+    "@polkadot-api/sdk-ink": "^0.5.1",
+    "@polkadot/util": "^13.5.6",
+    "@polkadot/util-crypto": "^13.5.5",
+    "@talismn/connect-wallets": "^1.2.8",
+    "polkadot-api": "^1.16.1",
+    "vue": "^3.5.18"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^5.2.1",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/token-branded": "^1.2.24",
+    "@iconify/tailwind4": "^1.0.6",
+    "@tailwindcss/vite": "^4.1.11",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "daisyui": "^5.0.50",
+    "eslint": "^9.33.0",
+    "tailwindcss": "^4.1.11",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.2",
+    "vue-tsc": "^3.0.5"
+  }
+}
