@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useLocalStorage } from '~/composables/useLocalStorage'
 import { getBalance } from '~/utils/sdk-interface'
 
 const props = defineProps<{
@@ -8,29 +9,17 @@ const props = defineProps<{
   chainKey: Prefix
 }>()
 
-const STORAGE_KEY = 'balance'
+const { value: balanceData, setItem } = useLocalStorage(`balance_${props.chainKey}`, { balance: '', symbol: '' })
 
-const storageKey = `${STORAGE_KEY}_${props.chainKey}`
-const storedData = localStorage.getItem(storageKey)
-const initialData = storedData ? JSON.parse(storedData) : { balance: '', symbol: '' }
-
-const balance = ref(initialData.balance)
-const symbol = ref(initialData.symbol)
-
-watch([balance, symbol], ([newBalance, newSymbol]) => {
-  if (newBalance && newSymbol) {
-    localStorage.setItem(storageKey, JSON.stringify({ balance: newBalance, symbol: newSymbol }))
-  }
-})
+const balance = computed(() => balanceData.value.balance)
+const symbol = computed(() => balanceData.value.symbol)
 
 onMounted(async () => {
-  if (!props.address) {
+  if (!props.address)
     return
-  }
 
   const freeBalance = await getBalance(props.chainKey, props.address)
-  balance.value = freeBalance.balance
-  symbol.value = freeBalance.symbol
+  setItem({ balance: freeBalance.balance, symbol: freeBalance.symbol })
 })
 </script>
 

@@ -1,8 +1,8 @@
+import type { Wallet } from '@talismn/connect-wallets'
 import type { InjectedSigner } from 'dedot/types'
 import type { Prefix } from './sdk'
 import { getWalletBySource } from '@talismn/connect-wallets'
 import { formatBalance } from 'dedot/utils'
-import { connectedWallet } from '~/composables/useConnect'
 import { name } from '../../package.json'
 import sdk from './sdk'
 
@@ -13,25 +13,14 @@ export async function getClient(chainPrefix: Prefix) {
   return await apiInstance
 }
 
-export async function polkadotSigner(): Promise<InjectedSigner | undefined> {
-  const wallet = getWalletBySource(connectedWallet.value?.extensionName)
-  await wallet?.enable(DAPP_NAME)
+export async function polkadotSigner(wallet: Wallet | null): Promise<InjectedSigner | undefined> {
+  if (!wallet)
+    return undefined
 
-  return wallet?.signer
-}
+  const selectedWallet = getWalletBySource(wallet.extensionName)
+  await selectedWallet?.enable(DAPP_NAME)
 
-export async function subscribeToBlocks(
-  networkKey: Prefix,
-  onBlock: (data: { blockHeight: number, chainName: string }) => void,
-) {
-  const api = await getClient(networkKey)
-  const chainName = await api.chainSpec.chainName()
-
-  const unsub = await api.query.system.number(async (blockHeight) => {
-    onBlock({ blockHeight, chainName })
-  })
-
-  return unsub
+  return selectedWallet?.signer
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {

@@ -8,10 +8,7 @@ export const CONTRACT_CONFIG = {
   },
 } as const
 
-export function getContractAddress(chainPrefix: Prefix) {
-  return CONTRACT_CONFIG[chainPrefix].address
-}
+const getContractConfig = (chainPrefix: Prefix) => CONTRACT_CONFIG[chainPrefix]
 
-export function getContractMetadata(chainPrefix: Prefix) {
-  return CONTRACT_CONFIG[chainPrefix].metadata
-}
+export const getContractAddress = (chainPrefix: Prefix) => getContractConfig(chainPrefix).address
+export const getContractMetadata = (chainPrefix: Prefix) => getContractConfig(chainPrefix).metadata

@@ -7,7 +7,7 @@ import { getClient, polkadotSigner } from '~/utils/sdk-interface'
 import { useConnect } from './useConnect'
 
 export function useContractTransaction(chainKey: Prefix, address?: string) {
-  const { selectedAccount } = useConnect()
+  const { selectedAccount, connectedWallet } = useConnect()
   const isProcessing = ref(false)
   const result = ref<string>('')
   const txHash = ref<string>('')
@@ -23,7 +23,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
       result.value = ''
       txHash.value = ''
 
-      const signer = await polkadotSigner()
+      const signer = await polkadotSigner(connectedWallet.value)
       if (!signer) {
         result.value = 'Error: Signer not available'
         isProcessing.value = false
