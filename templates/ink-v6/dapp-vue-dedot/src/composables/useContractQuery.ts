@@ -3,7 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
 import { ref, watch } from 'vue'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
-import { getClient } from '~/utils/sdk-interface'
+import { getClient } from '~/utils/sdk'
 
 const STORAGE_KEY = 'contract_value'
 

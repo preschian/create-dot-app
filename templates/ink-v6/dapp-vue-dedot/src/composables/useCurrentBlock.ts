@@ -1,6 +1,6 @@
 import type { Prefix } from '~/utils/sdk'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { getClient } from '~/utils/sdk-interface'
+import { getClient } from '~/utils/sdk'
 
 export function useCurrentBlock(chain: Prefix) {
   const name = ref('')

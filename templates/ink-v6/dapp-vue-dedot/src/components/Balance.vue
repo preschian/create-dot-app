@@ -1,26 +1,13 @@
 <script setup lang="ts">
 import type { Prefix } from '~/utils/sdk'
-import { computed, onMounted } from 'vue'
-import { useLocalStorage } from '~/composables/useLocalStorage'
-import { getBalance } from '~/utils/sdk-interface'
+import { useBalance } from '~/composables/useBalance'
 
 const props = defineProps<{
   address?: string
   chainKey: Prefix
 }>()
 
-const { value: balanceData, setItem } = useLocalStorage(`balance_${props.chainKey}`, { balance: '', symbol: '' })
-
-const balance = computed(() => balanceData.value.balance)
-const symbol = computed(() => balanceData.value.symbol)
-
-onMounted(async () => {
-  if (!props.address)
-    return
-
-  const freeBalance = await getBalance(props.chainKey, props.address)
-  setItem({ balance: freeBalance.balance, symbol: freeBalance.symbol })
-})
+const { balance, symbol } = useBalance(props.chainKey, props.address)
 </script>
 
 <template>

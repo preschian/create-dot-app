@@ -1,7 +1,7 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import { getWallets } from '@talismn/connect-wallets'
 import { computed, ref } from 'vue'
-import { DAPP_NAME } from '~/utils/sdk-interface'
+import { DAPP_NAME } from '~/utils/sdk'
 import { useLocalStorage } from './useLocalStorage'
 
 const { value: selectedAccount, setItem: setSelectedAccount, removeItem: removeSelectedAccount } = useLocalStorage<WalletAccount | null>('dapp:account', null)

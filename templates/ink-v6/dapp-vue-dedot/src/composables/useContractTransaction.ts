@@ -3,7 +3,7 @@ import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
 import { ref } from 'vue'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
-import { getClient, polkadotSigner } from '~/utils/sdk-interface'
+import { getClient, polkadotSigner } from '~/utils/sdk'
 import { useConnect } from './useConnect'
 
 export function useContractTransaction(chainKey: Prefix, address?: string) {
