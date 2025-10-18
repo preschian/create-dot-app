@@ -10,19 +10,25 @@ A modern **React + TypeScript + Vite** template for building Polkadot decentrali
 - **Smart Contract Support** - Query and interact with ink! smart contracts
 - **TailwindCSS + DaisyUI** for beautiful UI components
 - **Wallet Connection** support via Talisman Connect
+- **XState Store** for predictable state management
 - **Iconify** icons integration
 - Pre-configured for **multiple Polkadot chains**
 
-## 🔗 SDK Information
+## 🔗 SDK & Libraries
 
-This template uses **Dedot** - a Polkadot SDK for JavaScript/TypeScript that provides type-safe APIs for interacting with Polkadot-based blockchains.
+This template uses:
 
-📚 **Dedot Documentation**: https://docs.dedot.dev/
+- **Dedot** - A Polkadot SDK for JavaScript/TypeScript that provides type-safe APIs for interacting with Polkadot-based blockchains.
+  - 📚 **Documentation**: https://docs.dedot.dev/
+
+- **XState Store** - Lightweight state management library for managing wallet connections and app state.
+  - 📚 **Documentation**: https://stately.ai/docs/xstate-store
 
 ### Configuration Files:
 - **`src/utils/sdk.ts`** - Configures which chains to connect to and manages chain endpoints. You can modify supported networks and RPC providers here.
 - **`src/utils/contract-config.ts`** - Smart contract configuration and metadata.
 - **`src/utils/formatters.ts`** - Utility functions for formatting data.
+- **`src/hooks/useConnect.ts`** - Wallet connection state management using XState Store.
 
 ## 🌐 Supported Chains
 
@@ -95,7 +101,7 @@ src/
 │   ├── ContractData.tsx     # Smart contract query display
 │   └── SignTransaction.tsx
 ├── hooks/             # Custom React hooks
-│   ├── useConnect.ts
+│   ├── useConnect.ts         # Wallet connection with XState Store
 │   ├── useContractQuery.ts  # Smart contract query logic
 │   ├── useContractTransaction.ts
 │   ├── useCurrentBlock.ts
@@ -143,6 +149,41 @@ The template also includes a `SignTransaction.tsx` component for executing contr
 - **`src/components/SignTransaction.tsx`** - UI for sending transactions
 
 📖 For more details on smart contract integration, see the [Dedot Smart Contracts documentation](https://docs.dedot.dev/smart-contracts/queries).
+
+## 🗄️ State Management
+
+This template uses **XState Store** for managing wallet connection state across components. The store is defined in `src/hooks/useConnect.ts` and provides a centralized, predictable way to handle wallet connections.
+
+### How it works:
+
+```typescript
+import { createStore } from '@xstate/store'
+import { useSelector } from '@xstate/store/react'
+
+// Create a global store
+const walletStore = createStore({
+  context: {
+    selectedAccount: null,
+    connectedWallet: null,
+    listAccounts: [],
+    isConnecting: null,
+  },
+  on: {
+    setSelectedAccount: (context, event) => ({
+      ...context,
+      selectedAccount: event.account,
+    }),
+    // ... other transitions
+  },
+})
+
+// Use in components
+const selectedAccount = useSelector(walletStore, state => state.context.selectedAccount)
+```
+
+The `useConnect` hook wraps the store and provides convenient methods like `connect()`, `disconnect()`, and `selectAccount()` that can be used across any component in your app.
+
+📖 Learn more about XState Store in the [official documentation](https://stately.ai/docs/xstate-store).
 
 ## 🔧 Adding Custom Networks
 

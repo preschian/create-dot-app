@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@talismn/connect-wallets": "^1.2.8",
+    "@xstate/store": "^3.11.1",
     "dedot": "^0.18.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
