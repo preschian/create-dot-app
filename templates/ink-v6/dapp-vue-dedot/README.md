@@ -45,9 +45,49 @@ npm run build
 npm run preview
 ```
 
+## 📜 Smart Contract Development
+
+This template includes a sample flipper contract in the `contract/` directory to help you get started.
+
+### Building the Contract
+
+```bash
+# Build the smart contract
+npm run build:contract
+```
+
+This will compile your ink! smart contract and generate the contract metadata at `contract/target/ink/flipper.json`.
+
+### Deploying the Contract
+
+```bash
+# Deploy contract to Passet Hub testnet
+npm run deploy:contract
+```
+
+This will deploy your contract using `pop` CLI with wallet integration.
+
+### Generating Types
+
+```bash
+# Generate TypeScript types from contract metadata
+npm run generate:contract
+
+# Generate chain types from RPC endpoint
+npm run generate:chain
+```
+
+The `generate:contract` command creates type-safe APIs in `src/generated/contract/` based on your contract's JSON metadata.
+
 ## 📁 Project Structure
 
 ```
+contract/              # Sample ink! smart contract
+├── Cargo.toml
+├── lib.rs
+└── target/ink/        # Built contract artifacts
+    ├── flipper.json   # Contract metadata
+    └── flipper.contract
 src/
 ├── components/         # Vue components
 │   ├── AccountCard.vue
@@ -66,9 +106,9 @@ src/
 └── App.vue            # Main application component
 ```
 
-## 📜 Smart Contract Integration
+## 🔗 Smart Contract Integration
 
-This template includes support for querying ink! smart contracts using Dedot's contract API.
+This template includes support for querying and interacting with ink! smart contracts using Dedot's contract API.
 
 ### Querying Contract Data
 
@@ -82,7 +122,7 @@ Example usage:
 ```typescript
 import type { FlipperContractApi } from '~/generated/contract/flipper'
 import { Contract } from 'dedot/contracts'
-import contractMetadata from '../../../contract/target/ink/contract.json'
+import contractMetadata from '../../../contract/target/ink/flipper.json'
 
 const contract = new Contract<FlipperContractApi>(
   api,
@@ -95,15 +135,12 @@ const result = await contract.query.get()
 const value = result.data // boolean value from flipper contract
 ```
 
-### Generating Contract Types
+### Executing Contract Transactions
 
-To generate TypeScript types from your ink! contract metadata:
+The template also includes a `SignTransaction.vue` component for executing contract transactions:
 
-```bash
-npm run types:contract
-```
-
-This will generate type-safe APIs in `src/generated/contract/` based on your contract's JSON metadata.
+- **`src/composables/useContractTransaction.ts`** - Contains the contract transaction logic
+- **`src/components/SignTransaction.vue`** - UI for sending transactions
 
 📖 For more details on smart contract integration, see the [Dedot Smart Contracts documentation](https://docs.dedot.dev/smart-contracts/queries).
 
