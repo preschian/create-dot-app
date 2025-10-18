@@ -1,4 +1,4 @@
-import type { FlipperContractApi } from '~/generated-types/contract/flipper'
+import type { FlipperContractApi } from '~/generated/contract/flipper'
 import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
 import { ref } from 'vue'

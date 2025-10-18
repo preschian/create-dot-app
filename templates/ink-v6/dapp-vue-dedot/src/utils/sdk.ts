@@ -1,6 +1,6 @@
 import type { Wallet } from '@talismn/connect-wallets'
 import type { InjectedSigner } from 'dedot/types'
-import type { PassetHubApi } from '../generated-types/passet-hub'
+import type { PassetHubApi } from '../generated/passet-hub'
 import { getWalletBySource } from '@talismn/connect-wallets'
 import { DedotClient, WsProvider } from 'dedot'
 import { ref } from 'vue'
