@@ -1,5 +1,5 @@
 import type { Prefix } from './sdk'
-import flipperMetadata from '../../contract/target/ink/flipper.json'
+import flipperMetadata from '../contracts/flipper.json'
 
 export const CONTRACT_CONFIG = {
   passethub: {
