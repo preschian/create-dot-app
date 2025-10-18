@@ -60,8 +60,8 @@ src/
 │   ├── useContractTransaction.ts
 │   ├── useCurrentBlock.ts
 │   └── useLocalStorage.ts
-├── generated-types/    # Auto-generated types from chains and contracts
-├── utils/              # Utility functions and SDK setup
+├── generated/         # Auto-generated types from chains and contracts
+├── utils/             # Utility functions and SDK setup
 ├── style.css          # Global styles
 └── App.vue            # Main application component
 ```
@@ -80,7 +80,7 @@ The template includes a `ContractData.vue` component that demonstrates how to qu
 Example usage:
 
 ```typescript
-import type { FlipperContractApi } from '~/generated-types/contract/flipper'
+import type { FlipperContractApi } from '~/generated/contract/flipper'
 import { Contract } from 'dedot/contracts'
 import contractMetadata from '../../../contract/target/ink/contract.json'
 
@@ -103,7 +103,7 @@ To generate TypeScript types from your ink! contract metadata:
 npm run types:contract
 ```
 
-This will generate type-safe APIs in `src/generated-types/contract/` based on your contract's JSON metadata.
+This will generate type-safe APIs in `src/generated/contract/` based on your contract's JSON metadata.
 
 📖 For more details on smart contract integration, see the [Dedot Smart Contracts documentation](https://docs.dedot.dev/smart-contracts/queries).
 
