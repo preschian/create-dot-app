@@ -54,7 +54,7 @@ export function useConnect() {
       walletStore.send({ type: 'setIsConnecting', walletName: wallet.extensionName })
       walletStore.send({ type: 'setListAccounts', accounts: [] })
       walletStore.send({ type: 'setConnectedWallet', wallet })
-      
+
       await wallet.enable(DAPP_NAME)
       const accounts = await wallet.getAccounts()
 

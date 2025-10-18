@@ -178,6 +178,7 @@ const walletStore = createStore({
 })
 
 // Use in components
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const selectedAccount = useSelector(walletStore, state => state.context.selectedAccount)
 ```
 
