@@ -6,7 +6,7 @@
       "wsUrl": "wss://testnet-passet-hub.polkadot.io",
       "metadata": ".papi/metadata/passet.scale",
       "genesis": "0xfd974cf9eaf028f5e44b9fdd1949ab039c6cf9cc54449b0b60d71b042e79aeb6",
-      "codeHash": "0x3e088e61b3cb51e74c67cb3634a699109bf3ded14fbd35ed731968d0aa82a441"
+      "codeHash": "0xf9ae223918ce94714278da9e34be6ef020c0c27ae75b209281e1be193c700f02"
     }
   },
   "options": {
