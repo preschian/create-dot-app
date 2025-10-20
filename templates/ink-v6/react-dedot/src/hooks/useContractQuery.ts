@@ -1,7 +1,7 @@
 import type { FlipperContractApi } from '~/generated/contract/flipper'
 import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
 import { getClient } from '~/utils/sdk'
 
@@ -16,7 +16,7 @@ export function useContractQuery(chainKey: Prefix, address?: string) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function queryContractValue() {
+  const queryContractValue = useCallback(async () => {
     if (!address)
       return
 
@@ -50,7 +50,7 @@ export function useContractQuery(chainKey: Prefix, address?: string) {
     finally {
       setIsLoading(false)
     }
-  }
+  }, [chainKey, address, storageKey])
 
   return {
     contractValue,

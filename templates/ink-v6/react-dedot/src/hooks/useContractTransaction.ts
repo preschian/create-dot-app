@@ -1,7 +1,7 @@
 import type { FlipperContractApi } from '~/generated/contract/flipper'
 import type { Prefix } from '~/utils/sdk'
 import { Contract } from 'dedot/contracts'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { getContractAddress, getContractMetadata } from '~/utils/contract-config'
 import { getClient, polkadotSigner } from '~/utils/sdk'
 import { useConnect } from './useConnect'
@@ -12,7 +12,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
   const [result, setResult] = useState<string>('')
   const [txHash, setTxHash] = useState<string>('')
 
-  async function flipContractValue() {
+  const flipContractValue = useCallback(async () => {
     if (!selectedAccount || !address) {
       setResult('Error: Wallet not connected')
       return
@@ -56,7 +56,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
       setResult(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`)
       setIsProcessing(false)
     }
-  }
+  }, [selectedAccount, address, connectedWallet, chainKey])
 
   return {
     isProcessing,
