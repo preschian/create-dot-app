@@ -1,5 +1,5 @@
 import type { Prefix } from '~/utils/sdk'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { contracts } from '~/descriptors'
 import { getContractAddress } from '~/utils/contract-config'
 import sdk from '~/utils/sdk'
@@ -15,7 +15,7 @@ export function useContractQuery(chainKey: Prefix, userAddress?: string) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function queryContractValue() {
+  const queryContractValue = useCallback(async () => {
     if (!userAddress) {
       setError('No address provided')
       return
@@ -80,7 +80,7 @@ export function useContractQuery(chainKey: Prefix, userAddress?: string) {
     finally {
       setIsLoading(false)
     }
-  }
+  }, [chainKey, userAddress, storageKey])
 
   return {
     contractValue,

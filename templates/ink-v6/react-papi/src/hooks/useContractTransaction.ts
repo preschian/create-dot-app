@@ -1,5 +1,5 @@
 import type { Prefix } from '~/utils/sdk'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { contracts } from '~/descriptors'
 import { getContractAddress } from '~/utils/contract-config'
 import sdk, { polkadotSigner } from '~/utils/sdk'
@@ -11,7 +11,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
   const [result, setResult] = useState<string>('')
   const [txHash, setTxHash] = useState<string>('')
 
-  async function flipContractValue() {
+  const flipContractValue = useCallback(async () => {
     if (!selectedAccount || !address) {
       setResult('Error: Wallet not connected')
       return
@@ -87,7 +87,7 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
 
       setIsProcessing(false)
     }
-  }
+  }, [selectedAccount, address, connectedWallet, chainKey])
 
   return {
     isProcessing,

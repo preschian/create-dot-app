@@ -5,24 +5,47 @@ import { useSelector } from '@xstate/store/react'
 import { useMemo } from 'react'
 import { DAPP_NAME } from '~/utils/sdk'
 
+const STORAGE_ACCOUNT = 'dapp:account'
+const STORAGE_WALLET = 'dapp:wallet'
+
+function getStoredValue<T>(key: string): T | null {
+  const stored = localStorage.getItem(key)
+  return stored ? JSON.parse(stored) : null
+}
+
+function setStoredValue<T>(key: string, value: T | null) {
+  if (value === null) {
+    localStorage.removeItem(key)
+  }
+  else {
+    localStorage.setItem(key, JSON.stringify(value))
+  }
+}
+
 const wallets = getWallets()
 
 const walletStore = createStore({
   context: {
-    selectedAccount: null as WalletAccount | null,
-    connectedWallet: null as Wallet | null,
+    selectedAccount: getStoredValue<WalletAccount>(STORAGE_ACCOUNT),
+    connectedWallet: getStoredValue<Wallet>(STORAGE_WALLET),
     listAccounts: [] as WalletAccount[],
     isConnecting: null as string | null,
   },
   on: {
-    setSelectedAccount: (context, event: { account: WalletAccount | null }) => ({
-      ...context,
-      selectedAccount: event.account,
-    }),
-    setConnectedWallet: (context, event: { wallet: Wallet | null }) => ({
-      ...context,
-      connectedWallet: event.wallet,
-    }),
+    setSelectedAccount: (context, event: { account: WalletAccount | null }) => {
+      setStoredValue(STORAGE_ACCOUNT, event.account)
+      return {
+        ...context,
+        selectedAccount: event.account,
+      }
+    },
+    setConnectedWallet: (context, event: { wallet: Wallet | null }) => {
+      setStoredValue(STORAGE_WALLET, event.wallet)
+      return {
+        ...context,
+        connectedWallet: event.wallet,
+      }
+    },
     setListAccounts: (context, event: { accounts: WalletAccount[] }) => ({
       ...context,
       listAccounts: event.accounts,
@@ -31,12 +54,16 @@ const walletStore = createStore({
       ...context,
       isConnecting: event.walletName,
     }),
-    reset: () => ({
-      selectedAccount: null,
-      connectedWallet: null,
-      listAccounts: [],
-      isConnecting: null,
-    }),
+    reset: () => {
+      setStoredValue(STORAGE_ACCOUNT, null)
+      setStoredValue(STORAGE_WALLET, null)
+      return {
+        selectedAccount: null,
+        connectedWallet: null,
+        listAccounts: [],
+        isConnecting: null,
+      }
+    },
   },
 })
 

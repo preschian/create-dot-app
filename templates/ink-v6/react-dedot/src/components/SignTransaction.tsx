@@ -1,8 +1,8 @@
-import type { Prefix } from '../utils/sdk'
-import { useState } from 'react'
-import { useConnect } from '../hooks/useConnect'
-import { useContractTransaction } from '../hooks/useContractTransaction'
-import { explorerDetail, stripAddress } from '../utils/formatters'
+import type { Prefix } from '~/utils/sdk'
+import { useCallback, useRef } from 'react'
+import { useConnect } from '~/hooks/useConnect'
+import { useContractTransaction } from '~/hooks/useContractTransaction'
+import { explorerDetail, stripAddress } from '~/utils/formatters'
 
 interface SignTransactionProps {
   chainKey: Prefix
@@ -18,22 +18,25 @@ export default function SignTransaction({ chainKey, address }: SignTransactionPr
     flipContractValue,
   } = useContractTransaction(chainKey, address)
 
-  const [showResult, setShowResult] = useState(true)
-  const [showTxHash, setShowTxHash] = useState(true)
+  const dismissedResultRef = useRef<string | null>(null)
+  const dismissedTxHashRef = useRef<string | null>(null)
 
-  async function handleFlip() {
-    setShowResult(true)
-    setShowTxHash(true)
+  const showResult = result && !isProcessing && dismissedResultRef.current !== result
+  const showTxHash = txHash && dismissedTxHashRef.current !== txHash
+
+  const handleFlip = useCallback(async () => {
+    dismissedResultRef.current = null
+    dismissedTxHashRef.current = null
     await flipContractValue()
-  }
+  }, [flipContractValue])
 
-  function closeResult() {
-    setShowResult(false)
-  }
+  const closeResult = useCallback(() => {
+    dismissedResultRef.current = result
+  }, [result])
 
-  function closeTxHash() {
-    setShowTxHash(false)
-  }
+  const closeTxHash = useCallback(() => {
+    dismissedTxHashRef.current = txHash
+  }, [txHash])
 
   return (
     <div>
@@ -50,7 +53,7 @@ export default function SignTransaction({ chainKey, address }: SignTransactionPr
           : null}
 
         {/* Result State */}
-        {result && !isProcessing && showResult
+        {showResult
           ? (
               <div role="alert" className={`alert shadow-lg ${result.includes('Error') ? 'alert-error' : 'alert-success'}`}>
                 {result.includes('Error')
@@ -69,7 +72,7 @@ export default function SignTransaction({ chainKey, address }: SignTransactionPr
           : null}
 
         {/* Transaction Hash Toast */}
-        {txHash && showTxHash
+        {showTxHash
           ? (
               <div role="alert" className="alert alert-neutral shadow-lg">
                 <div className="flex items-center gap-2">
