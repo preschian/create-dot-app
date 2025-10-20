@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
-import { useConnect } from '../hooks/useConnect'
-import { stripAddress } from '../utils/formatters'
+import { useConnect } from '~/hooks/useConnect'
+import { stripAddress } from '~/utils/formatters'
 
 export default function Connect() {
   const modalRef = useRef<HTMLDialogElement>(null)

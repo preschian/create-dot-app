@@ -12,4 +12,3 @@ const getContractConfig = (chainPrefix: Prefix) => CONTRACT_CONFIG[chainPrefix]
 
 export const getContractAddress = (chainPrefix: Prefix) => getContractConfig(chainPrefix).address
 export const getContractMetadata = (chainPrefix: Prefix) => getContractConfig(chainPrefix).metadata
-

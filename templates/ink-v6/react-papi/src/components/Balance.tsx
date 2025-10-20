@@ -1,6 +1,5 @@
-import type { Prefix } from '../utils/sdk'
-import { useEffect, useState } from 'react'
-import { getBalance } from '../utils/sdk-interface'
+import type { Prefix } from '~/utils/sdk'
+import { useBalance } from '~/hooks/useBalance'
 
 interface BalanceProps {
   address?: string
@@ -8,30 +7,7 @@ interface BalanceProps {
 }
 
 export default function Balance({ address, chainKey }: BalanceProps) {
-  const [balance, setBalance] = useState('')
-  const [symbol, setSymbol] = useState('')
-
-  useEffect(() => {
-    if (!address) {
-      return
-    }
-
-    let ignore = false
-
-    const fetchBalance = async () => {
-      const { balance, symbol } = await getBalance(chainKey, address)
-      if (!ignore) {
-        setBalance(balance)
-        setSymbol(symbol)
-      }
-    }
-
-    fetchBalance()
-
-    return () => {
-      ignore = true
-    }
-  }, [address, chainKey])
+  const { balance, symbol } = useBalance(chainKey, address)
 
   return (
     <div>

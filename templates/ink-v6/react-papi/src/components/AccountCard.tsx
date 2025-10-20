@@ -1,7 +1,8 @@
-import type { Prefix } from '../utils/sdk'
-import { useCurrentBlock } from '../hooks/useCurrentBlock'
-import { buyTokenUrl, explorerAccount } from '../utils/formatters'
+import type { Prefix } from '~/utils/sdk'
+import { useCurrentBlock } from '~/hooks/useCurrentBlock'
+import { buyTokenUrl } from '~/utils/formatters'
 import Balance from './Balance'
+import ContractData from './ContractData'
 import SignTransaction from './SignTransaction'
 
 interface AccountCardProps {
@@ -13,79 +14,102 @@ export default function AccountCard({ chainKey, address }: AccountCardProps) {
   const { name, currentBlock, isConnected } = useCurrentBlock(chainKey)
 
   return (
-    <div className="group bg-white border border-gray-200 overflow-hidden hover:border-black transition-all duration-300 hover:shadow-lg p-4">
+    <div className="group bg-white border border-gray-200 overflow-hidden hover:border-black transition-all duration-300 hover:shadow-lg">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <h3 className="font-light text-black tracking-wide">
-            {name || '---'}
-          </h3>
-        </div>
+      <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <h3 className="text-xl font-light text-black tracking-wide">
+          {name || '---'}
+        </h3>
 
-        {isConnected && (
-          <div className="text-xs px-2 py-1 bg-green-100 text-green-700 border border-green-200 uppercase tracking-wider flex items-center gap-1">
-            <span className="icon-[mdi--check-circle] text-xs" />
-            Live
-          </div>
-        )}
-      </div>
-
-      {/* Chain Info Section */}
-      <div className="mb-4">
-        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">
-          Current Block
-        </div>
-        <div key={currentBlock} className="font-light text-black font-mono text-lg block-highlight">
-          #
-          {currentBlock ? currentBlock.toLocaleString() : '---'}
-        </div>
-      </div>
-
-      {/* Account Section */}
-      <div className="border-t border-gray-100 pt-4">
-        {address
+        {isConnected
           ? (
-              <Balance key={address} address={address} chainKey={chainKey} />
-            )
-          : (
-              <div className="flex flex-col items-center py-3">
-                <span className="icon-[mdi--wallet-plus] text-2xl text-gray-400 mb-2" />
-                <p className="text-xs text-gray-500">
-                  Connect wallet for balance
-                </p>
+              <div className="text-xs px-3 py-1.5 bg-green-100 text-green-700 border border-green-200 uppercase tracking-wider flex items-center gap-1.5">
+                <span className="icon-[mdi--check-circle] text-sm" />
+                Live
               </div>
-            )}
+            )
+          : null}
       </div>
 
-      {/* Actions Section */}
-      {address && (
-        <div className="mt-4">
-          {/* Quick Actions Row */}
-          <div className="pt-3 border-t border-gray-100">
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <a href={buyTokenUrl(chainKey, address)} target="_blank" rel="noopener noreferrer" className="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
-                Get Tokens
-              </a>
-              <a href={explorerAccount(chainKey, address)} target="_blank" rel="noopener noreferrer" className="btn btn-xs btn-outline btn-neutral uppercase tracking-wider">
-                <span className="icon-[mdi--open-in-new]" />
-                Explorer
-              </a>
+      {/* Two Column Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+        {/* Left Column: Chain Info & Balance */}
+        <div className="p-6 space-y-6">
+          {/* Chain Info Section */}
+          <div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+              Current Block
             </div>
+            <div key={currentBlock} className="font-light text-black font-mono text-2xl block-highlight">
+              #
+              {currentBlock ? currentBlock.toLocaleString() : '---'}
+            </div>
+          </div>
 
-            {/* Transaction Component */}
-            {isConnected
+          {/* Balance Section */}
+          <div className="border-t border-gray-100 pt-6">
+            {address
               ? (
-                  <SignTransaction chainKey={chainKey} />
+                  <div key={`${address}_${currentBlock}`}>
+                    <Balance address={address} chainKey={chainKey} />
+                  </div>
                 )
               : (
-                  <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-                    <span className="icon-[mdi--link-off]" />
-                    Chain not connected
+                  <div className="flex flex-col items-center py-6">
+                    <span className="icon-[mdi--wallet-plus] text-3xl text-gray-300 mb-3" />
+                    <p className="text-sm text-gray-400">
+                      Connect wallet for balance
+                    </p>
                   </div>
                 )}
           </div>
         </div>
-      )}
+
+        {/* Right Column: Contract Info & Actions */}
+        <div className="p-6">
+          {address
+            ? (
+                <div className="space-y-6">
+                  {/* Contract Data */}
+                  <div key={currentBlock}>
+                    <ContractData key={address} address={address} chainKey={chainKey} />
+                  </div>
+
+                  {/* Actions Section */}
+                  <div className="border-t border-gray-100 pt-6 space-y-3">
+                    {/* Transaction Component with Get Tokens */}
+                    {isConnected
+                      ? (
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1">
+                              <SignTransaction chainKey={chainKey} address={address} />
+                            </div>
+                            <div className="tooltip" data-tip="Get Tokens">
+                              <a href={buyTokenUrl()} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline btn-neutral btn-square">
+                                <span className="icon-[mdi--wallet-plus] text-lg" />
+                              </a>
+                            </div>
+                          </div>
+                        )
+                      : (
+                          <div className="flex items-center justify-center gap-2 py-4 text-sm text-gray-400">
+                            <span className="icon-[mdi--link-off]" />
+                            Chain not connected
+                          </div>
+                        )}
+                  </div>
+                </div>
+              )
+            : (
+                <div className="flex flex-col items-center justify-center h-full py-12">
+                  <span className="icon-[mdi--file-document-outline] text-4xl text-gray-300 mb-3" />
+                  <p className="text-sm text-gray-400">
+                    Connect wallet to interact
+                  </p>
+                </div>
+              )}
+        </div>
+      </div>
     </div>
   )
 }

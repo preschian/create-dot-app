@@ -1,9 +1,8 @@
-import AccountCard from './components/AccountCard'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import { useConnect } from './hooks/useConnect'
-import { unifyAddress } from './utils/formatters'
-import { chainKeys } from './utils/sdk'
+import AccountCard from '~/components/AccountCard'
+import Footer from '~/components/Footer'
+import Header from '~/components/Header'
+import { useConnect } from '~/hooks/useConnect'
+import { chainKeys } from '~/utils/sdk'
 
 function App() {
   const { selectedAccount } = useConnect()
@@ -19,23 +18,21 @@ function App() {
             <span>App Starter</span>
           </h1>
           <p className="text-xl text-gray-600 font-mono flex items-center justify-center gap-2">
-            <span>Powered by</span>
+            <span>Powered by Polkadot</span>
             <span className="icon-[token-branded--polkadot] animate-spin" style={{ animationDuration: '16s' }} />
           </p>
         </div>
       </section>
 
       {/* Account Cards */}
-      <main className="container mx-auto py-8 space-y-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <main className="container mx-auto py-8 flex justify-center">
+        <div className="flex flex-col gap-4 w-full max-w-2xl">
           {chainKeys.map(chainKey => (
-            <div key={chainKey}>
-              <AccountCard
-                key={chainKey}
-                chainKey={chainKey}
-                address={selectedAccount?.address ? unifyAddress(selectedAccount.address) : undefined}
-              />
-            </div>
+            <AccountCard
+              key={chainKey}
+              chainKey={chainKey}
+              address={selectedAccount?.address || undefined}
+            />
           ))}
         </div>
       </main>

@@ -89,4 +89,3 @@ export function useContractQuery(chainKey: Prefix, userAddress?: string) {
     queryContractValue,
   }
 }
-

@@ -1,12 +1,12 @@
 import type { PolkadotClient, PolkadotSigner } from 'polkadot-api'
-import { createAtom } from '@xstate/store'
 import { createInkSdk } from '@polkadot-api/sdk-ink'
+import { createAtom } from '@xstate/store'
 import { createClient } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
 import { getWsProvider } from 'polkadot-api/ws-provider'
-import { passet } from '../descriptors'
 import { name } from '../../package.json'
+import { passet } from '../descriptors'
 
 export const CHAIN_CONFIG = {
   passethub: {

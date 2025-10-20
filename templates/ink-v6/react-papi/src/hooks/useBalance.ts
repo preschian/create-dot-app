@@ -53,4 +53,3 @@ export function useBalance(chainKey: Prefix, address?: string) {
     symbol,
   }
 }
-

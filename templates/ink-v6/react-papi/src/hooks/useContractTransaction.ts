@@ -96,4 +96,3 @@ export function useContractTransaction(chainKey: Prefix, address?: string) {
     flipContractValue,
   }
 }
-

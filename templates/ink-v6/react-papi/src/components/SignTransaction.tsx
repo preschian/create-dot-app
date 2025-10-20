@@ -1,76 +1,101 @@
-import type { Prefix } from '../utils/sdk'
-import { useConnect } from '../hooks/useConnect'
-import { useTransaction } from '../hooks/useTransaction'
-import { explorerDetail } from '../utils/formatters'
+import type { Prefix } from '~/utils/sdk'
+import { useState } from 'react'
+import { useConnect } from '~/hooks/useConnect'
+import { useContractTransaction } from '~/hooks/useContractTransaction'
+import { explorerDetail, stripAddress } from '~/utils/formatters'
 
 interface SignTransactionProps {
   chainKey: Prefix
+  address?: string
 }
 
-export default function SignTransaction({ chainKey }: SignTransactionProps) {
+export default function SignTransaction({ chainKey, address }: SignTransactionProps) {
   const { selectedAccount } = useConnect()
   const {
     isProcessing,
     result,
     txHash,
-    signRemarkTransaction,
-  } = useTransaction()
+    flipContractValue,
+  } = useContractTransaction(chainKey, address)
 
-  async function signTransaction() {
-    if (!selectedAccount)
-      return
+  const [showResult, setShowResult] = useState(true)
+  const [showTxHash, setShowTxHash] = useState(true)
 
-    const message = 'Hello from create-dot-app'
+  async function handleFlip() {
+    setShowResult(true)
+    setShowTxHash(true)
+    await flipContractValue()
+  }
 
-    await signRemarkTransaction(chainKey, message)
+  function closeResult() {
+    setShowResult(false)
+  }
+
+  function closeTxHash() {
+    setShowTxHash(false)
   }
 
   return (
     <div>
-      {/* Status */}
-      {isProcessing && (
-        <div role="alert" className="alert alert-info mb-4">
-          <span className="icon-[mdi--loading] animate-spin" />
-          <span>
-            Processing transaction...
-          </span>
-        </div>
-      )}
+      {/* Floating Toast Notifications */}
+      <div className="toast toast-bottom toast-end z-50">
+        {/* Processing State */}
+        {isProcessing
+          ? (
+              <div role="alert" className="alert alert-info shadow-lg">
+                <span className="icon-[mdi--loading] animate-spin" />
+                <span>Processing transaction...</span>
+              </div>
+            )
+          : null}
 
-      {/* Result */}
-      {result && (
-        <div role="alert" className={`alert mb-4 ${result.includes('Error') ? 'alert-error' : 'alert-success'}`}>
-          {result.includes('Error')
-            ? (
-                <span className="icon-[mdi--alert-circle]" />
-              )
-            : (
-                <span className="icon-[mdi--check-circle]" />
-              )}
-          <span>{result}</span>
-        </div>
-      )}
+        {/* Result State */}
+        {result && !isProcessing && showResult
+          ? (
+              <div role="alert" className={`alert shadow-lg ${result.includes('Error') ? 'alert-error' : 'alert-success'}`}>
+                {result.includes('Error')
+                  ? (
+                      <span className="icon-[mdi--alert-circle]" />
+                    )
+                  : (
+                      <span className="icon-[mdi--check-circle]" />
+                    )}
+                <span>{result}</span>
+                <button type="button" className="btn btn-xs btn-ghost btn-square" onClick={closeResult}>
+                  <span className="icon-[mdi--close]" />
+                </button>
+              </div>
+            )
+          : null}
 
-      {/* Transaction Hash Link */}
-      {txHash && (
-        <div className="mb-4 p-3 border border-gray-200">
-          <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
-            Transaction Hash
-          </div>
-          <div className="text-sm text-gray-800 font-mono break-all mb-2 truncate">
-            {txHash}
-          </div>
-          <a
-            href={explorerDetail(chainKey, txHash)}
-            target="_blank"
-            className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-black transition-colors uppercase tracking-wider"
-          >
-            View on Subscan
-            {' '}
-            <span className="icon-[mdi--open-in-new]" />
-          </a>
-        </div>
-      )}
+        {/* Transaction Hash Toast */}
+        {txHash && showTxHash
+          ? (
+              <div role="alert" className="alert alert-neutral shadow-lg">
+                <div className="flex items-center gap-2">
+                  <span className="icon-[mdi--link-variant]" />
+                  <span className="text-xs uppercase tracking-wider">Transaction Hash</span>
+                </div>
+                <div className="text-xs font-mono break-all">
+                  {stripAddress(txHash)}
+                </div>
+                <a
+                  href={explorerDetail(txHash, chainKey)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs hover:underline"
+                >
+                  View on Explorer
+                  {' '}
+                  <span className="icon-[mdi--open-in-new]" />
+                </a>
+                <button type="button" className="btn btn-xs btn-ghost btn-square" onClick={closeTxHash}>
+                  <span className="icon-[mdi--close]" />
+                </button>
+              </div>
+            )
+          : null}
+      </div>
 
       {/* Action */}
       {selectedAccount
@@ -79,10 +104,16 @@ export default function SignTransaction({ chainKey }: SignTransactionProps) {
               type="button"
               disabled={isProcessing}
               className="btn btn-sm btn-neutral w-full uppercase tracking-wider"
-              onClick={signTransaction}
+              onClick={handleFlip}
             >
-              {isProcessing && <span className="icon-[mdi--loading] animate-spin" />}
-              {isProcessing ? 'Processing...' : 'Sign Transaction'}
+              {isProcessing
+                ? (
+                    <span className="icon-[mdi--loading] animate-spin" />
+                  )
+                : (
+                    <span className="icon-[mdi--toggle-switch]" />
+                  )}
+              {isProcessing ? 'Processing...' : 'Flip Contract Value'}
             </button>
           )
         : (
