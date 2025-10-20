@@ -1,86 +1,89 @@
 import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
-import type { Atom } from '@xstate/store'
 import { getWallets } from '@talismn/connect-wallets'
-import { createAtom } from '@xstate/store'
-import { useAtom } from '@xstate/store/react'
-import { DAPP_NAME } from '~/utils/sdk-interface'
+import { createStore } from '@xstate/store'
+import { useSelector } from '@xstate/store/react'
+import { useMemo } from 'react'
+import { DAPP_NAME } from '~/utils/sdk'
 
-const storageWallet = 'dapp:wallet'
-const storageAccount = 'dapp:account'
+const wallets = getWallets()
 
-function getStorage(key: string) {
-  const value = localStorage.getItem(key)
-  return value ? JSON.parse(value) : null
-}
-
-function setStorage(key: string, value: any) {
-  localStorage.setItem(key, JSON.stringify(value))
-}
-
-function removeStorage(key: string) {
-  localStorage.removeItem(key)
-}
-
-export const selectedAccount: Atom<WalletAccount | null> = createAtom(getStorage(storageAccount))
-export const connectedWallet: Atom<Wallet | null> = createAtom(getStorage(storageWallet))
-const listAccounts: Atom<WalletAccount[]> = createAtom([])
-const isConnecting: Atom<string | null> = createAtom(null)
+const walletStore = createStore({
+  context: {
+    selectedAccount: null as WalletAccount | null,
+    connectedWallet: null as Wallet | null,
+    listAccounts: [] as WalletAccount[],
+    isConnecting: null as string | null,
+  },
+  on: {
+    setSelectedAccount: (context, event: { account: WalletAccount | null }) => ({
+      ...context,
+      selectedAccount: event.account,
+    }),
+    setConnectedWallet: (context, event: { wallet: Wallet | null }) => ({
+      ...context,
+      connectedWallet: event.wallet,
+    }),
+    setListAccounts: (context, event: { accounts: WalletAccount[] }) => ({
+      ...context,
+      listAccounts: event.accounts,
+    }),
+    setIsConnecting: (context, event: { walletName: string | null }) => ({
+      ...context,
+      isConnecting: event.walletName,
+    }),
+    reset: () => ({
+      selectedAccount: null,
+      connectedWallet: null,
+      listAccounts: [],
+      isConnecting: null,
+    }),
+  },
+})
 
 export function useConnect() {
-  const wallets = getWallets()
-  const installedWallets = wallets.filter(wallet => wallet.installed)
-  const availableWallets = wallets.filter(wallet => !wallet.installed)
+  const selectedAccount = useSelector(walletStore, state => state.context.selectedAccount)
+  const connectedWallet = useSelector(walletStore, state => state.context.connectedWallet)
+  const listAccounts = useSelector(walletStore, state => state.context.listAccounts)
+  const isConnecting = useSelector(walletStore, state => state.context.isConnecting)
+
+  const installedWallets = useMemo(() => wallets.filter(wallet => wallet.installed), [])
+  const availableWallets = useMemo(() => wallets.filter(wallet => !wallet.installed), [])
 
   async function connect(wallet: Wallet) {
     try {
-      isConnecting.set(wallet.extensionName)
-      listAccounts.set([])
-
-      // set the connected wallet
-      connectedWallet.set(wallet)
-      setStorage(storageWallet, wallet)
+      walletStore.send({ type: 'setIsConnecting', walletName: wallet.extensionName })
+      walletStore.send({ type: 'setListAccounts', accounts: [] })
+      walletStore.send({ type: 'setConnectedWallet', wallet })
 
       await wallet.enable(DAPP_NAME)
       const accounts = await wallet.getAccounts()
 
-      if (accounts) {
-        listAccounts.set(accounts)
-      }
-
-      isConnecting.set(null)
+      walletStore.send({ type: 'setListAccounts', accounts: accounts ?? [] })
+      walletStore.send({ type: 'setIsConnecting', walletName: null })
     }
     catch (err) {
       console.error(err)
-      isConnecting.set(null)
-      connectedWallet.set(null)
-      removeStorage(storageWallet)
+      walletStore.send({ type: 'setIsConnecting', walletName: null })
+      walletStore.send({ type: 'setConnectedWallet', wallet: null })
     }
   }
 
   function disconnect() {
-    selectedAccount.set(null)
-    connectedWallet.set(null)
-    listAccounts.set([])
-    removeStorage(storageAccount)
-    removeStorage(storageWallet)
+    walletStore.send({ type: 'reset' })
   }
 
   function selectAccount(account: WalletAccount) {
-    selectedAccount.set(account)
-    setStorage(storageAccount, account)
+    walletStore.send({ type: 'setSelectedAccount', account })
   }
 
   return {
-    // State
-    listAccounts: useAtom(listAccounts),
-    selectedAccount: useAtom(selectedAccount),
-    connectedWallet: useAtom(connectedWallet),
-    isConnecting: useAtom(isConnecting),
+    listAccounts,
+    selectedAccount,
+    connectedWallet,
+    isConnecting,
     wallets,
     installedWallets,
     availableWallets,
-
-    // Actions
     connect,
     disconnect,
     selectAccount,

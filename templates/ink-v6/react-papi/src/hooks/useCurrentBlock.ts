@@ -1,6 +1,6 @@
-import type { Prefix } from '../utils/sdk'
+import type { Prefix } from '~/utils/sdk'
 import { useEffect, useState } from 'react'
-import { subscribeToBlocks } from '../utils/sdk-interface'
+import sdk from '~/utils/sdk'
 
 export function useCurrentBlock(chain: Prefix) {
   const [name, setName] = useState('')
@@ -8,22 +8,25 @@ export function useCurrentBlock(chain: Prefix) {
 
   useEffect(() => {
     let ignore = false
-    let unsubscribe: Awaited<ReturnType<typeof subscribeToBlocks>> | undefined
+    let unsubscribe: (() => void) | undefined
 
-    const initializeSubscription = async () => {
-      unsubscribe = await subscribeToBlocks(chain, ({ blockHeight, chainName }) => {
+    async function initializeSubscription() {
+      const { client } = sdk(chain)
+      const chainName = await client.getChainSpecData().then(data => data.name)
+
+      unsubscribe = client.blocks$.subscribe((block) => {
         if (!ignore) {
-          setCurrentBlock(blockHeight)
+          setCurrentBlock(block.number)
           setName(chainName)
         }
-      })
+      }).unsubscribe
     }
 
     initializeSubscription()
 
     return () => {
       ignore = true
-      unsubscribe?.unsubscribe()
+      unsubscribe?.()
     }
   }, [chain])
 
