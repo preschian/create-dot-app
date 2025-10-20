@@ -1,31 +1,24 @@
-import type { PolkadotClient, TypedApi } from 'polkadot-api'
+import type { PolkadotClient, PolkadotSigner } from 'polkadot-api'
 import { createAtom } from '@xstate/store'
+import { createInkSdk } from '@polkadot-api/sdk-ink'
 import { createClient } from 'polkadot-api'
+import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
-import { getWsProvider } from 'polkadot-api/ws-provider/web'
-import { dot, dot_asset_hub, pas, pas_asset_hub } from '../descriptors'
+import { getWsProvider } from 'polkadot-api/ws-provider'
+import { passet } from '../descriptors'
+import { name } from '../../package.json'
 
-const config = {
-  dot: {
-    descriptor: dot,
-    providers: ['wss://dot-rpc.stakeworld.io'],
-  },
-  dot_asset_hub: {
-    descriptor: dot_asset_hub,
-    providers: ['wss://dot-rpc.stakeworld.io/assethub'],
-  },
-  pas: {
-    descriptor: pas,
-    providers: ['wss://pas-rpc.stakeworld.io'],
-  },
-  pas_asset_hub: {
-    descriptor: pas_asset_hub,
-    providers: ['wss://pas-rpc.stakeworld.io/assethub'],
+export const CHAIN_CONFIG = {
+  passethub: {
+    descriptor: passet,
+    providers: ['wss://testnet-passet-hub.polkadot.io'],
   },
 } as const
 
-export type Prefix = keyof typeof config
-export const chainKeys = Object.keys(config) as Prefix[]
+export type Prefix = keyof typeof CHAIN_CONFIG
+export const chainKeys = Object.keys(CHAIN_CONFIG) as Prefix[]
+
+export const DAPP_NAME = name
 
 const clientStore = createAtom<Partial<Record<Prefix, PolkadotClient>>>({})
 
@@ -35,13 +28,25 @@ export default function sdk<T extends Prefix>(chain: T) {
   if (!clients[chain]) {
     clients[chain] = createClient(
       withPolkadotSdkCompat(
-        getWsProvider(config[chain].providers[0]),
+        getWsProvider(CHAIN_CONFIG[chain].providers[0]),
       ),
     )
   }
 
   return {
-    api: clients[chain]!.getTypedApi(config[chain].descriptor) as TypedApi<typeof config[T]['descriptor']>,
+    api: createInkSdk(clients[chain]!),
     client: clients[chain]!,
+  }
+}
+
+export async function polkadotSigner(extensionName: string, address: string): Promise<PolkadotSigner | undefined> {
+  try {
+    const selectedExtension = await connectInjectedExtension(extensionName)
+    const account = selectedExtension.getAccounts().find(acc => acc.address === address)
+    return account?.polkadotSigner
+  }
+  catch (err) {
+    console.error('Failed to get signer:', err)
+    return undefined
   }
 }

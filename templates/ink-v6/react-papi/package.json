@@ -15,6 +15,7 @@
     "postinstall": "papi && npm run generate:chain && npm run generate:contract"
   },
   "dependencies": {
+    "@polkadot-api/sdk-ink": "^0.5.1",
     "@polkadot/util": "^13.5.7",
     "@polkadot/util-crypto": "^13.5.7",
     "@talismn/connect-wallets": "^1.2.8",
