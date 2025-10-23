@@ -26,14 +26,14 @@
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.29",
     "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/vite": "^4.1.14",
+    "@tailwindcss/vite": "^4.1.15",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
-    "daisyui": "^5.3.3",
-    "eslint": "^9.37.0",
-    "tailwindcss": "^4.1.14",
+    "daisyui": "^5.3.8",
+    "eslint": "^9.38.0",
+    "tailwindcss": "^4.1.15",
     "typescript": "~5.9.3",
-    "vite": "^7.1.10",
+    "vite": "^7.1.12",
     "vue-tsc": "^3.0.9"
   }
 }
