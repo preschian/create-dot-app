@@ -2,7 +2,15 @@ import type { SelectOptions } from '@clack/prompts'
 import process from 'node:process'
 import { cancel, isCancel, select } from '@clack/prompts'
 
-export const templateOptions: SelectOptions<string>['options'] = [
+type Category = 'pallet' | 'solidity' | 'ink'
+
+const categoryOptions: SelectOptions<Category>['options'] = [
+  { value: 'pallet', label: 'Pallet Templates' },
+  { value: 'solidity', label: 'Solidity Templates' },
+  { value: 'ink', label: 'ink! Templates' },
+]
+
+const palletTemplateOptions: SelectOptions<string>['options'] = [
   { value: 'next-dedot', label: 'Next + Dedot' },
   { value: 'next-papi', label: 'Next + PAPI' },
 
@@ -14,9 +22,24 @@ export const templateOptions: SelectOptions<string>['options'] = [
 
   { value: 'vue-dedot', label: 'Vue + Dedot' },
   { value: 'vue-papi', label: 'Vue + PAPI' },
+]
 
+const solidityTemplateOptions: SelectOptions<string>['options'] = [
   { value: 'solidity-react', label: 'Solidity + React (Hardhat + Wagmi)' },
   { value: 'solidity-vue', label: 'Solidity + Vue (Hardhat + Wagmi)' },
+]
+
+const inkTemplateOptions: SelectOptions<string>['options'] = [
+  { value: 'ink-v6/react-dedot', label: 'ink! React + Dedot' },
+  { value: 'ink-v6/react-papi', label: 'ink! React + PAPI' },
+  { value: 'ink-v6/vue-dedot', label: 'ink! Vue + Dedot' },
+  { value: 'ink-v6/vue-papi', label: 'ink! Vue + PAPI' },
+]
+
+export const templateOptions: SelectOptions<string>['options'] = [
+  ...palletTemplateOptions,
+  ...solidityTemplateOptions,
+  ...inkTemplateOptions,
 ]
 
 export async function pickTemplate(providedTemplate?: string): Promise<string> {
@@ -33,9 +56,35 @@ export async function pickTemplate(providedTemplate?: string): Promise<string> {
   }
 
   // Otherwise, show the interactive picker
+  // First, pick a category
+  const category = await select({
+    message: 'Pick a template category',
+    options: categoryOptions,
+  })
+
+  if (isCancel(category)) {
+    cancel('Operation cancelled')
+    process.exit(0)
+  }
+
+  // Then, pick a template based on the category
+  let templateOptionsForCategory: SelectOptions<string>['options']
+  
+  switch (category) {
+    case 'pallet':
+      templateOptionsForCategory = palletTemplateOptions
+      break
+    case 'solidity':
+      templateOptionsForCategory = solidityTemplateOptions
+      break
+    case 'ink':
+      templateOptionsForCategory = inkTemplateOptions
+      break
+  }
+
   const template = await select({
     message: 'Pick a template',
-    options: templateOptions,
+    options: templateOptionsForCategory,
   })
 
   if (isCancel(template)) {
