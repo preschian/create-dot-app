@@ -1,5 +1,5 @@
 import type { Prefix } from '~/utils/sdk'
-import { useCallback, useRef } from 'react'
+import { useCallback, useState } from 'react'
 import { useConnect } from '~/hooks/useConnect'
 import { useContractTransaction } from '~/hooks/useContractTransaction'
 import { explorerDetail, stripAddress } from '~/utils/formatters'
@@ -18,24 +18,24 @@ export default function SignTransaction({ chainKey, address }: SignTransactionPr
     flipContractValue,
   } = useContractTransaction(chainKey, address)
 
-  const dismissedResultRef = useRef<string | null>(null)
-  const dismissedTxHashRef = useRef<string | null>(null)
+  const [dismissedResult, setDismissedResult] = useState<string | null>(null)
+  const [dismissedTxHash, setDismissedTxHash] = useState<string | null>(null)
 
-  const showResult = result && !isProcessing && dismissedResultRef.current !== result
-  const showTxHash = txHash && dismissedTxHashRef.current !== txHash
+  const showResult = result && !isProcessing && dismissedResult !== result
+  const showTxHash = txHash && dismissedTxHash !== txHash
 
   const handleFlip = useCallback(async () => {
-    dismissedResultRef.current = null
-    dismissedTxHashRef.current = null
+    setDismissedResult(null)
+    setDismissedTxHash(null)
     await flipContractValue()
   }, [flipContractValue])
 
   const closeResult = useCallback(() => {
-    dismissedResultRef.current = result
+    setDismissedResult(result)
   }, [result])
 
   const closeTxHash = useCallback(() => {
-    dismissedTxHashRef.current = txHash
+    setDismissedTxHash(txHash)
   }, [txHash])
 
   return (

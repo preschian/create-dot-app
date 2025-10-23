@@ -48,6 +48,7 @@ export default function MapAccount({ chainKey, address }: MapAccountProps) {
               </div>
 
               <button
+                type="button"
                 disabled={isMapping}
                 className="btn btn-sm btn-neutral w-full uppercase tracking-wider"
                 onClick={handleMapAccount}
