@@ -3,6 +3,7 @@ import { useCurrentBlock } from '../hooks/useCurrentBlock'
 import { buyTokenUrl } from '../utils/formatters'
 import Balance from './Balance'
 import ContractData from './ContractData'
+import MapAccount from './MapAccount'
 import SignTransaction from './SignTransaction'
 
 interface AccountCardProps {
@@ -70,6 +71,9 @@ export default function AccountCard({ chainKey, address }: AccountCardProps) {
           {address
             ? (
                 <div className="space-y-6">
+                  {/* Map Account */}
+                  <MapAccount key={address} chainKey={chainKey} address={address} />
+
                   {/* Contract Data */}
                   <div key={currentBlock}>
                     <ContractData key={address} address={address} chainKey={chainKey} />
