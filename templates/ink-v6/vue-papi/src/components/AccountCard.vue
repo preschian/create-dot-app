@@ -4,6 +4,7 @@ import { useCurrentBlock } from '~/composables/useCurrentBlock'
 import { buyTokenUrl } from '~/utils/formatters'
 import Balance from './Balance.vue'
 import ContractData from './ContractData.vue'
+import MapAccount from './MapAccount.vue'
 import SignTransaction from './SignTransaction.vue'
 
 const props = defineProps<{
@@ -63,6 +64,9 @@ const { name, currentBlock, isConnected } = useCurrentBlock(props.chainKey)
       <!-- Right Column: Contract Info & Actions -->
       <div class="p-6">
         <div v-if="address" class="space-y-6">
+          <!-- Map Account -->
+          <MapAccount :key="address" :chain-key="chainKey" :address="address" />
+
           <!-- Contract Data -->
           <div :key="currentBlock">
             <ContractData :key="address" :address="address" :chain-key="chainKey" />
