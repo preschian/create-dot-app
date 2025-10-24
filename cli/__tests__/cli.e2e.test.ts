@@ -70,17 +70,17 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
 }
 
 async function handleSelection(p: pty.IPty, navigateDown = 0): Promise<void> {
-  await wait(500) // Increased wait time for CI
+  await wait(500)
 
   // Navigate down if needed
   for (let i = 0; i < navigateDown; i++) {
     p.write('\x1B[B') // Arrow down
-    await wait(200) // Increased wait between navigation
+    await wait(200)
   }
 
   // Select current option
   p.write('\r')
-  await wait(300) // Increased wait after selection
+  await wait(300)
 }
 
 describe('cli E2E tests with node-pty', () => {
@@ -155,30 +155,24 @@ describe('cli E2E tests with node-pty', () => {
 
     const { output } = await spawnCLI(testDir, {
       args: [],
-      timeout: 90000, // Increased timeout for CI
-      onData: (_, cleanOutput, process) => {
+      onData: async (_, cleanOutput, process) => {
         // Respond to project name prompt
         if (cleanOutput.includes('What is your project name?') && !askedForName) {
           askedForName = true
-          setTimeout(() => {
-            process.write(`${projectName}\r`)
-          }, 200)
+          await wait(100)
+          process.write(`${projectName}\r`)
         }
 
         // Respond to category selection
         if (cleanOutput.includes('Choose your project type') && !askedForCategory) {
           askedForCategory = true
-          setTimeout(() => {
-            handleSelection(process, 0)
-          }, 300)
+          await handleSelection(process, 0)
         }
 
         // Respond to template selection
         if (cleanOutput.includes('Pick a template') && !askedForTemplate) {
           askedForTemplate = true
-          setTimeout(() => {
-            handleSelection(process, 0)
-          }, 300)
+          await handleSelection(process, 0)
         }
       },
     })
@@ -311,14 +305,13 @@ describe('cli E2E tests with node-pty', () => {
 
     const { output } = await spawnCLI(testDir, {
       args: ['--template=react-dedot'],
-      timeout: 90000, // Increased timeout for CI
-      onData: (_, cleanOutput, process) => {
+      timeout: 60000,
+      onData: async (_, cleanOutput, process) => {
         // Respond to project name prompt
         if (cleanOutput.includes('What is your project name?') && !askedForName) {
           askedForName = true
-          setTimeout(() => {
-            process.write(`${projectName}\r`)
-          }, 200)
+          await wait(100)
+          process.write(`${projectName}\r`)
         }
       },
     })
@@ -383,30 +376,25 @@ describe('cli E2E tests with node-pty', () => {
 
     const { output } = await spawnCLI(testDir, {
       args: [],
-      timeout: 90000, // Increased timeout for CI
-      onData: (_, cleanOutput, process) => {
+      timeout: 60000,
+      onData: async (_, cleanOutput, process) => {
         // Respond to project name prompt
         if (cleanOutput.includes('What is your project name?') && !askedForName) {
           askedForName = true
-          setTimeout(() => {
-            process.write(`${projectName}\r`)
-          }, 200)
+          await wait(100)
+          process.write(`${projectName}\r`)
         }
 
         // Respond to category selection (select ink! Templates - 3rd option, index 2)
         if (cleanOutput.includes('Choose your project type') && !askedForCategory) {
           askedForCategory = true
-          setTimeout(() => {
-            handleSelection(process, 2)
-          }, 300)
+          await handleSelection(process, 2)
         }
 
         // Respond to template selection (select first ink! template)
         if (cleanOutput.includes('Pick a template') && !askedForTemplate) {
           askedForTemplate = true
-          setTimeout(() => {
-            handleSelection(process, 0)
-          }, 300)
+          await handleSelection(process, 0)
         }
       },
     })
