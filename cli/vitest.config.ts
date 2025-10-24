@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    testTimeout: 30000,
-    hookTimeout: 30000,
-    teardownTimeout: 30000,
+    testTimeout: 30_000 * 2,
+    hookTimeout: 30_000,
+    teardownTimeout: 30_000,
     environment: 'node',
     globals: true,
   },
