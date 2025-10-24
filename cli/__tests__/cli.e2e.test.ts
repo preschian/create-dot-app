@@ -69,21 +69,7 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
   })
 }
 
-async function handleCategorySelection(p: pty.IPty, navigateDown = 0): Promise<void> {
-  await wait(500) // Increased wait time for CI
-
-  // Navigate down if needed
-  for (let i = 0; i < navigateDown; i++) {
-    p.write('\x1B[B') // Arrow down
-    await wait(200) // Increased wait between navigation
-  }
-
-  // Select current option
-  p.write('\r')
-  await wait(300) // Increased wait after selection
-}
-
-async function handleTemplateSelection(p: pty.IPty, navigateDown = 0): Promise<void> {
+async function handleSelection(p: pty.IPty, navigateDown = 0): Promise<void> {
   await wait(500) // Increased wait time for CI
 
   // Navigate down if needed
@@ -126,13 +112,13 @@ describe('cli E2E tests with node-pty', () => {
       args: [projectName],
       timeout: 60000, // Increase timeout
       onData: (data, cleanOutput, process) => {
-        if (cleanOutput.includes('Pick a template category') && !categorySelectionHandled) {
+        if (cleanOutput.includes('Choose your project type') && !categorySelectionHandled) {
           categorySelectionHandled = true
-          handleCategorySelection(process, 0) // Select first category (Pallet Templates)
+          handleSelection(process, 0) // Select first category (Pallet Templates)
         }
         if (cleanOutput.includes('Pick a template') && !templateSelectionHandled) {
           templateSelectionHandled = true
-          handleTemplateSelection(process, 0) // Use first template (index 0)
+          handleSelection(process, 0) // Use first template (index 0)
         }
       },
     })
@@ -180,10 +166,10 @@ describe('cli E2E tests with node-pty', () => {
         }
 
         // Respond to category selection
-        if (cleanOutput.includes('Pick a template category') && !askedForCategory) {
+        if (cleanOutput.includes('Choose your project type') && !askedForCategory) {
           askedForCategory = true
           setTimeout(() => {
-            handleCategorySelection(process, 0)
+            handleSelection(process, 0)
           }, 300)
         }
 
@@ -191,7 +177,7 @@ describe('cli E2E tests with node-pty', () => {
         if (cleanOutput.includes('Pick a template') && !askedForTemplate) {
           askedForTemplate = true
           setTimeout(() => {
-            handleTemplateSelection(process, 0)
+            handleSelection(process, 0)
           }, 300)
         }
       },
@@ -223,12 +209,12 @@ describe('cli E2E tests with node-pty', () => {
       expectExitCode: 1,
       onData: (_, cleanOutput, process) => {
         // Handle category selection if it appears
-        if (cleanOutput.includes('Pick a template category')) {
-          handleCategorySelection(process, 0)
+        if (cleanOutput.includes('Choose your project type')) {
+          handleSelection(process, 0)
         }
         // Handle template selection if it appears
         if (cleanOutput.includes('Pick a template')) {
-          handleTemplateSelection(process, 0)
+          handleSelection(process, 0)
         }
       },
     })
@@ -248,14 +234,14 @@ describe('cli E2E tests with node-pty', () => {
       args: [projectName],
       onData: (_, cleanOutput, process) => {
         // Handle category selection (Pallet Templates)
-        if (cleanOutput.includes('Pick a template category') && !categorySelectionHandled) {
+        if (cleanOutput.includes('Choose your project type') && !categorySelectionHandled) {
           categorySelectionHandled = true
-          handleCategorySelection(process, 0) // Select Pallet Templates
+          handleSelection(process, 0) // Select Pallet Templates
         }
         // Handle template selection with navigation to Vue + Dedot (7th option, index 6)
         if (cleanOutput.includes('Pick a template') && !templateSelectionHandled) {
           templateSelectionHandled = true
-          handleTemplateSelection(process, 6) // Navigate down 6 times to get Vue + Dedot
+          handleSelection(process, 6) // Navigate down 6 times to get Vue + Dedot
         }
       },
     })
@@ -408,10 +394,10 @@ describe('cli E2E tests with node-pty', () => {
         }
 
         // Respond to category selection (select ink! Templates - 3rd option, index 2)
-        if (cleanOutput.includes('Pick a template category') && !askedForCategory) {
+        if (cleanOutput.includes('Choose your project type') && !askedForCategory) {
           askedForCategory = true
           setTimeout(() => {
-            handleCategorySelection(process, 2)
+            handleSelection(process, 2)
           }, 300)
         }
 
@@ -419,7 +405,7 @@ describe('cli E2E tests with node-pty', () => {
         if (cleanOutput.includes('Pick a template') && !askedForTemplate) {
           askedForTemplate = true
           setTimeout(() => {
-            handleTemplateSelection(process, 0)
+            handleSelection(process, 0)
           }, 300)
         }
       },

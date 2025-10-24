@@ -87,7 +87,7 @@ export async function pickTemplate(providedTemplate?: string): Promise<string> {
   // Otherwise, show the interactive picker
   // First, pick a category
   const category = await select({
-    message: 'Pick a template category',
+    message: 'Choose your project type',
     options: categoryOptions,
   })
 
