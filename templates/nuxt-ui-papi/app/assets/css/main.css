@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+@plugin "@iconify/tailwind4";
+
+:root {
+  --ui-radius: 0rem;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+@keyframes flash-highlight {
+  0% {
+    background-color: rgb(187 247 208);
+    transform: scale(1.05);
+  }
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}
+
+.block-highlight {
+  animation: flash-highlight 1s ease-out;
+  display: inline-block;
+}
