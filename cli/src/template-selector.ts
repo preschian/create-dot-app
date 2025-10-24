@@ -1,6 +1,7 @@
 import type { SelectOptions } from '@clack/prompts'
 import process from 'node:process'
-import { cancel, isCancel, select } from '@clack/prompts'
+import { cancel, isCancel, log, select } from '@clack/prompts'
+import color from 'picocolors'
 
 type Category = 'pallet' | 'solidity' | 'ink'
 
@@ -42,11 +43,39 @@ export const templateOptions: SelectOptions<string>['options'] = [
   ...inkTemplateOptions,
 ]
 
+function isInkV6Template(template: string): boolean {
+  return template.startsWith('ink-v6/')
+}
+
+function displayInkV6Notes(): void {
+  log.info(`${color.yellow('📝 Important Notes for ink! v6:')}
+
+${color.cyan('1. Install Pop CLI with ink! v6 support:')}
+   ${color.dim('cargo install --git https://github.com/r0gue-io/pop-cli.git --branch v6.0.0-alpha.4 --locked')}
+
+${color.cyan('2. Requirements:')}
+   ${color.dim('• Rust 1.89 or higher (check with: rustc --version)')}
+   ${color.dim('• ink! v6 uses RISC-V bytecode and PolkaVM instead of WebAssembly')}
+
+${color.cyan('3. Account Mapping:')}
+   ${color.dim('• You need to map your 32-byte Polkadot account to a 20-byte address')}
+   ${color.dim('• Pop CLI will prompt you automatically when needed')}
+
+${color.cyan('4. Learn more:')}
+   ${color.dim('• Migration guide: https://learn.onpop.io/contracts/welcome/migrating-to-inkv6')}
+   ${color.dim('• ink! v6 documentation and changelog available in the guide')}
+`)
+}
+
 export async function pickTemplate(providedTemplate?: string): Promise<string> {
   // If a template is provided, validate it and return it
   if (providedTemplate) {
     const validTemplates = templateOptions.map(option => option.value)
     if (validTemplates.includes(providedTemplate)) {
+      // Show notes for ink! v6 templates even when provided via CLI
+      if (isInkV6Template(providedTemplate)) {
+        displayInkV6Notes()
+      }
       return providedTemplate
     }
     else {
@@ -58,7 +87,7 @@ export async function pickTemplate(providedTemplate?: string): Promise<string> {
   // Otherwise, show the interactive picker
   // First, pick a category
   const category = await select({
-    message: 'Pick a template category',
+    message: 'Choose your project type',
     options: categoryOptions,
   })
 
@@ -69,7 +98,7 @@ export async function pickTemplate(providedTemplate?: string): Promise<string> {
 
   // Then, pick a template based on the category
   let templateOptionsForCategory: SelectOptions<string>['options']
-  
+
   switch (category) {
     case 'pallet':
       templateOptionsForCategory = palletTemplateOptions
@@ -90,6 +119,11 @@ export async function pickTemplate(providedTemplate?: string): Promise<string> {
   if (isCancel(template)) {
     cancel('Operation cancelled')
     process.exit(0)
+  }
+
+  // Show notes for ink! v6 templates
+  if (isInkV6Template(template)) {
+    displayInkV6Notes()
   }
 
   return template
