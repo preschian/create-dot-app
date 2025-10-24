@@ -37,6 +37,20 @@ The template comes pre-configured for:
 
 ## 🛠️ Getting Started
 
+### Prerequisites
+
+This template uses **ink! v6** smart contracts. You'll need Pop CLI with ink! v6 support to build and deploy contracts.
+
+Install Pop CLI:
+
+```bash
+cargo install --git https://github.com/r0gue-io/pop-cli.git --branch v6.0.0-alpha.4 --locked
+```
+
+📖 For more details, see the [Getting Started with ink! v6 guide](https://learn.onpop.io/contracts/welcome/migrating-to-inkv6).
+
+### Installation
+
 ```bash
 # Install dependencies
 npm install
