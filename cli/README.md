@@ -5,37 +5,99 @@ A command-line interface (CLI) tool designed to streamline the development proce
 ## Features
 
 ### 🚀 Multiple Frontend Framework Support
-- **React.js**
-- **Vue.js**
+- **React.js** - Single Page Application with Vite
+- **Vue.js** - Single Page Application with Vite
+- **Next.js** - React framework with SSR/SSG
+- **Nuxt** - Vue framework with SSR/SSG
 
 ### 🔗 Dual SDK Integration Support
-- **[PAPI](https://papi.how/)**
-- **[Dedot](https://docs.dedot.dev/)**
+- **[PAPI](https://papi.how/)** - Polkadot API
+- **[Dedot](https://docs.dedot.dev/)** - Developer-friendly Polkadot SDK
+
+### 🔨 Smart Contract Support
+- **Substrate Pallets** - Build with runtime modules
+- **Solidity** - EVM-compatible smart contracts (Hardhat + Wagmi)
+- **ink! v6** - WebAssembly-based smart contracts with RISC-V
+
+### 📦 Package Manager Support
+Compatible with npm, yarn, pnpm, bun, and deno
 
 ### 📋 Planned Templates
 
-- **Frontend Frameworks:** Next.js, Nuxt.js, Svelte, SvelteKit, Solid, Remix
+- **Frontend Frameworks:** Svelte, SvelteKit, Solid, Remix
 - **Backend Frameworks:** Hono, Elysia, Fastify, H3
 
 *Want any specific UI or frontend framework such as Shadcn/UI, Chakra UI, or others? Let me know by opening an issue!*
 
 ## Usage
 
-Create a new Polkadot dApp project:
+### Interactive Mode
+
+Create a new Polkadot dApp project with interactive prompts:
 
 ```bash
 npx create-dot-app@latest
 ```
 
 Follow the interactive prompts to:
-1. Choose your preferred frontend framework
-2. Select your SDK integration (PAPI or Dedot)
+1. Enter your project name
+2. Choose your project type (Pallet, Solidity, or ink!)
+3. Select your preferred template
+
+### Non-Interactive Mode
+
+Skip the prompts by providing options via CLI flags:
+
+```bash
+# Specify project name only
+npx create-dot-app@latest my-dapp
+
+# Specify project name and template
+npx create-dot-app@latest my-dapp --template react-papi
+
+# Full non-interactive mode
+npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
+```
+
+### CLI Options
+
+| Option | Alias | Description |
+|--------|-------|-------------|
+| `--template <template>` | `-t` | Specify template (see available templates below) |
+| `--name <name>` | | Specify project name (can also be first positional arg) |
+| `--help` | `-h` | Show help message |
+| `--version` | `-v` | Show version number |
+
+#### Available Templates
+
+**Pallet Templates:**
+- `next-dedot` - Next.js + Dedot
+- `next-papi` - Next.js + PAPI
+- `nuxt-dedot` - Nuxt + Dedot
+- `nuxt-papi` - Nuxt + PAPI
+- `react-dedot` - React + Dedot
+- `react-papi` - React + PAPI
+- `vue-dedot` - Vue + Dedot
+- `vue-papi` - Vue + PAPI
+
+**Solidity Templates:**
+- `solidity-react` - Solidity + React (Hardhat + Wagmi)
+- `solidity-vue` - Solidity + Vue (Hardhat + Wagmi)
+
+**ink! Templates:**
+- `ink-v6/react-dedot` - ink! React + Dedot
+- `ink-v6/react-papi` - ink! React + PAPI
+- `ink-v6/vue-dedot` - ink! Vue + Dedot
+- `ink-v6/vue-papi` - ink! Vue + PAPI
 
 ## Quick Start
 
 ```bash
-# Create a new project
-npx create-dot-app@latest my-dapp
+# Interactive mode
+npx create-dot-app@latest
+
+# Non-interactive with specific template
+npx create-dot-app@latest my-dapp --template ink-v6/react-papi
 
 # Navigate to project directory
 cd my-dapp
@@ -94,9 +156,6 @@ bun run test
 
 # Run tests in watch mode
 bun run test:watch
-
-# Or use the convenience script
-./run-tests.sh
 ```
 
 For more details about testing, see [TESTING.md](./TESTING.md).
@@ -104,8 +163,8 @@ For more details about testing, see [TESTING.md](./TESTING.md).
 ### CI/CD
 
 The project uses GitHub Actions for continuous integration:
-- **CLI E2E Tests**: Runs on Ubuntu, macOS, and Windows with Node.js 18, 20, and 22
-- **Package Manager Tests**: Tests template installations with different package managers
+- **CLI E2E Tests**: Automated tests for all templates and features
+- **Package Manager Tests**: Tests template installations with npm, yarn, pnpm, and bun
 - **Automated Releases**: Publishes to npm on version tags
 
 ## Contributing

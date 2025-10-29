@@ -3,83 +3,34 @@
 [![CLI E2E Tests](https://github.com/preschian/create-dot-app/actions/workflows/cli-tests.yml/badge.svg)](https://github.com/preschian/create-dot-app/actions/workflows/cli-tests.yml)
 [![Package Managers](https://github.com/preschian/create-dot-app/actions/workflows/package-managers.yml/badge.svg)](https://github.com/preschian/create-dot-app/actions/workflows/package-managers.yml)
 
-A command-line interface (CLI) tool designed to streamline the development process for Polkadot-based decentralized applications (dApps).
-
-## Features
-
-### 🚀 Multiple Frontend Framework Support
-- **React.js**
-- **Vue.js**
-- **Next.js**
-- **Nuxt.js**
-
-### 🔗 Dual SDK Integration Support
-- **[PAPI](https://papi.how/)**
-- **[Dedot](https://docs.dedot.dev/)**
-
-### 📋 Planned Templates
-
-- **Frontend Frameworks:** Svelte, SvelteKit, Solid, Remix
-- **Backend Frameworks:** Hono, Elysia, Fastify, H3
-
-*Want any specific UI or frontend framework such as Shadcn/UI, Chakra UI, or others? Let me know by opening an issue!*
-
-## Usage
-
-Create a new Polkadot dApp project:
-
-```bash
-npx create-dot-app@latest
-```
-
-Follow the interactive prompts to:
-1. Choose your preferred frontend framework
-2. Select your SDK integration (PAPI or Dedot)
+A CLI tool to quickly bootstrap Polkadot-based decentralized applications with pre-configured templates and best practices.
 
 ## Quick Start
 
 ```bash
-# Create a new project
-npx create-dot-app@latest my-dapp
+# Interactive mode
+npx create-dot-app@latest
 
-# Navigate to project directory
-cd my-dapp
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+# Non-interactive mode
+npx create-dot-app@latest my-dapp --template react-papi
 ```
 
-## Privacy & Telemetry
+## Features
 
-This CLI collects anonymous usage data to help improve the tool. The data includes:
-- Selected template type
-- CLI version
+- 🚀 **Multiple Frameworks** - React, Vue, Next.js, Nuxt
+- 🔗 **Dual SDK Support** - [PAPI](https://papi.how/) and [Dedot](https://docs.dedot.dev/)
+- 🔨 **Smart Contracts** - Substrate Pallets, Solidity, ink! v6
+- 📦 **Package Managers** - npm, yarn, pnpm, bun, deno
 
-**To disable telemetry**, set the environment variable:
+## Documentation
 
-```bash
-export DISABLE_TELEMETRY=true
-```
+For detailed documentation, available templates, and advanced usage:
 
-Or run with telemetry disabled:
-
-```bash
-DISABLE_TELEMETRY=true npx create-dot-app@latest
-```
+📚 **[CLI Documentation](cli/README.md)**
 
 ## Contributing
 
-We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details on:
-
-- Development setup
-- How to add new templates
-- Testing requirements
-- Pull request process
-
-Feel free to submit issues and pull requests!
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ---
 
