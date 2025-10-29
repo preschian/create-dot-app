@@ -1,5 +1,17 @@
 # create-dot-app
 
+## 2.0.0
+
+### Major Changes
+
+- [#196](https://github.com/preschian/create-dot-app/pull/196) [`9583755`](https://github.com/preschian/create-dot-app/commit/958375515214d8f6bfc755dc0d919397a791ba3f) Thanks [@preschian](https://github.com/preschian)! - feat: improve CLI flow with template categorization and ink! support
+
+### Patch Changes
+
+- [#201](https://github.com/preschian/create-dot-app/pull/201) [`85ff59e`](https://github.com/preschian/create-dot-app/commit/85ff59ee96f648da2779464bc4ac1dad578d1b2f) Thanks [@preschian](https://github.com/preschian)! - feat: add comprehensive non-interactive CLI flags
+
+- [#198](https://github.com/preschian/create-dot-app/pull/198) [`d242ea7`](https://github.com/preschian/create-dot-app/commit/d242ea7c0dc03f88beb1921f3397575534cd0cd6) Thanks [@preschian](https://github.com/preschian)! - feat: add ink! v6 template notes and guidance
+
 ## 1.0.9
 
 ### Patch Changes
