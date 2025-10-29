@@ -499,7 +499,7 @@ describe('cli E2E tests with node-pty', () => {
     const projectName = 'named-project'
     const projectPath = path.join(testDir, projectName)
 
-    const { output } = await spawnCLI(testDir, {
+    await spawnCLI(testDir, {
       args: ['--name', projectName, '-t', 'react-dedot'],
       timeout: 60000,
     })
@@ -518,7 +518,7 @@ describe('cli E2E tests with node-pty', () => {
     const projectName = 'named-project-2'
     const projectPath = path.join(testDir, projectName)
 
-    const { output } = await spawnCLI(testDir, {
+    await spawnCLI(testDir, {
       args: [`--name=${projectName}`, '--template=nuxt-papi'],
       timeout: 60000,
     })
