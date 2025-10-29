@@ -416,4 +416,191 @@ describe('cli E2E tests with node-pty', () => {
     const contractExists = await fs.access(path.join(projectPath, 'contract/Cargo.toml')).then(() => true).catch(() => false)
     expect(contractExists, 'Should have ink! contract folder').toBe(true)
   })
+
+  it('creates project with --yes flag (non-interactive with defaults)', async () => {
+    const projectName = 'my-polkadot-app'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: ['--yes'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Using default project name: my-polkadot-app')
+    expect(output).toContain('Using default template: react-papi')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+  })
+
+  it('creates project with -y flag (short version)', async () => {
+    const projectName = 'my-polkadot-app'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: ['-y'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+  })
+
+  it('creates project with --yes and custom name', async () => {
+    const projectName = 'custom-dapp'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: [projectName, '--yes'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+  })
+
+  it('creates project with --yes, custom name, and template', async () => {
+    const projectName = 'vue-dapp'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: [projectName, '-t', 'vue-dedot', '-y'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+
+    // Verify it's a Vue project (should have App.vue)
+    const appVueExists = await fs.access(path.join(projectPath, 'src/App.vue')).then(() => true).catch(() => false)
+    expect(appVueExists, 'Should create Vue project with App.vue').toBe(true)
+  })
+
+  it('displays help with --help flag', async () => {
+    const { output } = await spawnCLI(testDir, {
+      args: ['--help'],
+      timeout: 10000,
+    })
+
+    // Verify help message contains expected content
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Bootstrap Polkadot dApps quickly')
+    expect(output).toContain('Usage:')
+    expect(output).toContain('Options:')
+    expect(output).toContain('-y, --yes')
+    expect(output).toContain('-t, --template')
+    expect(output).toContain('--name')
+    expect(output).toContain('-h, --help')
+    expect(output).toContain('-v, --version')
+    expect(output).toContain('Available Templates:')
+    expect(output).toContain('Examples:')
+  })
+
+  it('displays help with -h flag', async () => {
+    const { output } = await spawnCLI(testDir, {
+      args: ['-h'],
+      timeout: 10000,
+    })
+
+    // Verify help message is displayed
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain('Bootstrap Polkadot dApps quickly')
+    expect(output).toContain('Usage:')
+  })
+
+  it('displays version with --version flag', async () => {
+    const { output } = await spawnCLI(testDir, {
+      args: ['--version'],
+      timeout: 10000,
+    })
+
+    // Verify version is displayed (should be in format: create-dot-app vX.Y.Z)
+    expect(output).toMatch(/create-dot-app v\d+\.\d+\.\d+/)
+  })
+
+  it('displays version with -v flag', async () => {
+    const { output } = await spawnCLI(testDir, {
+      args: ['-v'],
+      timeout: 10000,
+    })
+
+    // Verify version is displayed
+    expect(output).toMatch(/create-dot-app v\d+\.\d+\.\d+/)
+  })
+
+  it('creates project with --name flag', async () => {
+    const projectName = 'named-project'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: ['--name', projectName, '-t', 'react-dedot', '-y'],
+      timeout: 60000,
+    })
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+  })
+
+  it('creates project with --name= syntax', async () => {
+    const projectName = 'named-project-2'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: [`--name=${projectName}`, '--template=nuxt-papi', '-y'],
+      timeout: 60000,
+    })
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+
+    // Verify it's a Nuxt project
+    const nuxtConfigExists = await fs.access(path.join(projectPath, 'nuxt.config.ts')).then(() => true).catch(() => false)
+    expect(nuxtConfigExists, 'Should create Nuxt project with nuxt.config.ts').toBe(true)
+  })
 })
