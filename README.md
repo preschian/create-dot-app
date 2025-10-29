@@ -12,7 +12,7 @@ A CLI tool to quickly bootstrap Polkadot-based decentralized applications with p
 npx create-dot-app@latest
 
 # Non-interactive mode
-npx create-dot-app@latest my-dapp --template=react-papi
+npx create-dot-app@latest my-dapp --template react-papi
 ```
 
 ## Features

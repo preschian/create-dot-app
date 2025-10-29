@@ -417,78 +417,12 @@ describe('cli E2E tests with node-pty', () => {
     expect(contractExists, 'Should have ink! contract folder').toBe(true)
   })
 
-  it('creates project with --yes flag (non-interactive with defaults)', async () => {
-    const projectName = 'my-polkadot-app'
-    const projectPath = path.join(testDir, projectName)
-
-    const { output } = await spawnCLI(testDir, {
-      args: ['--yes'],
-      timeout: 60000,
-    })
-
-    // Verify output contains expected messages
-    expect(output).toContain('create-dot-app')
-    expect(output).toContain('Using default project name: my-polkadot-app')
-    expect(output).toContain('Using default template: react-papi')
-    expect(output).toContain('Project created successfully!')
-
-    // Verify project directory was created
-    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
-    expect(projectExists).toBe(true)
-
-    // Verify package.json has correct name
-    const packageJsonPath = path.join(projectPath, 'package.json')
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
-    expect(packageJson.name).toBe(projectName)
-  })
-
-  it('creates project with -y flag (short version)', async () => {
-    const projectName = 'my-polkadot-app'
-    const projectPath = path.join(testDir, projectName)
-
-    const { output } = await spawnCLI(testDir, {
-      args: ['-y'],
-      timeout: 60000,
-    })
-
-    // Verify output contains expected messages
-    expect(output).toContain('create-dot-app')
-    expect(output).toContain('Project created successfully!')
-
-    // Verify project directory was created
-    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
-    expect(projectExists).toBe(true)
-  })
-
-  it('creates project with --yes and custom name', async () => {
-    const projectName = 'custom-dapp'
-    const projectPath = path.join(testDir, projectName)
-
-    const { output } = await spawnCLI(testDir, {
-      args: [projectName, '--yes'],
-      timeout: 60000,
-    })
-
-    // Verify output contains expected messages
-    expect(output).toContain('create-dot-app')
-    expect(output).toContain('Project created successfully!')
-
-    // Verify project directory was created
-    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
-    expect(projectExists).toBe(true)
-
-    // Verify package.json has correct name
-    const packageJsonPath = path.join(projectPath, 'package.json')
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
-    expect(packageJson.name).toBe(projectName)
-  })
-
-  it('creates project with --yes, custom name, and template', async () => {
+  it('creates project with custom name and template (non-interactive)', async () => {
     const projectName = 'vue-dapp'
     const projectPath = path.join(testDir, projectName)
 
     const { output } = await spawnCLI(testDir, {
-      args: [projectName, '-t', 'vue-dedot', '-y'],
+      args: [projectName, '-t', 'vue-dedot'],
       timeout: 60000,
     })
 
@@ -521,7 +455,6 @@ describe('cli E2E tests with node-pty', () => {
     expect(output).toContain('Bootstrap Polkadot dApps quickly')
     expect(output).toContain('Usage:')
     expect(output).toContain('Options:')
-    expect(output).toContain('-y, --yes')
     expect(output).toContain('-t, --template')
     expect(output).toContain('--name')
     expect(output).toContain('-h, --help')
@@ -567,7 +500,7 @@ describe('cli E2E tests with node-pty', () => {
     const projectPath = path.join(testDir, projectName)
 
     const { output } = await spawnCLI(testDir, {
-      args: ['--name', projectName, '-t', 'react-dedot', '-y'],
+      args: ['--name', projectName, '-t', 'react-dedot'],
       timeout: 60000,
     })
 
@@ -586,7 +519,7 @@ describe('cli E2E tests with node-pty', () => {
     const projectPath = path.join(testDir, projectName)
 
     const { output } = await spawnCLI(testDir, {
-      args: [`--name=${projectName}`, '--template=nuxt-papi', '-y'],
+      args: [`--name=${projectName}`, '--template=nuxt-papi'],
       timeout: 60000,
     })
 

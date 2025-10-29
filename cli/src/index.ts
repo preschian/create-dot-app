@@ -19,7 +19,6 @@ import { pickTemplate } from './template-selector.js'
 interface CliArgs {
   projectName?: string
   template?: string
-  yes?: boolean
   help?: boolean
   version?: boolean
 }
@@ -35,9 +34,6 @@ function parseArgs(args: string[]): CliArgs {
     }
     else if (arg === '--version' || arg === '-v') {
       parsed.version = true
-    }
-    else if (arg === '--yes' || arg === '-y') {
-      parsed.yes = true
     }
     else if (arg.startsWith('--template=') || arg.startsWith('-t=')) {
       parsed.template = arg.split('=')[1]
@@ -67,7 +63,6 @@ ${color.bold('Usage:')}
   npx create-dot-app@latest [project-name] [options]
 
 ${color.bold('Options:')}
-  -y, --yes                  Skip all prompts and use defaults
   -t, --template <template>  Specify template (see available templates below)
   --name <name>              Specify project name
   -h, --help                 Show this help message
@@ -90,9 +85,6 @@ ${color.bold('Examples:')}
   ${color.dim('# Interactive mode')}
   npx create-dot-app@latest
 
-  ${color.dim('# Non-interactive with defaults')}
-  npx create-dot-app@latest --yes
-
   ${color.dim('# Specify project name')}
   npx create-dot-app@latest my-dapp
 
@@ -100,7 +92,7 @@ ${color.bold('Examples:')}
   npx create-dot-app@latest my-dapp --template react-papi
 
   ${color.dim('# Full non-interactive mode')}
-  npx create-dot-app@latest my-dapp -t ink-v6/react-dedot -y
+  npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
 
 ${color.bold('Learn more:')}
   ${color.underline('https://github.com/preschian/create-dot-app')}
@@ -135,20 +127,12 @@ async function main() {
   console.log()
   intro(color.inverse(' create-dot-app '))
 
-  const isNonInteractive = args.yes
-
   // Get project name from command line args or prompt
   let name: string
 
   if (args.projectName) {
     name = args.projectName
-    if (!isNonInteractive) {
-      log.info(`Using project name: ${args.projectName}`)
-    }
-  }
-  else if (isNonInteractive) {
-    name = 'my-polkadot-app'
-    log.info(`Using default project name: ${name}`)
+    log.info(`Using project name: ${args.projectName}`)
   }
   else {
     const nameInput = await text({
@@ -169,15 +153,8 @@ async function main() {
   let template: string
 
   if (args.template) {
-    if (!isNonInteractive) {
-      log.info(`Using template: ${args.template}`)
-    }
+    log.info(`Using template: ${args.template}`)
     template = await pickTemplate(args.template)
-  }
-  else if (isNonInteractive) {
-    const defaultTemplate = 'react-papi'
-    log.info(`Using default template: ${defaultTemplate}`)
-    template = defaultTemplate
   }
   else {
     template = await pickTemplate()

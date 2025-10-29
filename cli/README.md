@@ -49,9 +49,6 @@ Follow the interactive prompts to:
 Skip the prompts by providing options via CLI flags:
 
 ```bash
-# Use default project name and template
-npx create-dot-app@latest --yes
-
 # Specify project name only
 npx create-dot-app@latest my-dapp
 
@@ -59,14 +56,13 @@ npx create-dot-app@latest my-dapp
 npx create-dot-app@latest my-dapp --template react-papi
 
 # Full non-interactive mode
-npx create-dot-app@latest my-dapp -t ink-v6/react-dedot -y
+npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
 ```
 
 ### CLI Options
 
 | Option | Alias | Description |
 |--------|-------|-------------|
-| `--yes` | `-y` | Skip all prompts and use defaults |
 | `--template <template>` | `-t` | Specify template (see available templates below) |
 | `--name <name>` | | Specify project name (can also be first positional arg) |
 | `--help` | `-h` | Show help message |
@@ -99,9 +95,6 @@ npx create-dot-app@latest my-dapp -t ink-v6/react-dedot -y
 ```bash
 # Interactive mode
 npx create-dot-app@latest
-
-# Non-interactive with defaults
-npx create-dot-app@latest --yes
 
 # Non-interactive with specific template
 npx create-dot-app@latest my-dapp --template ink-v6/react-papi
