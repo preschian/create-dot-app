@@ -5,7 +5,7 @@ import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { connectedWallet, selectedAccount } from '../hooks/use-connect'
 import sdk from '../utils/sdk'
 import { name } from '../../package.json'
-import { formatBalance } from '@polkadot/util'
+import { formatValue } from '@polkadot-api/react-components'
 
 export const DAPP_NAME = name
 
@@ -39,11 +39,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   ])
   const tokenDecimals = chainSpec.properties.tokenDecimals
   const tokenSymbol = chainSpec.properties.tokenSymbol
-  const freeBalance = formatBalance(balance.data.free.toString(), {
-    decimals: tokenDecimals,
-    withUnit: false,
-    forceUnit: '-',
-  })
+  const freeBalance = formatValue(balance.data.free, tokenDecimals)
 
   return {
     balance: freeBalance,
