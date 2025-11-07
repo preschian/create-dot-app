@@ -1,5 +1,5 @@
 import type { Prefix } from '~/plugins/sdk.client'
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto'
+import { AccountId } from 'polkadot-api'
 
 const subscan: Record<Prefix, string> = {
   dot: 'https://polkadot.subscan.io',
@@ -9,8 +9,9 @@ const subscan: Record<Prefix, string> = {
 }
 
 export function unifyAddress(address: string) {
-  const publicKey = decodeAddress(address)
-  return encodeAddress(publicKey, 0)
+  const codec = AccountId(0)
+  const publicKey = codec.enc(address)
+  return codec.dec(publicKey)
 }
 
 export function stripAddress(address: string): string {

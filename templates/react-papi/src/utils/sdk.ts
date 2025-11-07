@@ -2,7 +2,7 @@ import type { PolkadotClient, TypedApi } from 'polkadot-api'
 import { createAtom } from '@xstate/store'
 import { createClient } from 'polkadot-api'
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat'
-import { getWsProvider } from 'polkadot-api/ws-provider/web'
+import { getWsProvider } from 'polkadot-api/ws-provider'
 import { dot, dot_asset_hub, pas, pas_asset_hub } from '../descriptors'
 
 const config = {

@@ -1,6 +1,6 @@
 import type { PolkadotSigner } from 'polkadot-api'
 import type { Prefix } from '~/plugins/sdk.client'
-import { formatBalance } from '@polkadot/util'
+import { formatValue } from '@polkadot-api/react-components'
 import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { name } from '../../package.json'
@@ -43,11 +43,7 @@ export async function getBalance(chainPrefix: Prefix, address: string) {
   ])
   const tokenDecimals = chainSpec.properties.tokenDecimals
   const tokenSymbol = chainSpec.properties.tokenSymbol
-  const freeBalance = formatBalance(balance.data.free.toString(), {
-    decimals: tokenDecimals,
-    withUnit: false,
-    forceUnit: '-',
-  })
+  const freeBalance = formatValue(balance.data.free, tokenDecimals)
 
   return {
     balance: freeBalance,

@@ -10,8 +10,7 @@
     "postinstall": "papi"
   },
   "dependencies": {
-    "@polkadot/util": "^13.5.6",
-    "@polkadot/util-crypto": "^13.5.6",
+    "@polkadot-api/react-components": "^0.4.1",
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.9.2",
     "next": "15.5.2",
