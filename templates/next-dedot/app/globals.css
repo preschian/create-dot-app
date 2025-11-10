@@ -1,9 +1,12 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin "@iconify/tailwind4";
-@plugin "daisyui";
 
 .container {
   max-width: 1200px;
+}
+
+@plugin "daisyui" {
+  exclude: properties;
 }
 
 /* to enable dark mode, remove data-theme="light" from html tag */
