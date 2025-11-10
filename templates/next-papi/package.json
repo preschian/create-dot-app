@@ -6,32 +6,32 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "eslint --fix .",
     "postinstall": "papi"
   },
   "dependencies": {
     "@polkadot-api/react-components": "^0.4.1",
     "@talismn/connect-wallets": "^1.2.8",
-    "@xstate/store": "^3.9.2",
-    "next": "15.5.2",
-    "polkadot-api": "^1.16.3",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "@xstate/store": "^3.11.2",
+    "next": "16.0.1",
+    "polkadot-api": "^1.20.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/token-branded": "^1.2.26",
-    "@iconify/tailwind4": "^1.0.6",
-    "@next/eslint-plugin-next": "^15.5.2",
+    "@iconify-json/token-branded": "^1.2.32",
+    "@iconify/tailwind4": "^1.1.0",
+    "@next/eslint-plugin-next": "^16.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "daisyui": "^5.0.54",
-    "eslint": "^9.34.0",
-    "eslint-config-next": "^15.5.2",
+    "daisyui": "^5.4.7",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "browserslist": "> 1%"
 }
