@@ -1,8 +1,4 @@
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
-
-const currentDir = dirname(fileURLToPath(import.meta.url))
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -21,7 +17,18 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     'shadcn-nuxt',
+    'nuxt-seo-utils',
   ],
+
+  seo: {
+    meta: {
+      title: 'Create Dot App - Scaffold Polkadot dApps',
+      description: 'Scaffold Polkadot dApps with pre-configured templates and best practices.',
+      twitterCreator: '@0xPresc',
+      author: 'preschian',
+      applicationName: 'create-dot-app',
+    },
+  },
 
   shadcn: {
     /**
@@ -32,7 +39,7 @@ export default defineNuxtConfig({
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: join(currentDir, './app/components/ui'),
+    componentDir: '~/components/ui',
   },
 
   eslint: {
