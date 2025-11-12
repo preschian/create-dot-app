@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     'shadcn-nuxt',
-    '@nuxtjs/seo',
+    'nuxt-seo-utils',
   ],
 
   seo: {
