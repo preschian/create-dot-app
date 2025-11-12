@@ -41,6 +41,6 @@
     "typescript": "^5.9.3"
   },
   "resolutions": {
-    "estree-walker": "3.0.3"
+    "estree-walker": "2.0.2"
   }
 }
