@@ -12,194 +12,19 @@ const { data } = await useLazyAsyncData('github-star', async () => {
   return { repo: github.repo, version: npm.version }
 })
 
-// Interactive selections
-const selectedFramework = ref<string>('')
-const selectedSdk = ref<string>('')
-const selectedSolidityFramework = ref<string>('')
-const copied = ref(false)
-const showValidationMessage = ref(false)
-const validationMessage = ref('')
-
-const frameworks = [
-  { id: 'react', name: 'React.js', template: 'react' },
-  { id: 'next', name: 'Next.js', template: 'next' },
-  { id: 'vue', name: 'Vue.js', template: 'vue' },
-  { id: 'nuxt', name: 'Nuxt.js', template: 'nuxt' },
-]
-
-const sdks = [
-  { id: 'dedot', name: 'Dedot', template: 'dedot' },
-  { id: 'papi', name: 'PAPI', template: 'papi' },
-]
-
-const solidityFrameworks = [
-  { id: 'react', name: 'React.js', template: 'solidity-react' },
-  { id: 'vue', name: 'Vue.js', template: 'solidity-vue' },
-]
-
-// Computed properties for selected items (avoid repeated .find() calls)
-const selectedFrameworkData = computed(() =>
-  frameworks.find(f => f.id === selectedFramework.value),
-)
-
-const selectedSdkData = computed(() =>
-  sdks.find(s => s.id === selectedSdk.value),
-)
-
-const command = computed(() => {
-  let cmd = 'npx create-dot-app@latest'
-
-  if (selectedSolidityFramework.value) {
-    const solidityTemplate = solidityFrameworks.find(f => f.id === selectedSolidityFramework.value)?.template
-    cmd += ` --template=${solidityTemplate}`
-  }
-  else if (selectedFramework.value || selectedSdk.value) {
-    const frameworkTemplate = selectedFrameworkData.value?.template || 'react'
-    const sdkTemplate = selectedSdkData.value?.template || 'dedot'
-
-    cmd += ` --template=${frameworkTemplate}-${sdkTemplate}`
-  }
-
-  return cmd
-})
-
-async function copyCommand() {
-  try {
-    await navigator.clipboard.writeText(command.value)
-    copied.value = true
-    setTimeout(() => {
-      copied.value = false
-    }, 2000)
-  }
-  catch (err) {
-    console.error('Failed to copy: ', err)
-  }
-}
-
-function selectFramework(frameworkId: string) {
-  selectedFramework.value = selectedFramework.value === frameworkId ? '' : frameworkId
-  selectedSolidityFramework.value = ''
-  
-  if (selectedFramework.value && selectedSdk.value) {
-    copyCommand()
-  }
-}
-
-function selectSdk(sdkId: string) {
-  selectedSdk.value = selectedSdk.value === sdkId ? '' : sdkId
-  selectedSolidityFramework.value = ''
-  
-  if (selectedFramework.value && selectedSdk.value) {
-    copyCommand()
-  }
-}
-
-function selectSolidityFramework(frameworkId: string) {
-  selectedSolidityFramework.value = selectedSolidityFramework.value === frameworkId ? '' : frameworkId
-  selectedFramework.value = ''
-  selectedSdk.value = ''
-  
-  if (selectedSolidityFramework.value) {
-    copyCommand()
-  }
-}
-
-function getTemplateString() {
-  const framework = frameworks.find(f => f.id === selectedFramework.value)
-  const sdk = sdks.find(s => s.id === selectedSdk.value)
-
-  const frameworkTemplate = framework?.template || 'react'
-  const sdkTemplate = sdk?.template || 'dedot'
-
-  return `${frameworkTemplate}-${sdkTemplate}`
-}
-
-function validateAndGetTemplate() {
-  // Check if both framework and SDK are selected
-  if (!selectedFramework.value || !selectedSdk.value) {
-    const missingSelections = []
-    if (!selectedFramework.value)
-      missingSelections.push('framework')
-    if (!selectedSdk.value)
-      missingSelections.push('SDK')
-
-    validationMessage.value = `Please select a ${missingSelections.join(' and ')} before exporting.`
-    showValidationMessage.value = true
-
-    // Hide message after 3 seconds
-    setTimeout(() => {
-      showValidationMessage.value = false
-    }, 3000)
-
-    return null
-  }
-
-  return getTemplateString()
-}
-
-const platforms = {
-  bolt: 'https://bolt.new',
-  stackblitz: 'https://stackblitz.com',
-  codesandbox: 'https://codesandbox.io/s',
-}
-
-const isExportEnabled = computed(() => selectedFramework.value && selectedSdk.value)
-
-const buttonClass = computed(() => ({
-  'border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent': isExportEnabled.value,
-  'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed': !isExportEnabled.value,
-}))
-
-const shouldShowPlatform = computed(() => (platform: string) => {
-  if (platform === 'bolt') {
-    return selectedFramework.value === 'react' || selectedFramework.value === 'vue' || !selectedFramework.value
-  }
-  return true
-})
-
-// Optimized status message
-const statusMessage = computed(() => {
-  if (selectedSolidityFramework.value) {
-    const solidityFramework = solidityFrameworks.find(f => f.id === selectedSolidityFramework.value)?.name || ''
-    return `✓ Creating ${solidityFramework} dApp with Solidity...`
-  }
-
-  if (!selectedFramework.value && !selectedSdk.value) {
-    return '✓ Creating your Polkadot dApp...'
-  }
-
-  const framework = selectedFrameworkData.value?.name || ''
-  const sdk = selectedSdkData.value?.name || ''
-
-  if (framework && !sdk)
-    return `✓ Creating ${framework} dApp...`
-  if (!framework && sdk)
-    return `✓ Creating dApp with ${sdk}...`
-  if (framework && sdk)
-    return `✓ Creating ${framework} dApp with ${sdk}...`
-
-  return '✓ Creating your Polkadot dApp...'
-})
-
-// Reusable selection button class
-function selectionButtonClass(isSelected: boolean) {
-  return {
-    'bg-black text-white': isSelected,
-    'bg-gray-50': !isSelected,
-  }
-}
-
-function exportTo(platform: keyof typeof platforms) {
-  const template = validateAndGetTemplate()
-  if (!template)
-    return
-
-  const baseUrl = platforms[platform]
-  const url = `${baseUrl}/github/preschian/create-dot-app/tree/main/templates/${template}`
-  const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-  if (newWindow)
-    newWindow.opener = null
-}
+const {
+  contractType,
+  copied,
+  showValidationMessage,
+  validationMessage,
+  command,
+  isExportEnabled,
+  buttonClass,
+  shouldShowPlatform,
+  platforms,
+  copyCommand,
+  exportTo,
+} = useTemplateSelector()
 </script>
 
 <template>
@@ -257,7 +82,7 @@ function exportTo(platform: keyof typeof platforms) {
 
         <div class="max-w-4xl mx-auto mb-12">
           <!-- Main command showcase -->
-          <div class="bg-black text-white p-6 rounded-lg mb-8 relative overflow-hidden">
+          <div class="bg-black text-white p-6 rounded-lg mb-8 relative overflow-hidden min-h-[180px]">
             <div class="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-4 justify-between">
               <div class="flex items-center">
                 <div class="flex space-x-2">
@@ -283,103 +108,18 @@ function exportTo(platform: keyof typeof platforms) {
               <div class="text-green-400 text-sm mb-2">
                 user@polkadot:~$
               </div>
-              <div class="text-2xl lg:text-3xl font-mono mb-4">
+              <div class="text-2xl lg:text-3xl font-mono">
                 <span class="text-white">{{ command }}</span>
                 <span class="text-green-400 animate-pulse select-none">|</span>
               </div>
-              <div class="text-gray-400 text-sm">
-                {{ statusMessage }}
-              </div>
             </div>
           </div>
 
-          <div class="grid md:grid-cols-2 gap-8 mb-8">
-            <div class="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 class="text-lg font-semibold mb-4 text-black text-center">
-                [Choose Framework]
-              </h3>
-              <div class="grid grid-cols-2 gap-2">
-                <button
-                  v-for="framework in frameworks"
-                  :key="framework.id"
-                  class="flex items-center gap-2 p-3 rounded text-sm transition-colors"
-                  :class="selectionButtonClass(selectedFramework === framework.id)"
-                  @click="selectFramework(framework.id)"
-                >
-                  <span
-                    class="w-5 h-5 flex-shrink-0"
-                    :class="{
-                      'icon-[logos--react]': framework.id === 'react',
-                      'icon-[logos--nextjs-icon]': framework.id === 'next',
-                      'icon-[logos--vue]': framework.id === 'vue',
-                      'icon-[logos--nuxt-icon]': framework.id === 'nuxt',
-                    }"
-                  />
-                  <span class="flex-1 text-left">{{ framework.name }}</span>
-                  <span v-if="selectedFramework === framework.id" class="text-white">✓</span>
-                  <span v-else class="text-gray-500">○</span>
-                </button>
-              </div>
-            </div>
+          <ContractTypeSelector />
 
-            <div class="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 class="text-lg font-semibold mb-4 text-black text-center">
-                [Select SDK]
-              </h3>
-              <div class="space-y-2">
-                <button
-                  v-for="sdk in sdks"
-                  :key="sdk.id"
-                  class="w-full flex items-center gap-2 p-3 rounded text-sm transition-colors"
-                  :class="selectionButtonClass(selectedSdk === sdk.id)"
-                  @click="selectSdk(sdk.id)"
-                >
-                  <span
-                    class="w-5 h-5 flex-shrink-0 icon-[token-branded--polkadot]"
-                  />
-                  <span class="flex-1 text-left">{{ sdk.name }}</span>
-                  <span v-if="selectedSdk === sdk.id" class="text-white">✓</span>
-                  <span v-else class="text-gray-500">○</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <FrameworkSdkSelector />
 
-          <div class="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-6 mb-8">
-            <div class="flex items-center justify-center gap-2 mb-4">
-              <Badge variant="outline" class="border-green-300 text-green-700 bg-green-50">
-                [NEW]
-              </Badge>
-              <h3 class="text-lg font-semibold text-black text-center">
-                [Solidity Smart Contracts]
-              </h3>
-            </div>
-            <p class="text-sm text-gray-600 text-center mb-4">
-              EVM-compatible smart contracts for Polkadot
-            </p>
-            <div class="grid grid-cols-2 gap-2 max-w-md mx-auto">
-              <button
-                v-for="framework in solidityFrameworks"
-                :key="framework.id"
-                class="flex items-center gap-2 p-3 rounded text-sm transition-colors"
-                :class="selectionButtonClass(selectedSolidityFramework === framework.id)"
-                @click="selectSolidityFramework(framework.id)"
-              >
-                <span
-                  class="w-5 h-5 flex-shrink-0"
-                  :class="{
-                    'icon-[logos--react]': framework.id === 'react',
-                    'icon-[logos--vue]': framework.id === 'vue',
-                  }"
-                />
-                <span class="flex-1 text-left">{{ framework.name }}</span>
-                <span v-if="selectedSolidityFramework === framework.id" class="text-white">✓</span>
-                <span v-else class="text-gray-500">○</span>
-              </button>
-            </div>
-          </div>
-
-          <div v-if="!selectedSolidityFramework" class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+          <div v-if="contractType === 'substrate'" class="bg-white border border-gray-200 rounded-lg p-6 text-center">
             <h3 class="text-lg font-semibold mb-4 text-black">
               [Try Online]
             </h3>
@@ -451,25 +191,6 @@ function exportTo(platform: keyof typeof platforms) {
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Smart Contracts Integration -->
-          <div class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-            <h3 class="text-lg font-semibold mb-4 text-black text-center">
-              [Coming Soon]
-            </h3>
-            <div class="flex items-center justify-center gap-4 p-4 bg-gray-50 rounded-lg">
-              <div class="flex items-center gap-2">
-                <span class="text-gray-400">○</span>
-                <span class="text-gray-600">ink! Smart Contracts</span>
-              </div>
-              <Badge variant="outline" class="border-gray-300 text-gray-500 bg-gray-100">
-                [coming_soon]
-              </Badge>
-            </div>
-            <p class="text-sm text-gray-500 text-center mt-3">
-              Native Polkadot smart contracts with ink!
-            </p>
           </div>
         </div>
 
