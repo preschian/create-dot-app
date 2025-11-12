@@ -21,7 +21,18 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     'shadcn-nuxt',
+    '@nuxtjs/seo',
   ],
+
+  seo: {
+    meta: {
+      title: 'Create Dot App - Scaffold Polkadot dApps',
+      description: 'Scaffold Polkadot dApps with pre-configured templates and best practices.',
+      twitterCreator: '@0xPresc',
+      author: 'preschian',
+      applicationName: 'create-dot-app',
+    },
+  },
 
   shadcn: {
     /**
