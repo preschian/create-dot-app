@@ -77,16 +77,16 @@ export function useTemplateSelector() {
     return templateName.value ? `${base} --template=${templateName.value}` : base
   })
 
+  const isExportEnabled = computed(() => {
+    return contractType.value === 'substrate' && selectedFramework.value && selectedSdk.value
+  })
+
   const isSelectionComplete = computed(() => {
     if (!contractType.value || !selectedFramework.value)
       return false
     if (needsSdkSelection.value && !selectedSdk.value)
       return false
     return true
-  })
-
-  const isExportEnabled = computed(() => {
-    return contractType.value === 'substrate' && selectedFramework.value && selectedSdk.value
   })
 
   const buttonClass = computed(() => ({
@@ -116,12 +116,16 @@ export function useTemplateSelector() {
 
   function selectContractType(type: ContractType) {
     contractType.value = type
-    selectedFramework.value = ''
-    selectedSdk.value = ''
+
+    const frameworks = FRAMEWORKS_BY_TYPE[type as keyof typeof FRAMEWORKS_BY_TYPE]
+    const sdks = SDKS_BY_TYPE[type as keyof typeof SDKS_BY_TYPE]
+
+    selectedFramework.value = frameworks?.[0]?.id || ''
+    selectedSdk.value = sdks?.[0]?.id || ''
   }
 
   function selectFramework(frameworkId: string) {
-    selectedFramework.value = selectedFramework.value === frameworkId ? '' : frameworkId
+    selectedFramework.value = frameworkId
 
     if (isSelectionComplete.value) {
       copyCommand()
@@ -129,21 +133,15 @@ export function useTemplateSelector() {
   }
 
   function selectSdk(sdkId: string) {
-    selectedSdk.value = selectedSdk.value === sdkId ? '' : sdkId
+    selectedSdk.value = sdkId
 
     if (isSelectionComplete.value) {
       copyCommand()
     }
   }
 
-  function resetSelection() {
-    contractType.value = ''
-    selectedFramework.value = ''
-    selectedSdk.value = ''
-  }
-
-  function validateAndGetTemplate() {
-    if (contractType.value === 'substrate' && (!selectedFramework.value || !selectedSdk.value)) {
+  function exportTo(platform: keyof typeof PLATFORMS) {
+    if (!isExportEnabled.value) {
       const missingSelections = []
       if (!selectedFramework.value)
         missingSelections.push('framework')
@@ -157,19 +155,11 @@ export function useTemplateSelector() {
         showValidationMessage.value = false
       }, 3000)
 
-      return null
+      return
     }
 
-    return templateName.value || null
-  }
-
-  function exportTo(platform: keyof typeof PLATFORMS) {
-    const template = validateAndGetTemplate()
-    if (!template)
-      return
-
     const baseUrl = PLATFORMS[platform]
-    const url = `${baseUrl}/github/preschian/create-dot-app/tree/main/templates/${template}`
+    const url = `${baseUrl}/github/preschian/create-dot-app/tree/main/templates/${templateName.value}`
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
     if (newWindow)
       newWindow.opener = null
@@ -186,18 +176,15 @@ export function useTemplateSelector() {
     availableFrameworks,
     availableSdks,
     needsSdkSelection,
-    isSelectionComplete,
     command,
     isExportEnabled,
     buttonClass,
     shouldShowPlatform,
+    platforms: PLATFORMS,
     copyCommand,
     selectContractType,
     selectFramework,
     selectSdk,
-    resetSelection,
-    validateAndGetTemplate,
-    platforms: PLATFORMS,
     exportTo,
   }
 }
