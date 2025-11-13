@@ -1,5 +1,11 @@
 # create-dot-app
 
+## 2.0.1
+
+### Patch Changes
+
+- [#202](https://github.com/preschian/create-dot-app/pull/202) [`feb3362`](https://github.com/preschian/create-dot-app/commit/feb336202962b9aee11cc9002b1d7b1f0e83354f) Thanks [@carlosala](https://github.com/carlosala)! - Avoid using PJS libraries in PAPI templates
+
 ## 2.0.0
 
 ### Major Changes
