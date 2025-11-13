@@ -77,16 +77,16 @@ export function useTemplateSelector() {
     return templateName.value ? `${base} --template=${templateName.value}` : base
   })
 
+  const isExportEnabled = computed(() => {
+    return contractType.value === 'substrate' && selectedFramework.value && selectedSdk.value
+  })
+
   const isSelectionComplete = computed(() => {
     if (!contractType.value || !selectedFramework.value)
       return false
     if (needsSdkSelection.value && !selectedSdk.value)
       return false
     return true
-  })
-
-  const isExportEnabled = computed(() => {
-    return contractType.value === 'substrate' && selectedFramework.value && selectedSdk.value
   })
 
   const buttonClass = computed(() => ({
@@ -140,14 +140,8 @@ export function useTemplateSelector() {
     }
   }
 
-  function resetSelection() {
-    contractType.value = ''
-    selectedFramework.value = ''
-    selectedSdk.value = ''
-  }
-
-  function validateAndGetTemplate() {
-    if (contractType.value === 'substrate' && (!selectedFramework.value || !selectedSdk.value)) {
+  function exportTo(platform: keyof typeof PLATFORMS) {
+    if (!isExportEnabled.value) {
       const missingSelections = []
       if (!selectedFramework.value)
         missingSelections.push('framework')
@@ -161,19 +155,11 @@ export function useTemplateSelector() {
         showValidationMessage.value = false
       }, 3000)
 
-      return null
+      return
     }
 
-    return templateName.value || null
-  }
-
-  function exportTo(platform: keyof typeof PLATFORMS) {
-    const template = validateAndGetTemplate()
-    if (!template)
-      return
-
     const baseUrl = PLATFORMS[platform]
-    const url = `${baseUrl}/github/preschian/create-dot-app/tree/main/templates/${template}`
+    const url = `${baseUrl}/github/preschian/create-dot-app/tree/main/templates/${templateName.value}`
     const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
     if (newWindow)
       newWindow.opener = null
@@ -190,18 +176,15 @@ export function useTemplateSelector() {
     availableFrameworks,
     availableSdks,
     needsSdkSelection,
-    isSelectionComplete,
     command,
     isExportEnabled,
     buttonClass,
     shouldShowPlatform,
+    platforms: PLATFORMS,
     copyCommand,
     selectContractType,
     selectFramework,
     selectSdk,
-    resetSelection,
-    validateAndGetTemplate,
-    platforms: PLATFORMS,
     exportTo,
   }
 }
