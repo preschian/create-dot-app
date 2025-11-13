@@ -11,9 +11,9 @@ function selectionButtonClass(isSelected: boolean) {
 
 <template>
   <div class="mb-8">
-    <h3 class="text-lg font-semibold mb-4 text-black text-center">
+    <p class="text-lg font-semibold mb-4 text-black text-center">
       [Step 1: Choose Contract Type]
-    </h3>
+    </p>
     <div class="grid md:grid-cols-3 gap-4">
       <button
         v-for="type in contractTypes"
