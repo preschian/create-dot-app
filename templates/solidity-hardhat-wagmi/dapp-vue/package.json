@@ -12,14 +12,14 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "@tanstack/vue-query": "^5.90.2",
-    "@wagmi/vue": "^0.2.11",
+    "@wagmi/vue": "^0.3.2",
     "blo": "^2.0.0",
     "tailwindcss": "^4.1.13",
     "viem": "^2.37.9",
     "vue": "^3.5.22"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.4.1",
+    "@antfu/eslint-config": "^6.2.0",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.28",
     "@iconify/tailwind4": "^1.0.6",
