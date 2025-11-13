@@ -212,9 +212,9 @@ const {
       <section class="py-16 bg-gray-50 border-y border-gray-200">
         <div class="container mx-auto px-4">
           <div class="text-center mb-12">
-            <h2 class="text-2xl lg:text-3xl font-bold mb-2 text-black">
+            <h3 class="text-2xl lg:text-3xl font-bold mb-2 text-black">
               &gt; Why create-dot-app?
-            </h2>
+            </h3>
             <p class="text-gray-600">
               Built by developers, for developers
             </p>
@@ -225,9 +225,9 @@ const {
               <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Terminal class="h-6 w-6 text-black" />
               </div>
-              <h3 class="font-semibold mb-2 text-black">
+              <p class="font-semibold mb-2 text-black">
                 [Zero Configuration]
-              </h3>
+              </p>
               <p class="text-sm text-gray-600">
                 One command gets you a fully configured development environment
               </p>
@@ -237,9 +237,9 @@ const {
               <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <ArrowRight class="h-6 w-6 text-black" />
               </div>
-              <h3 class="font-semibold mb-2 text-black">
+              <p class="font-semibold mb-2 text-black">
                 [Best Practices]
-              </h3>
+              </p>
               <p class="text-sm text-gray-600">
                 TypeScript, modern tooling, and Polkadot best practices included
               </p>
@@ -249,9 +249,9 @@ const {
               <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Github class="h-6 w-6 text-black" />
               </div>
-              <h3 class="font-semibold mb-2 text-black">
+              <p class="font-semibold mb-2 text-black">
                 [Open Source]
-              </h3>
+              </p>
               <p class="text-sm text-gray-600">
                 MIT licensed and continuously updated with latest features
               </p>
@@ -262,9 +262,9 @@ const {
 
       <section class="py-16 bg-black text-white">
         <div class="container mx-auto px-4 text-center">
-          <h2 class="text-2xl lg:text-3xl font-bold mb-4 text-white">
+          <h3 class="text-2xl lg:text-3xl font-bold mb-4 text-white">
             &gt; Start building on Polkadot
-          </h2>
+          </h3>
           <p class="text-lg text-gray-300 mb-6">
             Join developers building the Web3 future
           </p>
