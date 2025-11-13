@@ -1,5 +1,5 @@
 import type { Prefix } from '~/utils/sdk'
-import { formatBalance } from '@polkadot/util'
+import { formatValue } from '@polkadot-api/react-components'
 import { useEffect, useMemo } from 'react'
 import sdk, { CHAIN_CONFIG } from '~/utils/sdk'
 import { useLocalStorage } from './useLocalStorage'
@@ -30,11 +30,7 @@ export function useBalance(chainKey: Prefix, address?: string) {
 
       const tokenDecimals = chainSpec.properties.tokenDecimals
       const tokenSymbol = chainSpec.properties.tokenSymbol
-      const freeBalance = formatBalance(balance.data.free.toString(), {
-        decimals: tokenDecimals,
-        withUnit: false,
-        forceUnit: '-',
-      })
+      const freeBalance = formatValue(balance.data.free, tokenDecimals)
 
       if (!ignore) {
         setItem({ balance: freeBalance, symbol: tokenSymbol })
