@@ -116,12 +116,16 @@ export function useTemplateSelector() {
 
   function selectContractType(type: ContractType) {
     contractType.value = type
-    selectedFramework.value = ''
-    selectedSdk.value = ''
+
+    const frameworks = FRAMEWORKS_BY_TYPE[type as keyof typeof FRAMEWORKS_BY_TYPE]
+    const sdks = SDKS_BY_TYPE[type as keyof typeof SDKS_BY_TYPE]
+
+    selectedFramework.value = frameworks?.[0]?.id || ''
+    selectedSdk.value = sdks?.[0]?.id || ''
   }
 
   function selectFramework(frameworkId: string) {
-    selectedFramework.value = selectedFramework.value === frameworkId ? '' : frameworkId
+    selectedFramework.value = frameworkId
 
     if (isSelectionComplete.value) {
       copyCommand()
@@ -129,7 +133,7 @@ export function useTemplateSelector() {
   }
 
   function selectSdk(sdkId: string) {
-    selectedSdk.value = selectedSdk.value === sdkId ? '' : sdkId
+    selectedSdk.value = sdkId
 
     if (isSelectionComplete.value) {
       copyCommand()
