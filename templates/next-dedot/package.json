@@ -12,12 +12,12 @@
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.11.2",
     "dedot": "^0.18.5",
-    "next": "16.0.1",
+    "next": "16.0.5",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@dedot/chaintypes": "^0.181.0",
+    "@dedot/chaintypes": "^0.188.0",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.32",
     "@iconify/tailwind4": "^1.1.0",
