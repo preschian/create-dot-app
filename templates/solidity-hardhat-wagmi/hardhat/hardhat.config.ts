@@ -25,10 +25,14 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      polkavm: true,
+      polkadot: {
+        target: 'evm',
+      },
     },
     passetHub: {
-      polkavm: true,
+      polkadot: {
+        target: 'evm',
+      },
       url: 'https://testnet-passet-hub-eth-rpc.polkadot.io',
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },

@@ -1,3 +1,4 @@
+import { formatUnits } from 'viem'
 import { useBalance } from 'wagmi'
 
 interface BalanceProps {
@@ -17,11 +18,8 @@ export default function Balance({ address }: BalanceProps) {
     return <span className="font-mono font-semibold text-red-500">Error</span>
   }
 
-  return (
-    <span className="font-mono font-semibold">
-      {balance?.formatted || '0'}
-      {' '}
-      PAS
-    </span>
-  )
+  const balanceValue = Number(formatUnits(balance?.value || 0n, 18))
+  const formattedBalance = `${balanceValue.toLocaleString()} ${balance?.symbol}`
+
+  return <span className="font-mono font-semibold">{formattedBalance}</span>
 }
