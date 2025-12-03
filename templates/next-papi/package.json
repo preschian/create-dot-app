@@ -13,7 +13,7 @@
     "@polkadot-api/react-components": "^0.4.1",
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.11.2",
-    "next": "16.0.1",
+    "next": "16.0.5",
     "polkadot-api": "^1.20.2",
     "react": "19.2.0",
     "react-dom": "19.2.0"
