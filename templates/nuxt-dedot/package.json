@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
-    "@dedot/chaintypes": "^0.188.0",
+    "@dedot/chaintypes": "^0.189.0",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.28",
     "@iconify/tailwind4": "^1.0.6",
