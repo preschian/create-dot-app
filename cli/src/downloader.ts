@@ -2,13 +2,21 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { downloadTemplate as gigetDownload } from 'giget'
 
+// Template repository configuration
 const REPO_OWNER = 'preschian'
 const REPO_NAME = 'create-dot-app'
 const REPO_BRANCH = 'main'
 const SOLIDITY_BASE_TEMPLATE = 'solidity-hardhat-wagmi'
 const RAW_GITHUB_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`
 
+/**
+ * Downloads a template from the repository using giget
+ * @param options - Download configuration
+ * @param options.template - Template name (e.g., 'vue-dedot')
+ * @param options.targetName - Target directory name
+ */
 export async function downloadTemplate({ template = 'vue-dedot', targetName = '.' }): Promise<void> {
+  // Handle Solidity templates with multiple subdirectories
   if (template === 'solidity-react' || template === 'solidity-vue') {
     await downloadSolidityTemplate({ template, targetName })
     return
@@ -18,9 +26,17 @@ export async function downloadTemplate({ template = 'vue-dedot', targetName = '.
   await downloadWithGiget(subdir, targetName)
 }
 
+/**
+ * Downloads Solidity template with multiple subdirectories using giget
+ * @param options - Download configuration
+ * @param options.template - Template name ('solidity-react' or 'solidity-vue')
+ * @param options.targetName - Target directory name
+ */
 async function downloadSolidityTemplate({ template, targetName = '.' }): Promise<void> {
+  // Determine which dapp to download based on template
   const dappDir = template === 'solidity-react' ? 'dapp-react' : 'dapp-vue'
 
+  // Define directories and files to download
   const directories = [
     `templates/${SOLIDITY_BASE_TEMPLATE}/${dappDir}`,
     `templates/${SOLIDITY_BASE_TEMPLATE}/hardhat`,
@@ -31,6 +47,7 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
     `templates/${SOLIDITY_BASE_TEMPLATE}/README.md`,
   ]
 
+  // Download all directories and files in parallel
   const dirPromises = directories.map(async (subdir) => {
     const itemName = subdir.split('/').pop()!
     const targetPath = targetName === '.' ? itemName : `${targetName}/${itemName}`
@@ -45,6 +62,7 @@ async function downloadSolidityTemplate({ template, targetName = '.' }): Promise
 
   await Promise.all([...dirPromises, ...filePromises])
 
+  // Create custom package.json with only the selected dapp workspace
   await createSolidityPackageJson({ dappDir, targetName })
 }
 
@@ -84,12 +102,18 @@ async function createSolidityPackageJson({ dappDir, targetName = '.' }): Promise
   await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`)
 }
 
+/**
+ * Downloads using giget with the specified subdirectory and target
+ */
 async function downloadWithGiget(subdir: string, targetName: string): Promise<void> {
   const source = `github:${REPO_OWNER}/${REPO_NAME}/${subdir}#${REPO_BRANCH}`
 
   await gigetDownload(source, { dir: targetName, force: true })
 }
 
+/**
+ * Downloads a raw file from GitHub
+ */
 async function downloadRawFile(filePath: string, targetPath: string): Promise<void> {
   const url = `${RAW_GITHUB_URL}/${filePath}`
   const response = await fetch(url)
