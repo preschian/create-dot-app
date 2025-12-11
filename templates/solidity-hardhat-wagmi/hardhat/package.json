@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint . --fix",
     "compile": "hardhat compile",
-    "deploy": "HARDHAT_IGNITION_CONFIRM_DEPLOYMENT=false hardhat ignition deploy ./ignition/modules/MessageBoardModule.ts --network passetHub",
+    "deploy": "hardhat ignition deploy ./ignition/modules/MessageBoardModule.ts --network passetHub",
     "interact": "hardhat run scripts/interact-messageboard.ts --network passetHub",
     "accounts": "hardhat run scripts/show-accounts.ts --network passetHub"
   },
