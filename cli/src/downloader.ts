@@ -1,11 +1,12 @@
-import { writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 import { downloadTemplate as gigetDownload } from 'giget'
 
 const REPO_OWNER = 'preschian'
 const REPO_NAME = 'create-dot-app'
 const REPO_BRANCH = 'main'
 const SOLIDITY_BASE_TEMPLATE = 'solidity-hardhat-wagmi'
+const RAW_GITHUB_URL = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`
 
 export async function downloadTemplate({ template = 'vue-dedot', targetName = '.' }): Promise<void> {
   if (template === 'solidity-react' || template === 'solidity-vue') {
@@ -20,21 +21,29 @@ export async function downloadTemplate({ template = 'vue-dedot', targetName = '.
 async function downloadSolidityTemplate({ template, targetName = '.' }): Promise<void> {
   const dappDir = template === 'solidity-react' ? 'dapp-react' : 'dapp-vue'
 
-  const subdirs = [
+  const directories = [
     `templates/${SOLIDITY_BASE_TEMPLATE}/${dappDir}`,
     `templates/${SOLIDITY_BASE_TEMPLATE}/hardhat`,
+  ]
+
+  const files = [
     `templates/${SOLIDITY_BASE_TEMPLATE}/.gitignore`,
     `templates/${SOLIDITY_BASE_TEMPLATE}/README.md`,
   ]
 
-  const downloadPromises = subdirs.map(async (subdir) => {
+  const dirPromises = directories.map(async (subdir) => {
     const itemName = subdir.split('/').pop()!
     const targetPath = targetName === '.' ? itemName : `${targetName}/${itemName}`
-
     return downloadWithGiget(subdir, targetPath)
   })
 
-  await Promise.all(downloadPromises)
+  const filePromises = files.map(async (filePath) => {
+    const fileName = filePath.split('/').pop()!
+    const targetPath = targetName === '.' ? fileName : `${targetName}/${fileName}`
+    return downloadRawFile(filePath, targetPath)
+  })
+
+  await Promise.all([...dirPromises, ...filePromises])
 
   await createSolidityPackageJson({ dappDir, targetName })
 }
@@ -79,4 +88,20 @@ async function downloadWithGiget(subdir: string, targetName: string): Promise<vo
   const source = `github:${REPO_OWNER}/${REPO_NAME}/${subdir}#${REPO_BRANCH}`
 
   await gigetDownload(source, { dir: targetName, force: true })
+}
+
+async function downloadRawFile(filePath: string, targetPath: string): Promise<void> {
+  const url = `${RAW_GITHUB_URL}/${filePath}`
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error(`Failed to download file: ${filePath}`)
+  }
+
+  const content = await response.text()
+  const dir = dirname(targetPath)
+  if (dir !== '.') {
+    await mkdir(dir, { recursive: true })
+  }
+  await writeFile(targetPath, content)
 }
