@@ -19,11 +19,9 @@
     "dotenv": "^17.2.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
-    "@parity/hardhat-polkadot": "^0.2.4",
+    "@antfu/eslint-config": "^6.6.1",
+    "@parity/hardhat-polkadot": "^0.2.5",
     "eslint": "^9.39.1",
-    "fs-xattr": "^0.4.0",
-    "run-container": "^2.0.12",
-    "solc": "0.8.30"
+    "solc": "0.8.31"
   }
 }
