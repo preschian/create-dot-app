@@ -4,7 +4,7 @@ import hre from 'hardhat'
 
 async function main() {
   // Put the deployed contract address here
-  const contractAddress = '0xaB7B4c595d3cE8C85e16DA86630f2fc223B05057'
+  const contractAddress = '0x2B8F5e69C35c1Aff4CCc71458CA26c2F313c3ed3'
 
   // Get the contract factory and attach to deployed contract
   const MessageBoard = await hre.ethers.getContractFactory('MessageBoard')
