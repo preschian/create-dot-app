@@ -1,5 +1,11 @@
 # create-dot-app
 
+## 2.0.2
+
+### Patch Changes
+
+- [#223](https://github.com/preschian/create-dot-app/pull/223) [`d3d5ad2`](https://github.com/preschian/create-dot-app/commit/d3d5ad238f36c7fd72b51fb20abb9adff8ac6f68) Thanks [@preschian](https://github.com/preschian)! - refactor: replace gitpick with giget for template downloads
+
 ## 2.0.1
 
 ### Patch Changes
