@@ -14,11 +14,12 @@ on:
 
 jobs:
   monorepo-test:
-    name: Monorepo - ${{ matrix.dapp }}
-    runs-on: ubuntu-latest
+    name: Monorepo - ${{ matrix.dapp }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         dapp: [dapp-react, dapp-vue]
 
     steps:
@@ -32,26 +33,22 @@ jobs:
 
       - name: Create package.json for monorepo testing
         working-directory: templates/solidity-hardhat-wagmi
+        shell: node {0}
         run: |
-          cat > package.json << 'EOF'
-          {
-            "name": "solidity-hardhat-wagmi-template",
-            "version": "1.0.0",
-            "private": true,
-            "workspaces": [
-              "hardhat",
-              "${{ matrix.dapp }}"
-            ],
-            "scripts": {
-              "compile": "npm run compile -w hardhat",
-              "lint": "npm run lint --workspaces --if-present",
+          const fs = require('fs');
+          const packageJson = {
+            name: "solidity-hardhat-wagmi-template",
+            version: "1.0.0",
+            private: true,
+            workspaces: ["hardhat", "${{ matrix.dapp }}"],
+            scripts: {
+              compile: "npm run compile -w hardhat",
+              lint: "npm run lint --workspaces --if-present",
               "build:dapp": "npm run build -w ${{ matrix.dapp }}"
             },
-            "overrides": {
-              "lru-cache": "^11.1.0"
-            }
-          }
-          EOF
+            overrides: { "lru-cache": "^11.1.0" }
+          };
+          fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 
       - name: Install all workspace dependencies
         working-directory: templates/solidity-hardhat-wagmi
@@ -70,11 +67,12 @@ jobs:
         run: npm run build:dapp
 
   individual-test:
-    name: ${{ matrix.workspace }} - Individual Test
-    runs-on: ubuntu-latest
+    name: ${{ matrix.workspace }} - Individual Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         workspace: [hardhat, dapp-react, dapp-vue]
 
     steps:
