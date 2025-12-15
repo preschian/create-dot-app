@@ -12,25 +12,25 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
-    "@nuxt/eslint": "^1.9.0",
+    "@nuxt/eslint": "^1.12.1",
     "@polkadot-api/react-components": "^0.4.1",
     "@talismn/connect-wallets": "^1.2.8",
-    "nuxt": "^4.0.3",
-    "polkadot-api": "^1.16.3"
+    "nuxt": "^4.2.2",
+    "polkadot-api": "^1.23.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
+    "@antfu/eslint-config": "^6.7.1",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/token-branded": "^1.2.26",
-    "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/vite": "^4.1.12",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@iconify-json/token-branded": "^1.2.34",
+    "@iconify/tailwind4": "^1.2.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/tsconfig": "^0.8.1",
-    "daisyui": "^5.0.54",
-    "eslint": "^9.34.0",
-    "tailwindcss": "^4.1.12",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.3",
-    "vue-tsc": "^3.0.6"
+    "daisyui": "^5.5.14",
+    "eslint": "^9.39.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.7",
+    "vue-tsc": "^3.1.8"
   }
 }
