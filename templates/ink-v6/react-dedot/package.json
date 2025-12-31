@@ -17,13 +17,13 @@
   "dependencies": {
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.11.2",
-    "dedot": "^0.18.5",
+    "dedot": "^1.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
-    "@dedot/chaintypes": "^0.188.0",
+    "@dedot/chaintypes": "^0.203.0",
     "@eslint-react/eslint-plugin": "^2.3.5",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.32",
