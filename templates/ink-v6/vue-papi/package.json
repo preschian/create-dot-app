@@ -15,8 +15,8 @@
     "postinstall": "papi && npm run generate:chain && npm run generate:contract"
   },
   "dependencies": {
-    "@polkadot-api/sdk-ink": "^0.5.1",
-    "@polkadot/util": "^13.5.7",
+    "@polkadot-api/sdk-ink": "^0.6.2",
+    "@polkadot/util": "^14.0.1",
     "@talismn/connect-wallets": "^1.2.8",
     "polkadot-api": "^1.20.0",
     "vue": "^3.5.22"

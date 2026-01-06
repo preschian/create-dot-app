@@ -22,6 +22,6 @@
     "@antfu/eslint-config": "^6.6.1",
     "@parity/hardhat-polkadot": "^0.2.5",
     "eslint": "^9.39.1",
-    "solc": "0.8.31"
+    "solc": "0.8.33"
   }
 }

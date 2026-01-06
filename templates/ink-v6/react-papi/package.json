@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@polkadot-api/react-components": "^0.4.1",
-    "@polkadot-api/sdk-ink": "^0.5.1",
+    "@polkadot-api/sdk-ink": "^0.6.2",
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.11.2",
     "polkadot-api": "^1.20.5",
