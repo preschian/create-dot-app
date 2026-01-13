@@ -1,7 +1,7 @@
 {
   "name": "create-dot-app",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "A CLI tool to bootstrap Polkadot-based decentralized applications with multiple frontend frameworks",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "fs-extra": "^11.3.2",
-    "gitpick": "^4.12.3",
+    "giget": "^2.0.0",
     "picocolors": "^1.1.1",
     "posthog-node": "^5.10.3"
   },
@@ -47,7 +47,7 @@
     "eslint": "^9.38.0",
     "node-pty": "^1.0.0",
     "strip-ansi": "^7.1.2",
-    "tsdown": "latest",
+    "tsdown": "^0.15.9",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vitest": "^4.0.1"

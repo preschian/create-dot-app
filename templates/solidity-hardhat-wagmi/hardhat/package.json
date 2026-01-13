@@ -15,15 +15,13 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "@parity/resolc": "^0.3.0",
-    "dotenv": "^17.2.2"
+    "@parity/resolc": "^0.5.0",
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.3.0",
-    "@parity/hardhat-polkadot": "0.1.9",
-    "eslint": "^9.35.0",
-    "fs-xattr": "^0.4.0",
-    "run-container": "^2.0.12",
-    "solc": "0.8.28"
+    "@antfu/eslint-config": "^6.6.1",
+    "@parity/hardhat-polkadot": "^0.2.5",
+    "eslint": "^9.39.1",
+    "solc": "0.8.31"
   }
 }

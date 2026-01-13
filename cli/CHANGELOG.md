@@ -1,5 +1,17 @@
 # create-dot-app
 
+## 2.0.2
+
+### Patch Changes
+
+- [#223](https://github.com/preschian/create-dot-app/pull/223) [`d3d5ad2`](https://github.com/preschian/create-dot-app/commit/d3d5ad238f36c7fd72b51fb20abb9adff8ac6f68) Thanks [@preschian](https://github.com/preschian)! - refactor: replace gitpick with giget for template downloads
+
+## 2.0.1
+
+### Patch Changes
+
+- [#202](https://github.com/preschian/create-dot-app/pull/202) [`feb3362`](https://github.com/preschian/create-dot-app/commit/feb336202962b9aee11cc9002b1d7b1f0e83354f) Thanks [@carlosala](https://github.com/carlosala)! - Avoid using PJS libraries in PAPI templates
+
 ## 2.0.0
 
 ### Major Changes

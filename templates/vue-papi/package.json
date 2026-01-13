@@ -13,22 +13,22 @@
   "dependencies": {
     "@polkadot-api/react-components": "^0.4.1",
     "@talismn/connect-wallets": "^1.2.8",
-    "polkadot-api": "^1.16.1",
-    "vue": "^3.5.18"
+    "polkadot-api": "^1.23.1",
+    "vue": "^3.5.25"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.2.1",
+    "@antfu/eslint-config": "^6.7.1",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/token-branded": "^1.2.24",
-    "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/vite": "^4.1.11",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@iconify-json/token-branded": "^1.2.34",
+    "@iconify/tailwind4": "^1.2.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vue/tsconfig": "^0.8.1",
-    "daisyui": "^5.0.50",
-    "eslint": "^9.33.0",
-    "tailwindcss": "^4.1.11",
-    "typescript": "~5.9.2",
-    "vite": "^7.1.2",
-    "vue-tsc": "^3.0.5"
+    "daisyui": "^5.5.14",
+    "eslint": "^9.39.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.7",
+    "vue-tsc": "^3.1.8"
   }
 }
