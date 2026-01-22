@@ -17,13 +17,13 @@
     "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@dedot/chaintypes": "^0.207.0",
+    "@dedot/chaintypes": "^0.212.0",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.37",
     "@iconify/tailwind4": "^1.2.0",
     "@next/eslint-plugin-next": "^16.1.1",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^24",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^5.5.14",

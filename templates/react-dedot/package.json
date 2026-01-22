@@ -17,8 +17,8 @@
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.7.3",
-    "@dedot/chaintypes": "^0.207.0",
+    "@antfu/eslint-config": "^7.0.1",
+    "@dedot/chaintypes": "^0.212.0",
     "@eslint-react/eslint-plugin": "^2.5.1",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.37",
