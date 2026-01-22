@@ -5,11 +5,25 @@
 
 version: 2
 updates:
-  # Root and CLI directories use npm
+  # Root and CLI directories
   - package-ecosystem: npm
     directories:
       - "/"
       - "/cli"
+    schedule:
+      interval: "daily"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+
+  # Templates directories
+  - package-ecosystem: npm
+    directories:
       - "/templates/*"
       - "/templates/ink-v6/*"
       - "/templates/solidity-hardhat-wagmi/*"
@@ -20,6 +34,21 @@ updates:
       semver-major-days: 28
       semver-minor-days: 14
       semver-patch-days: 14
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+
+  # Docs directory
+  - package-ecosystem: npm
+    directories:
+      - "/docs"
+    schedule:
+      interval: "daily"
     groups:
       all-dependencies:
         patterns:
