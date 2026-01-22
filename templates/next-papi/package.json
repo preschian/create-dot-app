@@ -13,7 +13,7 @@
     "@polkadot-api/react-components": "^0.4.1",
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.13.0",
-    "next": "16.0.10",
+    "next": "16.1.1",
     "polkadot-api": "^1.23.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"
@@ -24,7 +24,7 @@
     "@iconify/tailwind4": "^1.2.0",
     "@next/eslint-plugin-next": "^16.0.10",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^24",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^5.5.14",
