@@ -12,17 +12,17 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.86",
-    "@iconify-json/simple-icons": "^1.2.67",
+    "@iconify-json/lucide": "^1.2.87",
+    "@iconify-json/simple-icons": "^1.2.68",
     "@nuxt/fonts": "0.13.0",
     "@nuxt/icon": "2.2.1",
     "@tailwindcss/vite": "^4.1.18",
     "@vueuse/core": "^14.1.0",
-    "caniuse-lite": "^1.0.30001765",
+    "caniuse-lite": "^1.0.30001766",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-vue-next": "^0.562.0",
-    "nuxt": "^4.2.2",
+    "lucide-vue-next": "^0.563.0",
+    "nuxt": "^4.3.0",
     "nuxt-seo-utils": "^7.0.19",
     "reka-ui": "^2.7.0",
     "shadcn-nuxt": "2.4.3",
@@ -36,7 +36,7 @@
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.38",
     "@iconify/tailwind4": "^1.2.1",
-    "@nuxt/eslint": "^1.12.1",
+    "@nuxt/eslint": "^1.13.0",
     "eslint": "^9.39.2",
     "typescript": "^5.9.2"
   }
