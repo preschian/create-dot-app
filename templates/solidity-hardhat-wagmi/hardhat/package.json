@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "@parity/resolc": "^0.6.0",
+    "@parity/resolc": "^1.0.0",
     "dotenv": "^17.2.3"
   },
   "devDependencies": {
