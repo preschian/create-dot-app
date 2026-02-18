@@ -12,12 +12,12 @@
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^3.14.1",
     "dedot": "^1.0.2",
-    "next": "16.1.5",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "next": "16.1.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@dedot/chaintypes": "^0.214.0",
+    "@dedot/chaintypes": "^0.229.0",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.37",
     "@iconify/tailwind4": "^1.2.0",
@@ -27,7 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^5.5.14",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "eslint-config-next": "^16.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
