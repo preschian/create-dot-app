@@ -77,10 +77,6 @@ ${color.cyan('Pallet Templates:')}
 ${color.cyan('Solidity Templates:')}
   solidity-react, solidity-vue
 
-${color.cyan('ink! Templates:')}
-  ink-v6/react-dedot, ink-v6/react-papi
-  ink-v6/vue-dedot, ink-v6/vue-papi
-
 ${color.bold('Examples:')}
   ${color.dim('# Interactive mode')}
   npx create-dot-app@latest
@@ -92,7 +88,7 @@ ${color.bold('Examples:')}
   npx create-dot-app@latest my-dapp --template react-papi
 
   ${color.dim('# Full non-interactive mode')}
-  npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
+  npx create-dot-app@latest my-dapp -t react-papi
 
 ${color.bold('Learn more:')}
   ${color.underline('https://github.com/preschian/create-dot-app')}

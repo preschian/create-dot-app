@@ -25,7 +25,6 @@ updates:
   - package-ecosystem: npm
     directories:
       - "/templates/*"
-      - "/templates/ink-v6/*"
       - "/templates/solidity-hardhat-wagmi/*"
     schedule:
       interval: "daily"

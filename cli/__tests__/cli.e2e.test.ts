@@ -312,7 +312,6 @@ describe('cli E2E tests', () => {
     expect(output).toContain('nuxt-dedot')
     expect(output).toContain('react-dedot')
     expect(output).toContain('vue-dedot')
-    expect(output).toContain('ink-v6/react-dedot')
   })
 
   it('creates project with --template parameter only (prompts for name)', async () => {
@@ -351,88 +350,6 @@ describe('cli E2E tests', () => {
     // Verify it's a React project (should have App.tsx)
     const appTsxExists = await fs.access(path.join(projectPath, 'src/App.tsx')).then(() => true).catch(() => false)
     expect(appTsxExists, 'Should create React project with App.tsx').toBe(true)
-  })
-
-  it('creates project with ink! template using --template parameter', async () => {
-    const projectName = 'ink-template-test'
-    const projectPath = path.join(testDir, projectName)
-
-    const { output } = await spawnCLI(testDir, {
-      args: [projectName, '--template=ink-v6/react-dedot'],
-      timeout: 60000,
-    })
-
-    // Verify output contains expected messages
-    expect(output).toContain('create-dot-app')
-    expect(output).toContain(`Using project name: ${projectName}`)
-    expect(output).toContain('Using template: ink-v6/react-dedot')
-    expect(output).toContain('Project created successfully!')
-
-    // Verify project directory was created
-    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
-    expect(projectExists).toBe(true)
-
-    // Verify package.json has correct name
-    const packageJsonPath = path.join(projectPath, 'package.json')
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
-    expect(packageJson.name).toBe(projectName)
-
-    // Verify it's an ink! React project (should have contract folder and App.tsx)
-    const contractExists = await fs.access(path.join(projectPath, 'contract/Cargo.toml')).then(() => true).catch(() => false)
-    const appTsxExists = await fs.access(path.join(projectPath, 'src/App.tsx')).then(() => true).catch(() => false)
-    expect(contractExists, 'Should have ink! contract folder').toBe(true)
-    expect(appTsxExists, 'Should create React project with App.tsx').toBe(true)
-  })
-
-  it('creates ink! project in interactive mode', async () => {
-    const projectName = 'ink-interactive-test'
-    const projectPath = path.join(testDir, projectName)
-
-    let askedForName = false
-    let askedForCategory = false
-    let askedForTemplate = false
-
-    const { output } = await spawnCLI(testDir, {
-      args: [],
-      timeout: 60000,
-      onData: async (_, cleanOutput, process) => {
-        // Respond to project name prompt
-        if (cleanOutput.includes('What is your project name?') && !askedForName) {
-          askedForName = true
-          await wait(100)
-          process.write(`${projectName}\r`)
-        }
-
-        // Respond to category selection (select ink! Templates - 3rd option, index 2)
-        if (cleanOutput.includes('Choose your project type') && !askedForCategory) {
-          askedForCategory = true
-          await handleSelection(process, 2)
-        }
-
-        // Respond to template selection (select first ink! template)
-        if (cleanOutput.includes('Pick a template') && !askedForTemplate) {
-          askedForTemplate = true
-          await handleSelection(process, 0)
-        }
-      },
-    })
-
-    // Verify output
-    expect(output).toContain('create-dot-app')
-    expect(output).toContain(projectName)
-
-    // Verify project was created
-    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
-    expect(projectExists).toBe(true)
-
-    // Verify package.json has correct name
-    const packageJsonPath = path.join(projectPath, 'package.json')
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
-    expect(packageJson.name).toBe(projectName)
-
-    // Verify it's an ink! project (should have contract folder)
-    const contractExists = await fs.access(path.join(projectPath, 'contract/Cargo.toml')).then(() => true).catch(() => false)
-    expect(contractExists, 'Should have ink! contract folder').toBe(true)
   })
 
   it('creates project with custom name and template (non-interactive)', async () => {
