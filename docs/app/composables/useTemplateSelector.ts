@@ -1,9 +1,8 @@
-type ContractType = '' | 'substrate' | 'solidity' | 'ink'
+type ContractType = '' | 'substrate' | 'solidity'
 
 const CONTRACT_TYPES = [
   { id: 'substrate' as const, name: 'Substrate Pallets', description: 'Build with Dedot or PAPI SDK' },
   { id: 'solidity' as const, name: 'Solidity Contracts', description: 'EVM-compatible smart contracts' },
-  { id: 'ink' as const, name: 'ink! Contracts', description: 'Rust smart contracts' },
 ] as const
 
 const FRAMEWORKS = {
@@ -21,12 +20,10 @@ const SDKS = {
 const FRAMEWORKS_BY_TYPE = {
   substrate: [FRAMEWORKS.react, FRAMEWORKS.next, FRAMEWORKS.vue, FRAMEWORKS.nuxt],
   solidity: [FRAMEWORKS.react, FRAMEWORKS.vue],
-  ink: [FRAMEWORKS.react, FRAMEWORKS.vue],
 } as const
 
 const SDKS_BY_TYPE = {
   substrate: [SDKS.dedot, SDKS.papi],
-  ink: [SDKS.dedot, SDKS.papi],
 } as const
 
 const PLATFORMS = {
@@ -66,7 +63,6 @@ export function useTemplateSelector() {
       '': '',
       'substrate': `${framework}-${sdk}`,
       'solidity': `solidity-${framework}`,
-      'ink': `ink-v6/${framework}-${sdk}`,
     }
 
     return templateMap[contractType.value]

@@ -17,7 +17,6 @@ A command-line interface (CLI) tool designed to streamline the development proce
 ### 🔨 Smart Contract Support
 - **Substrate Pallets** - Build with runtime modules
 - **Solidity** - EVM-compatible smart contracts (Hardhat + Wagmi)
-- **ink! v6** - WebAssembly-based smart contracts with RISC-V
 
 ### 📦 Package Manager Support
 Compatible with npm, yarn, pnpm, bun, and deno
@@ -41,7 +40,7 @@ npx create-dot-app@latest
 
 Follow the interactive prompts to:
 1. Enter your project name
-2. Choose your project type (Pallet, Solidity, or ink!)
+2. Choose your project type (Pallet or Solidity)
 3. Select your preferred template
 
 ### Non-Interactive Mode
@@ -56,7 +55,7 @@ npx create-dot-app@latest my-dapp
 npx create-dot-app@latest my-dapp --template react-papi
 
 # Full non-interactive mode
-npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
+npx create-dot-app@latest my-dapp -t react-papi
 ```
 
 ### CLI Options
@@ -84,12 +83,6 @@ npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
 - `solidity-react` - Solidity + React (Hardhat + Wagmi)
 - `solidity-vue` - Solidity + Vue (Hardhat + Wagmi)
 
-**ink! Templates:**
-- `ink-v6/react-dedot` - ink! React + Dedot
-- `ink-v6/react-papi` - ink! React + PAPI
-- `ink-v6/vue-dedot` - ink! Vue + Dedot
-- `ink-v6/vue-papi` - ink! Vue + PAPI
-
 ## Quick Start
 
 ```bash
@@ -97,7 +90,7 @@ npx create-dot-app@latest my-dapp -t ink-v6/react-dedot
 npx create-dot-app@latest
 
 # Non-interactive with specific template
-npx create-dot-app@latest my-dapp --template ink-v6/react-papi
+npx create-dot-app@latest my-dapp --template react-papi
 
 # Navigate to project directory
 cd my-dapp
