@@ -1,0 +1,39 @@
+---
+title: Introduction
+description: Bootstrap Polkadot dApps quickly with create-dot-app. Solidity, Hardhat, and Wagmi on Polkadot Asset Hub.
+---
+
+Create Dot App is a CLI that scaffolds Polkadot-based dApps with pre-configured templates and best practices. Use it to bootstrap a project with **Solidity** and **Hardhat** (EVM on Polkadot Asset Hub), then connect your frontend with **Wagmi** and **Viem**.
+
+For more on Polkadot and the ecosystem, see the [official Polkadot documentation](https://docs.polkadot.com).
+
+## Quick start
+
+```bash
+# Interactive: choose template in the terminal
+npx create-dot-app@latest
+
+# Non-interactive: create app with Solidity + React
+npx create-dot-app@latest my-dapp --template solidity-react
+```
+
+Then install and run:
+
+```bash
+cd my-dapp && npm install
+npm run deploy -w hardhat   # Deploy contracts
+npm run dev -w dapp-react   # Start the dApp
+```
+
+## Documentation
+
+<Cards>
+  <Card title="Templates" href="/docs/templates" />
+  <Card title="Smart Contracts (Solidity)" href="/docs/smart-contracts/solidity" />
+  <Card title="CLI Reference" href="/docs/cli-reference" />
+</Cards>
+
+## Resources
+
+- [Official Polkadot documentation](https://docs.polkadot.com)
+- [Polkadot Wiki](https://wiki.polkadot.network) — developer guides and ecosystem

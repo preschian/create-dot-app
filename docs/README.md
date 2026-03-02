@@ -1,75 +1,45 @@
-# Nuxt UI Starter
+# docs
 
-Look at [Nuxt docs](https://nuxt.com/docs/getting-started/introduction) and [Nuxt UI docs](https://ui.nuxt.com) to learn more.
+This is a Next.js application generated with
+[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Run development server:
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
+# or
+pnpm dev
+# or
 yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Open http://localhost:3000 with your browser to see the result.
 
-Build the application for production:
+## Explore
 
-```bash
-# npm
-npm run build
+In the project, you can see:
 
-# pnpm
-pnpm run build
+- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
+- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
 
-# yarn
-yarn build
+| Route                     | Description                                            |
+| ------------------------- | ------------------------------------------------------ |
+| `app/(home)`              | The route group for your landing page and other pages. |
+| `app/docs`                | The documentation layout and pages.                    |
+| `app/api/search/route.ts` | The Route Handler for search.                          |
 
-# bun
-bun run build
-```
+### Fumadocs MDX
 
-Locally preview production build:
+A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
 
-```bash
-# npm
-npm run preview
+Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
 
-# pnpm
-pnpm run preview
+## Learn More
 
-# yarn
-yarn preview
+To learn more about Next.js and Fumadocs, take a look at the following
+resources:
 
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
+  features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs

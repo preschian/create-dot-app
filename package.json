@@ -39,6 +39,7 @@
     "@types/node": "^24.4.0"
   },
   "workspaces": [
-    "cli"
+    "cli",
+    "docs"
   ]
 }

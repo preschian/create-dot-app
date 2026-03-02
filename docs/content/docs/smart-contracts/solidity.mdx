@@ -1,0 +1,155 @@
+---
+title: Solidity
+description: Write and deploy EVM-compatible smart contracts on Polkadot with Hardhat and Solidity.
+---
+
+The Solidity template gives you a full-stack monorepo: Hardhat for contracts, Wagmi + Viem for the dApp, and a sample contract to learn from. Contracts run on **Polkadot Asset Hub** (EVM), so you use standard Solidity and tooling.
+
+## Project structure
+
+When you create a project with the Solidity template:
+
+```
+my-dapp/
+├── packages/
+│   ├── hardhat/          # Smart contracts
+│   │   ├── contracts/
+│   │   ├── scripts/
+│   │   └── hardhat.config.ts
+│   └── dapp-react/       # Frontend (or dapp-vue, dapp-next, etc.)
+├── package.json
+└── ...
+```
+
+All contract code lives under `packages/hardhat`. The frontend package depends on Hardhat’s artifacts (ABI, addresses) after build or deploy.
+
+## Hardhat setup
+
+The template uses **Hardhat** with TypeScript and Solidity `^0.8.20`. Key config is in `packages/hardhat/hardhat.config.ts`.
+
+- **Network**: Default deployment target is Polkadot Asset Hub (EVM). You can add more networks in the config.
+- **Compilation**: Solidity compiler is configured via `solidity` in the Hardhat config.
+- **Verification**: Contract verification on block explorers (e.g. Blockscout) is supported via the same config.
+
+From the repo root you can run:
+
+```bash
+# Compile contracts
+npm run build -w hardhat
+
+# Run tests
+npm run test -w hardhat
+
+# Deploy (default network)
+npm run deploy -w hardhat
+```
+
+`-w hardhat` runs the script in the `hardhat` workspace.
+
+## Writing your first contract
+
+Contracts live in `packages/hardhat/contracts/`. The template includes a sample contract to show structure and how the frontend calls it.
+
+### Basic contract example
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Greeter {
+    string public greeting;
+
+    constructor(string memory _greeting) {
+        greeting = _greeting;
+    }
+
+    function setGreeting(string memory _greeting) public {
+        greeting = _greeting;
+    }
+}
+```
+
+- Use `pragma solidity ^0.8.20` (or the version set in Hardhat).
+- Deploy with constructor arguments in the deploy script (e.g. in `scripts/deploy.ts`).
+
+### Using OpenZeppelin (or other libraries)
+
+You can add OpenZeppelin contracts and use them in your Solidity code:
+
+```bash
+cd packages/hardhat && npm install @openzeppelin/contracts
+```
+
+Then in your contract:
+
+```solidity
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MyToken is ERC20 {
+    constructor() ERC20("MyToken", "MTK") {
+        _mint(msg.sender, 1000 * 10 ** decimals());
+    }
+}
+```
+
+Same idea applies to other Solidity libraries: install in `packages/hardhat` and import in your contracts.
+
+## Deployment
+
+### Deploy script
+
+Deploy scripts are in `packages/hardhat/scripts/`. A typical flow:
+
+1. Get the deployer account from the Hardhat environment.
+2. Deploy the contract with constructor arguments.
+3. (Optional) Log the deployed address and write it to a file or env for the frontend.
+
+Example pattern:
+
+```typescript
+// scripts/deploy.ts
+const greeter = await Greeter.deploy("Hello, Polkadot!");
+await greeter.waitForDeployment();
+const address = await greeter.getAddress();
+console.log("Greeter deployed to:", address);
+```
+
+### Deploying to Polkadot Asset Hub
+
+1. Set the network in Hardhat config (e.g. `asset-hub` or `polkadot-asset-hub`) with the correct RPC URL and chain id.
+2. Provide the deployer private key via `PRIVATE_KEY` (or similar) in `.env` in `packages/hardhat`.
+3. Run:
+
+   ```bash
+   npm run deploy -w hardhat
+   ```
+
+Use a funded account on Asset Hub (EVM) so deployment transactions succeed. For more on the network, RPC endpoints, and accounts, see the [official Polkadot documentation on Asset Hub](https://docs.polkadot.com/learn/asset-hub/).
+
+### Local / test networks
+
+You can run a local node (e.g. Hardhat Network) and point the config to `http://127.0.0.1:8545` for local development and testing before deploying to Asset Hub.
+
+## Connecting the dApp (Wagmi + Viem)
+
+The frontend package uses **Wagmi** and **Viem** to read and write the blockchain. After deployment:
+
+1. **ABI**: Wagmi uses the contract ABI (from Hardhat’s `artifacts` or exported from the package).
+2. **Address**: The deployed contract address must be known to the app (env variable, config, or passed at runtime).
+3. **Chain**: Configure the chain (e.g. Polkadot Asset Hub) in the Wagmi config so the dApp targets the correct network.
+
+The template usually wires the sample contract (e.g. Greeter) so you can call `greeting()` and `setGreeting(...)` from the UI. Reuse that pattern for your own contracts by adding new ABIs and addresses.
+
+## Summary
+
+| Task | Command / location |
+|------|--------------------|
+| Create project | `npx create-dot-app@latest my-dapp --template solidity-react` |
+| Compile | `npm run build -w hardhat` |
+| Test | `npm run test -w hardhat` |
+| Deploy | `npm run deploy -w hardhat` |
+| Contracts | `packages/hardhat/contracts/` |
+| Scripts | `packages/hardhat/scripts/` |
+| Frontend | `packages/dapp-react` (or your chosen frontend template) |
+
+Next you can extend the sample contract, add more contracts, or plug in the frontend to other chains by updating the Hardhat and Wagmi configs.

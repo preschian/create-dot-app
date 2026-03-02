@@ -1,0 +1,59 @@
+---
+title: CLI Reference
+description: create-dot-app command-line options, usage, and non-interactive mode.
+---
+
+## Usage
+
+```bash
+npx create-dot-app@latest [project-name] [options]
+```
+
+If you omit the project name and options, the CLI runs in **interactive** mode and will prompt you for the project name and template.
+
+## Options
+
+| Option | Short | Description |
+|--------|--------|-------------|
+| `--template <name>` | `-t` | Template to use (e.g. `solidity-react`, `solidity-vue`). Skips the template prompt. |
+| `--name <name>` | — | Project name. Use this instead of passing the name as a positional argument. |
+| `--help` | `-h` | Print help and exit. |
+| `--version` | `-v` | Print version and exit. |
+
+You can pass the template with an equals sign: `--template=solidity-react` or `-t=solidity-react`.
+
+## Interactive vs non-interactive
+
+**Interactive (default):** Run without a template and the CLI will ask you to choose a project type and template:
+
+```bash
+npx create-dot-app@latest
+```
+
+**Non-interactive:** Pass the project name and template to create the project without prompts:
+
+```bash
+npx create-dot-app@latest my-dapp --template solidity-react
+```
+
+Use non-interactive mode in scripts or when you already know which template you want.
+
+## Examples
+
+```bash
+# Interactive: choose template in the terminal
+npx create-dot-app@latest
+
+# Create "my-dapp" with Solidity + React
+npx create-dot-app@latest my-dapp --template solidity-react
+
+# Same using --name
+npx create-dot-app@latest --name my-dapp -t solidity-react
+
+# Show help
+npx create-dot-app@latest --help
+```
+
+## After creation
+
+The generated project is a monorepo. Install dependencies and run scripts from the project root. Supported package managers include npm, yarn, pnpm, and bun. For Solidity templates, see [Smart Contracts (Solidity)](/docs/smart-contracts/solidity) for build, test, and deploy commands.
