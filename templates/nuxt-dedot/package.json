@@ -18,16 +18,16 @@
     "nuxt": "^4.2.2",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
-    "vue-router": "^4.6.4"
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.0.1",
-    "@dedot/chaintypes": "^0.214.0",
+    "@dedot/chaintypes": "^0.238.0",
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/token-branded": "^1.2.37",
     "@iconify/tailwind4": "^1.2.0",
     "daisyui": "^5.5.14",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.1",
     "typescript": "^5.9.3"
   }
 }
