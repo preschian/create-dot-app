@@ -1,89 +1,107 @@
+import { spawn } from 'node:child_process'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import pty from 'node-pty'
 import stripAnsi from 'strip-ansi'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const node = process.execPath
-const cliPath = path.join(__dirname, '..', 'dist', 'index.js')
+const node = process.env.NODE ?? 'node'
+const cliPath = path.join(__dirname, '..', 'dist', 'index.mjs')
+
+/** Writer interface for sending input to the CLI (used by onData / handleSelection). */
+interface CLIWriter {
+  write(s: string): void
+}
 
 interface SpawnOptions {
   args?: string[]
   timeout?: number
-  onData?: (data: string, cleanOutput: string, process: pty.IPty) => void
+  onData?: (data: string, cleanOutput: string, writer: CLIWriter) => void
   expectExitCode?: number
 }
 
-// Utility functions
 function wait(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ output: string, process: pty.IPty }> {
+async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ output: string, process: ReturnType<typeof spawn> }> {
   const { args = [], timeout = 60000, onData, expectExitCode = 0 } = options
 
-  const p = pty.spawn(node, [cliPath, ...args], {
-    name: 'xterm-color',
-    cols: 120,
-    rows: 30,
+  const env = {
+    ...process.env,
+    FORCE_COLOR: '0',
+    CI: '1',
+    DISABLE_TELEMETRY: 'true',
+  }
+
+  const child = spawn(node, [cliPath, ...args], {
     cwd: testDir,
-    env: {
-      ...process.env,
-      FORCE_COLOR: '0', // Disable colors for consistent output
-      CI: '1', // Indicate we're in CI environment
-      DISABLE_TELEMETRY: 'true', // Disable analytics during tests
-    },
+    env,
+    stdio: ['pipe', 'pipe', 'pipe'],
   })
+
+  const writer: CLIWriter = {
+    write(s: string) {
+      child.stdin?.write(s)
+    },
+  }
 
   let buf = ''
   let resolved = false
 
-  return new Promise<{ output: string, process: pty.IPty }>((resolve, reject) => {
+  const append = (data: string) => {
+    buf += data
+    const cleanOutput = stripAnsi(buf)
+    onData?.(data, cleanOutput, writer)
+  }
+
+  child.stdout?.on('data', (chunk: Buffer | string) => append(chunk.toString()))
+  child.stderr?.on('data', (chunk: Buffer | string) => append(chunk.toString()))
+
+  return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
       if (!resolved) {
         resolved = true
-        p.kill()
+        child.kill('SIGKILL')
         reject(new Error(`Test timed out after ${timeout}ms`))
       }
     }, timeout)
 
-    p.onData((data) => {
-      buf += data
-      const cleanOutput = stripAnsi(buf)
-      onData?.(data, cleanOutput, p)
-    })
-
-    p.onExit((exitCode) => {
+    child.on('close', (code, signal) => {
       clearTimeout(timeoutId)
       if (!resolved) {
         resolved = true
-        if (exitCode.exitCode === expectExitCode) {
-          resolve({ output: stripAnsi(buf), process: p })
+        const exitCode = code ?? (signal ? 1 : 0)
+        if (exitCode === expectExitCode) {
+          resolve({ output: stripAnsi(buf), process: child })
         }
         else {
-          reject(new Error(`Expected exit code ${expectExitCode}, got ${exitCode.exitCode}`))
+          reject(new Error(`Expected exit code ${expectExitCode}, got ${exitCode}`))
         }
+      }
+    })
+
+    child.on('error', (err) => {
+      if (!resolved) {
+        resolved = true
+        clearTimeout(timeoutId)
+        reject(err)
       }
     })
   })
 }
 
-async function handleSelection(p: pty.IPty, navigateDown = 0): Promise<void> {
+async function handleSelection(writer: CLIWriter, navigateDown = 0): Promise<void> {
   await wait(500)
-
-  // Navigate down if needed
   for (let i = 0; i < navigateDown; i++) {
-    p.write('\x1B[B') // Arrow down
+    writer.write('\x1B[B')
     await wait(200)
   }
-
-  // Select current option
-  p.write('\r')
+  writer.write('\r')
   await wait(300)
 }
 
-describe('cli E2E tests with node-pty', () => {
+describe('cli E2E tests', () => {
   let testDir: string
   let originalCwd: string
 
