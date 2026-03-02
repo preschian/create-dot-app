@@ -101,7 +101,7 @@ async function handleSelection(writer: CLIWriter, navigateDown = 0): Promise<voi
   await wait(300)
 }
 
-describe('cli E2E tests with node-pty', () => {
+describe('cli E2E tests', () => {
   let testDir: string
   let originalCwd: string
 
