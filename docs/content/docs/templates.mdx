@@ -1,0 +1,33 @@
+---
+title: Templates
+description: Available templates for create-dot-app. Solidity + React or Vue for EVM on Polkadot Asset Hub.
+---
+
+Create Dot App offers several templates. The ones covered in this documentation are the **Solidity** templates, which give you Hardhat for smart contracts and Wagmi for the frontend, targeting **Polkadot Asset Hub** (EVM).
+
+## Solidity templates
+
+Use these when you want to write EVM-compatible smart contracts in Solidity and connect a React or Vue frontend.
+
+| Template           | Stack                          |
+| ----------------- | ------------------------------ |
+| `solidity-react`  | Hardhat + Wagmi + Viem + React |
+| `solidity-vue`    | Hardhat + Wagmi + Viem + Vue   |
+
+Both deploy to Polkadot Asset Hub and ship with a sample contract and deployment scripts.
+
+### Create a project
+
+```bash
+# Solidity + React (recommended)
+npx create-dot-app@latest my-dapp --template solidity-react
+
+# Solidity + Vue
+npx create-dot-app@latest my-dapp --template solidity-vue
+```
+
+Then see [Smart Contracts (Solidity)](/docs/smart-contracts/solidity) for writing contracts, deploying, and connecting the dApp.
+
+## Other templates
+
+The CLI also includes other template categories (e.g. pallet-based frontends and ink! smart contracts). Run `npx create-dot-app@latest` without `--template` to choose interactively. This documentation focuses on the Solidity workflow above.
