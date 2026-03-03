@@ -11,7 +11,7 @@ updates:
       - "/"
       - "/cli"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     groups:
       all-dependencies:
         patterns:
@@ -27,7 +27,7 @@ updates:
       - "/templates/*"
       - "/templates/solidity-hardhat-wagmi/*"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     cooldown:
       default-days: 7
       semver-major-days: 28
@@ -47,7 +47,7 @@ updates:
     directories:
       - "/docs"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     groups:
       all-dependencies:
         patterns:
