@@ -1,5 +1,15 @@
 # create-dot-app
 
+## 2.1.0
+
+### Minor Changes
+
+- [#278](https://github.com/preschian/create-dot-app/pull/278) [`248bb9d`](https://github.com/preschian/create-dot-app/commit/248bb9df13d6b20bec5dcbe5eb937ba9741a2221) Thanks [@preschian](https://github.com/preschian)! - refactor: remove ink templates
+
+### Patch Changes
+
+- [#275](https://github.com/preschian/create-dot-app/pull/275) [`c9d9ec0`](https://github.com/preschian/create-dot-app/commit/c9d9ec01973dcb5b5a12baae1325338220989229) Thanks [@preschian](https://github.com/preschian)! - chore: upgrade CLI dependencies
+
 ## 2.0.2
 
 ### Patch Changes
