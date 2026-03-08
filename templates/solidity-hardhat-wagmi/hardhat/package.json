@@ -14,14 +14,14 @@
     "accounts": "hardhat run scripts/show-accounts.ts --network passetHub"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "@parity/resolc": "^0.6.0",
+    "@nomicfoundation/hardhat-toolbox": "^7.0.0",
+    "@parity/resolc": "^1.0.0",
     "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.0.1",
     "@parity/hardhat-polkadot": "^0.2.5",
-    "eslint": "^9.39.1",
-    "solc": "0.8.33"
+    "eslint": "^10.0.2",
+    "solc": "0.8.34"
   }
 }
