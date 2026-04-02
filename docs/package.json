@@ -10,15 +10,15 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
-    "fumadocs-core": "16.6.8",
-    "fumadocs-mdx": "14.2.9",
-    "fumadocs-ui": "16.6.8",
-    "lucide-react": "^0.576.0",
-    "next": "16.1.6",
+    "fumadocs-core": "16.7.9",
+    "fumadocs-mdx": "14.2.11",
+    "fumadocs-ui": "16.7.9",
+    "lucide-react": "^1.7.0",
+    "next": "16.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwind-merge": "^3.5.0",
-    "@takumi-rs/image-response": "^0.70.3"
+    "@takumi-rs/image-response": "^0.73.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.1",
@@ -28,6 +28,6 @@
     "@types/react-dom": "^19.2.3",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }
