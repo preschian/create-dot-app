@@ -65,19 +65,24 @@ export function WalletConnect({ acc, chainId }: Props) {
     <button
       type="button"
       onClick={() => setMenu((m) => !m)}
-      className="inline-flex cursor-pointer items-center gap-2 border-[1.5px] border-[var(--acc)] bg-transparent px-4 py-2.5 font-mono text-[13px] font-medium text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px"
+      className="inline-flex max-w-full min-w-0 cursor-pointer items-center gap-2 border-[1.5px] border-[var(--acc)] bg-transparent px-3 py-2 font-mono text-xs font-medium text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px sm:max-w-none sm:px-4 sm:py-2.5 sm:text-[13px]"
     >
-      <span className="inline-block size-2.25 shrink-0 rounded-full bg-[var(--acc)]" />
-      {label} · {trunc(address!)}
+      <span className="inline-block size-2 shrink-0 rounded-full bg-[var(--acc)] sm:size-2.25" />
+      <span className="truncate">
+        <span className="hidden sm:inline">{label} · </span>
+        {trunc(address!)}
+      </span>
     </button>
   ) : (
     <button
       type="button"
       onClick={() => connect()}
       disabled={connecting}
-      className="inline-flex cursor-pointer items-center gap-2 border-[1.5px] border-[var(--ink)] bg-transparent px-4 py-2.5 font-mono text-[13px] font-medium text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px disabled:cursor-default disabled:opacity-70"
+      className="inline-flex shrink-0 cursor-pointer items-center gap-2 border-[1.5px] border-[var(--ink)] bg-transparent px-3 py-2 font-mono text-xs font-medium whitespace-nowrap text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px disabled:cursor-default disabled:opacity-70 sm:px-4 sm:py-2.5 sm:text-[13px]"
     >
-      <Ic.wallet className="text-[15px]" /> {connecting ? "Connecting…" : "Connect Wallet"}
+      <Ic.wallet className="text-[15px]" />
+      <span className="sm:hidden">{connecting ? "…" : "Connect"}</span>
+      <span className="hidden sm:inline">{connecting ? "Connecting…" : "Connect Wallet"}</span>
     </button>
   );
 

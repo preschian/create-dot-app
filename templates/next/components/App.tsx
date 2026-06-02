@@ -95,18 +95,31 @@ export default function App() {
       style={themeVars(C, acc)}
     >
       <div className="mx-auto min-h-screen max-w-[1280px] border-x border-[var(--line)]">
-        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_82%,transparent)] px-10 py-5 backdrop-blur-md max-[560px]:px-5 max-[560px]:py-3.5">
-          <div className="flex items-baseline gap-3">
-            <span className="text-lg font-bold tracking-tight">
-              create<span className="text-[var(--acc)]">·</span>app
-            </span>
-            <span className="font-mono text-[11.5px] text-[var(--faint)]">v1.0</span>
-          </div>
-          <div className="flex flex-wrap items-center justify-end gap-3">
-            <NetworkSwitch acc={acc} net={net} onSwitch={onSwitch} />
-            <AccentPicker acc={acc} onPick={setAccent} />
-            <ThemeToggle dark={dark} onToggle={() => setDark((d) => !d)} />
-            <WalletConnect acc={acc} chainId={net.chainId} />
+        <header className="sticky top-0 z-10 overflow-visible border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_82%,transparent)] px-5 py-3.5 backdrop-blur-md sm:px-10 sm:py-5">
+          <div className="flex flex-col gap-3 overflow-visible sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-baseline gap-3">
+                <span className="text-lg font-bold tracking-tight">
+                  create<span className="text-[var(--acc)]">·</span>app
+                </span>
+                <span className="font-mono text-[11.5px] text-[var(--faint)]">v1.0</span>
+              </div>
+              <div className="flex shrink-0 items-center gap-2 sm:hidden">
+                <AccentPicker acc={acc} onPick={setAccent} />
+                <ThemeToggle dark={dark} onToggle={() => setDark((d) => !d)} />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2 overflow-visible sm:flex-row sm:items-center sm:gap-3">
+              <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 overflow-visible">
+                <NetworkSwitch acc={acc} net={net} onSwitch={onSwitch} />
+                <WalletConnect acc={acc} chainId={net.chainId} />
+              </div>
+              <div className="hidden shrink-0 items-center gap-2 sm:flex">
+                <AccentPicker acc={acc} onPick={setAccent} />
+                <ThemeToggle dark={dark} onToggle={() => setDark((d) => !d)} />
+              </div>
+            </div>
           </div>
         </header>
 

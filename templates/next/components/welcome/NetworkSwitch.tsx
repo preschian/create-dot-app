@@ -50,12 +50,12 @@ export function NetworkSwitch({ acc, net, onSwitch }: Props) {
   };
 
   return (
-    <span ref={wrapRef} className="relative inline-flex">
+    <span ref={wrapRef} className="relative inline-flex min-w-0 overflow-visible max-sm:w-full">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label="Switch network"
-        className="inline-flex cursor-pointer items-center gap-2.25 border border-[var(--line)] bg-transparent px-3 py-2.25 font-mono text-[12.5px] font-medium text-[var(--ink)] transition-[border-color,background] duration-150 hover:border-[var(--acc)]"
+        className="inline-flex max-sm:w-full min-w-0 cursor-pointer items-center gap-2 border border-[var(--line)] bg-transparent px-3 py-2 font-mono text-[12.5px] font-medium text-[var(--ink)] transition-[border-color,background] duration-150 hover:border-[var(--acc)] sm:gap-2.25 sm:py-2.25"
       >
         <span className="relative inline-flex size-2.25 shrink-0">
           <span
@@ -64,7 +64,10 @@ export function NetworkSwitch({ acc, net, onSwitch }: Props) {
           />
           <span className="absolute inset-0 rounded-full" style={{ background: net.color }} />
         </span>
-        <span className="whitespace-nowrap">{net.name}</span>
+        <span className="min-w-0 truncate sm:whitespace-nowrap">
+          <span className="sm:hidden">{net.chain}</span>
+          <span className="hidden sm:inline">{net.name}</span>
+        </span>
         <svg
           viewBox="0 0 24 24"
           width="13"
@@ -77,7 +80,7 @@ export function NetworkSwitch({ acc, net, onSwitch }: Props) {
       </button>
 
       {open && (
-        <div className="absolute top-[calc(100%+8px)] right-0 z-40 w-[308px] animate-ns-rise border border-[var(--line)] bg-[var(--card)] shadow-[0_18px_50px_rgba(0,0,0,.18)]">
+        <div className="absolute top-[calc(100%+8px)] left-0 z-40 w-[calc(100vw-2.5rem)] max-w-none animate-ns-rise border border-[var(--line)] bg-[var(--card)] shadow-[0_18px_50px_rgba(0,0,0,.18)] sm:left-auto sm:right-0 sm:w-[308px] sm:max-w-[308px]">
           <div className="border-b border-[var(--line)] px-[18px] pt-[13px] pb-[11px]">
             <div className="font-mono text-[10.5px] font-semibold tracking-[0.12em] text-[var(--faint)]">SWITCH NETWORK</div>
           </div>
