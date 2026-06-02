@@ -139,7 +139,7 @@ export default function App() {
   // Defaults to the testnet (the provider's defaultChainId); switching aligns the
   // connected wallet via wagmi and also drives the read paths when disconnected.
   const [chainId, setChainId] = useState(NETWORKS[0].chainId);
-  const { switchChain } = useSwitchChain();
+  const { mutate: switchChain } = useSwitchChain();
 
   const net = networkByChainId(chainId);
   const onSwitch = (id: number) => {

@@ -37,6 +37,8 @@ Edit `.env.local` and set your Client ID:
 NEXT_PUBLIC_WEB3AUTH_CLIENT_ID=YOUR_CLIENT_ID
 ```
 
+After deploying on testnet, set Flipper and Remark addresses in [`lib/contracts/addresses.ts`](lib/contracts/addresses.ts).
+
 > `.env.example` ships a demo Sapphire Devnet Client ID for quick local testing.
 > Use **Sapphire Devnet** (the default) for local development — Sapphire Mainnet does
 > not allow localhost.
@@ -68,14 +70,27 @@ Providers and chain config:
 - [`components/provider.tsx`](components/provider.tsx) — Web3Auth + wagmi + React Query
 - [`lib/chains/polkadot.ts`](lib/chains/polkadot.ts) — the three Polkadot Hub chain configs
 
+## Smart contracts
+
+The [`contracts/`](contracts/) directory is a [Hardhat](https://docs.polkadot.com/smart-contracts/dev-environments/hardhat/) workspace for Polkadot Hub (same TestNet as the dapp). See [`contracts/README.md`](contracts/README.md).
+
+```bash
+cd contracts
+npm install
+npm run compile
+npm test
+```
+
 ## Scripts
 
 ```bash
 npm run dev     # start the dev server
 npm run build   # production build
 npm run start   # serve the production build
-npm run lint    # eslint
+npm run lint    # eslint (includes @typescript-eslint/no-deprecated for wagmi/viem APIs)
 ```
+
+`npm run lint` fails on wagmi symbols marked `@deprecated` in their types (for example `useAccount`, `switchChain`, `writeContract` on hook results). Use `useConnection`, `mutate` from `useSwitchChain` / `useWriteContract`, and similar replacements from the [wagmi migration guide](https://wagmi.sh/react/guides/migrate-from-v2-to-v3).
 
 ## Resources
 
