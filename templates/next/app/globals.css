@@ -1,17 +1,20 @@
-/* create-dot-app welcome screen — global base, keyframes, hover + responsive
-   rules. Component styling itself lives inline in components/welcome/*. */
+@import "tailwindcss";
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: #f0eee9;
-}
-* {
-  box-sizing: border-box;
+@custom-variant welcome-md (@media (max-width: 920px));
+@custom-variant welcome-sm (@media (max-width: 560px));
+
+@theme {
+  --font-sans: var(--font-grotesk), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  --welcome-header-inset: 1.25rem;
+
+  --animate-dapp-ping: dappPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-block-bump: blockBump 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-popover-rise: popoverRise 0.14s ease-out;
+  --animate-ns-spin: nsSpin 0.7s linear infinite;
 }
 
-/* keyframes ----------------------------------------------------------------- */
 @keyframes dappPing {
   75%,
   100% {
@@ -19,8 +22,7 @@ body {
     opacity: 0;
   }
 }
-/* per-digit "odometer": rest on ink, flash accent mid-tick, never touch opacity
-   so a frozen timeline can never hide a digit */
+
 @keyframes blockBump {
   0% {
     transform: translateY(-0.2em);
@@ -34,7 +36,8 @@ body {
     color: inherit;
   }
 }
-@keyframes edRise {
+
+@keyframes popoverRise {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -44,139 +47,15 @@ body {
     transform: none;
   }
 }
-@keyframes wcRise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes nsRise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
+
 @keyframes nsSpin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* hover / transition affordances (track the live --acc / --line CSS vars) ----- */
-.ed-feat {
-  transition: background 0.14s;
-}
-.ed-feat:hover {
-  background: color-mix(in srgb, var(--acc) 5%, transparent);
-}
-.ed-res:hover {
-  color: var(--acc) !important;
-}
-.ed-res:hover .ed-ar {
-  transform: translateX(3px);
-}
-.ed-btn {
-  transition: transform 0.12s, background 0.14s, color 0.14s;
-}
-.ed-btn:hover {
-  transform: translateY(-1px);
-}
-.ed-theme:hover {
-  border-color: var(--acc) !important;
-  color: var(--acc) !important;
-}
-.ed-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  backdrop-filter: blur(8px);
-}
-.ed-sw:hover {
-  transform: scale(1.12);
-}
-.wc-menuitem {
-  transition: background 0.12s;
-}
-.wc-menuitem:hover {
-  background: color-mix(in srgb, var(--acc) 8%, transparent);
-}
-.ns-btn {
-  transition: border-color 0.14s, background 0.14s;
-}
-.ns-btn:hover {
-  border-color: var(--acc) !important;
-}
-.ns-item {
-  transition: background 0.12s;
-}
-.ns-item:hover {
-  background: color-mix(in srgb, var(--acc) 8%, transparent);
-}
-
-/* responsive --------------------------------------------------------------- */
-@media (max-width: 920px) {
-  .ed-hero {
-    grid-template-columns: 1fr !important;
-  }
-  .ed-live {
-    grid-template-columns: 1fr !important;
-  }
-  .ed-lower {
-    grid-template-columns: 1fr !important;
-  }
-  .ed-feats {
-    grid-template-columns: 1fr 1fr !important;
-  }
-  .ed-rail {
-    border-left: none !important;
-    border-top: 1px solid var(--line) !important;
-  }
-  .ed-h1 {
-    font-size: 13vw !important;
-  }
-  .ed-blockcell {
-    border-right: none !important;
-    border-bottom: 1px solid var(--line) !important;
-  }
-}
-@media (max-width: 560px) {
-  .ed-topbar {
-    padding: 14px 20px !important;
-  }
-  .ed-hero {
-    padding: 36px 20px 28px !important;
-    gap: 24px !important;
-  }
-  .ed-cell {
-    padding: 22px 20px !important;
-  }
-  .ed-feats {
-    grid-template-columns: 1fr !important;
-  }
-  .ed-feat {
-    border-right: none !important;
-  }
-  .ed-bignum {
-    font-size: clamp(34px, 11vw, 52px) !important;
-  }
-  .ed-txhead {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 14px !important;
-  }
-  .ed-txhead .ed-btn {
-    width: 100% !important;
-  }
-  .ed-foot {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
 }

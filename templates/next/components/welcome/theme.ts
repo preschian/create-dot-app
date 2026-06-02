@@ -1,5 +1,8 @@
-// Color tokens + type roles for the editorial welcome screen.
+// Color tokens for the editorial welcome screen.
 // Light/dark token sets are oklch so accent + contrast stay coherent in both modes.
+// Values are exposed as CSS variables on the welcome root for Tailwind arbitrary utilities.
+
+import type { CSSProperties } from "react";
 
 export interface Tokens {
   paper: string;
@@ -34,9 +37,15 @@ export function tokens(dark: boolean): Tokens {
 export const ACCENTS = ["#D9542B", "#2F6BFF", "#18A058", "#7A5AE0", "#E0A92F"];
 export const DEFAULT_ACCENT = ACCENTS[0];
 
-// Type roles. Font families are wired to next/font CSS variables in app/layout.tsx.
-export const FONT = {
-  disp: "var(--font-grotesk), 'Space Grotesk', sans-serif",
-  body: "var(--font-grotesk), 'Space Grotesk', sans-serif",
-  mono: "var(--font-mono), 'JetBrains Mono', monospace",
-} as const;
+/** CSS custom properties consumed by Tailwind `var(--*)` utilities on the welcome root. */
+export function themeVars(C: Tokens, acc: string): CSSProperties {
+  return {
+    "--paper": C.paper,
+    "--ink": C.ink,
+    "--dim": C.dim,
+    "--faint": C.faint,
+    "--line": C.line,
+    "--card": C.card,
+    "--acc": acc,
+  } as CSSProperties;
+}

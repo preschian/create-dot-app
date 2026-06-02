@@ -56,16 +56,21 @@ Visit `http://localhost:3000`.
 ## Where to start
 
 Edit [`components/App.tsx`](components/App.tsx) — it composes the welcome screen and is
-the natural place to start building your own UI. The pieces it pulls in live in
-[`components/welcome/`](components/welcome):
+the natural place to start building your own UI. Styling uses **Tailwind CSS 4** utility
+classes with theme tokens exposed as CSS variables (`--paper`, `--ink`, `--acc`, …) on the
+welcome root. The pieces it pulls in live in [`components/welcome/`](components/welcome):
 
 | File | Responsibility |
 | --- | --- |
 | `App.tsx` | Top bar, hero, features, side rail; owns theme + selected-network state |
-| `welcome/LiveDemo.tsx` | Live block watcher + sample-transaction pipeline (`useBlock`, `useSendTransaction`) |
+| `welcome/LiveDemo.tsx` | Composes `BlockPanel` + `WritePanel` |
+| `welcome/BlockPanel.tsx` | Live block watcher (`useBlock`) |
+| `welcome/WritePanel.tsx` | Sample contract writes + transaction stepper |
 | `welcome/WalletConnect.tsx` | Connect Wallet button + connected menu (Web3Auth + `useBalance`) |
 | `welcome/NetworkSwitch.tsx` | Network selector (`useSwitchChain`) |
-| `welcome/{theme,networks,data,icons}` | Color tokens, chain display data, content, icons |
+| `welcome/HeaderControls.tsx` | Accent picker + theme toggle |
+| `welcome/{theme,networks,data,icons,format,useDismissible,PopoverPanel}` | Shared theme, data, UI primitives |
+| `app/globals.css` | Tailwind CSS 4 entry + welcome animations |
 
 Providers and chain config:
 

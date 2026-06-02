@@ -29,7 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const web3authInitialState = cookieToWeb3AuthState(headersList.get("cookie"));
   return (
     <html lang="en">
-      <body className={`${grotesk.variable} ${mono.variable}`}>
+      <body className={`${grotesk.variable} ${mono.variable} font-sans antialiased`}>
         <Provider web3authInitialState={web3authInitialState}>{children}</Provider>
       </body>
     </html>
