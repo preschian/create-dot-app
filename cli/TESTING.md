@@ -57,7 +57,6 @@ bun run test:watch
     ✓ creates project with command line argument
     ✓ creates project in interactive mode  
     ✓ handles existing directory error correctly
-    ✓ can navigate template selection with arrow keys
 
 Test Files  1 passed (1)
 Tests  4 passed (4)
@@ -69,13 +68,12 @@ Duration  8.42s (transform 23ms, setup 0ms, collect 45ms, tests 8.35s)
 
 1. **creates project with command line argument**
    - Runs `create-dot-app my-project`
-   - Automatically selects first template option
+   - Uses the Next.js template automatically (no template prompt)
    - Verifies project files are created correctly
 
 2. **creates project in interactive mode**
    - Runs `create-dot-app` without arguments
    - Responds to "What is your project name?" prompt
-   - Selects template from menu
    - Verifies project creation
 
 3. **handles existing directory error correctly**
@@ -83,11 +81,6 @@ Duration  8.42s (transform 23ms, setup 0ms, collect 45ms, tests 8.35s)
    - Tries to create project with same name
    - Expects CLI to exit with error code 1
    - Verifies error message contains "already exists"
-
-4. **can navigate template selection with arrow keys**
-   - Uses arrow down keys to navigate template menu
-   - Selects Vue + Dedot template (3rd option)
-   - Verifies correct template was used (App.vue instead of App.tsx)
 
 ## How It Works
 
@@ -139,4 +132,3 @@ describe('CLI E2E Tests with node-pty', () => {
 - All test artifacts are automatically cleaned up after each test using Vitest's `beforeEach`/`afterEach` hooks
 - Tests use `strip-ansi` to handle colored terminal output consistently
 - Vitest provides better test organization, parallel execution, and detailed reporting
-- **Telemetry is disabled during tests** using `DISABLE_TELEMETRY=true` environment variable to prevent analytics data from test runs

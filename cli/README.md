@@ -4,19 +4,11 @@ A command-line interface (CLI) tool designed to streamline the development proce
 
 ## Features
 
-### 🚀 Multiple Frontend Framework Support
-- **React.js** - Single Page Application with Vite
-- **Vue.js** - Single Page Application with Vite
-- **Next.js** - React framework with SSR/SSG
-- **Nuxt** - Vue framework with SSR/SSG
-
-### 🔗 Dual SDK Integration Support
-- **[PAPI](https://papi.how/)** - Polkadot API
-- **[Dedot](https://docs.dedot.dev/)** - Developer-friendly Polkadot SDK
-
-### 🔨 Smart Contract Support
-- **Substrate Pallets** - Build with runtime modules
-- **Solidity** - EVM-compatible smart contracts (Hardhat + Wagmi)
+### ⚡ Next.js + Web3Auth Template
+- **Next.js** (App Router) with React 19 and Tailwind CSS
+- **[Web3Auth](https://web3auth.io/)** social/embedded wallet login
+- **[Wagmi](https://wagmi.sh/)** for EVM wallet and contract interactions
+- **Solidity** smart contracts via an integrated Hardhat workspace (Polkadot Hub)
 
 ### 📦 Package Manager Support
 Compatible with npm, yarn, pnpm, bun, and deno
@@ -38,10 +30,7 @@ Create a new Polkadot dApp project with interactive prompts:
 npx create-dot-app@latest
 ```
 
-Follow the interactive prompts to:
-1. Enter your project name
-2. Choose your project type (Pallet or Solidity)
-3. Select your preferred template
+Enter your project name when prompted. The Next.js template is currently selected automatically.
 
 ### Non-Interactive Mode
 
@@ -52,10 +41,10 @@ Skip the prompts by providing options via CLI flags:
 npx create-dot-app@latest my-dapp
 
 # Specify project name and template
-npx create-dot-app@latest my-dapp --template react-papi
+npx create-dot-app@latest my-dapp --template next
 
 # Full non-interactive mode
-npx create-dot-app@latest my-dapp -t react-papi
+npx create-dot-app@latest my-dapp -t next
 ```
 
 ### CLI Options
@@ -69,19 +58,7 @@ npx create-dot-app@latest my-dapp -t react-papi
 
 #### Available Templates
 
-**Pallet Templates:**
-- `next-dedot` - Next.js + Dedot
-- `next-papi` - Next.js + PAPI
-- `nuxt-dedot` - Nuxt + Dedot
-- `nuxt-papi` - Nuxt + PAPI
-- `react-dedot` - React + Dedot
-- `react-papi` - React + PAPI
-- `vue-dedot` - Vue + Dedot
-- `vue-papi` - Vue + PAPI
-
-**Solidity Templates:**
-- `solidity-react` - Solidity + React (Hardhat + Wagmi)
-- `solidity-vue` - Solidity + Vue (Hardhat + Wagmi)
+- `next` - Next.js (Web3Auth + Wagmi)
 
 ## Quick Start
 
@@ -90,7 +67,7 @@ npx create-dot-app@latest my-dapp -t react-papi
 npx create-dot-app@latest
 
 # Non-interactive with specific template
-npx create-dot-app@latest my-dapp --template react-papi
+npx create-dot-app@latest my-dapp --template next
 
 # Navigate to project directory
 cd my-dapp
@@ -100,24 +77,6 @@ npm install
 
 # Start development server
 npm run dev
-```
-
-## Privacy & Telemetry
-
-This CLI collects anonymous usage data to help improve the tool. The data includes:
-- Selected template type
-- CLI version
-
-**To disable telemetry**, set the environment variable:
-
-```bash
-export DISABLE_TELEMETRY=true
-```
-
-Or run with telemetry disabled:
-
-```bash
-DISABLE_TELEMETRY=true npx create-dot-app@latest
 ```
 
 ## Development

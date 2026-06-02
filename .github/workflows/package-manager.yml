@@ -11,11 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-      deno-matrix: ${{ steps.set-deno-matrix.outputs.matrix }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Check for template changes
         uses: dorny/paths-filter@v3
         id: filter
@@ -23,59 +22,27 @@ jobs:
           filters: |
             next:
               - 'templates/next/**'
-            next-dedot:
-              - 'templates/next-dedot/**'
-            next-papi:
-              - 'templates/next-papi/**'
-            nuxt-dedot:
-              - 'templates/nuxt-dedot/**'
-            nuxt-papi:
-              - 'templates/nuxt-papi/**'
-            react-dedot:
-              - 'templates/react-dedot/**'
-            react-papi:
-              - 'templates/react-papi/**'
-            vue-dedot:
-              - 'templates/vue-dedot/**'
-            vue-papi:
-              - 'templates/vue-papi/**'
-      
+
       - name: Set matrix based on changes
         id: set-matrix
         run: |
           CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
           echo "Changed templates: $CHANGED_TEMPLATES"
-          
+
           # Generate matrix for all changed templates with multiple package managers
           MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
-            if . == [] then 
-              {"include": []} 
-            else 
+            if . == [] then
+              {"include": []}
+            else
               {"include": [
-                (.[] as $template | 
-                  ["npm"] | .[] as $pm | 
+                (.[] as $template |
+                  ["npm"] | .[] as $pm |
                   {"template": $template, "working-directory": "templates/\($template)", "package-manager": $pm}
                 )
-              ]} 
+              ]}
             end
           ' || echo '{"include": []}')
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-      
-      - name: Set Deno matrix based on changes
-        id: set-deno-matrix
-        run: |
-          CHANGED_TEMPLATES='${{ steps.filter.outputs.changes }}'
-          echo "Changed templates for Deno: $CHANGED_TEMPLATES"
-          
-          # Generate matrix only for React and Vue templates
-          DENO_MATRIX=$(echo "$CHANGED_TEMPLATES" | jq -c '
-            if . == [] then 
-              {"include": []} 
-            else 
-              {"include": [.[] | select(startswith("react-") or startswith("vue-")) | {"template": ., "working-directory": "templates/\(.)"}]} 
-            end
-          ' || echo '{"include": []}')
-          echo "matrix=$DENO_MATRIX" >> $GITHUB_OUTPUT
 
   node:
     needs: changes
@@ -83,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -97,6 +64,14 @@ jobs:
         working-directory: ${{ matrix.working-directory }}
         run: ${{ matrix.package-manager }} install
 
+      - name: Compile contracts
+        working-directory: ${{ matrix.working-directory }}
+        run: ${{ matrix.package-manager }} run compile:contracts
+
+      - name: Test contracts
+        working-directory: ${{ matrix.working-directory }}
+        run: ${{ matrix.package-manager }} run test:contracts
+
       - name: Lint code
         working-directory: ${{ matrix.working-directory }}
         run: ${{ matrix.package-manager }} run lint
@@ -104,36 +79,3 @@ jobs:
       - name: Build project
         working-directory: ${{ matrix.working-directory }}
         run: ${{ matrix.package-manager }} run build
-
-  deno:
-    needs: changes
-    if: ${{ needs.changes.outputs.deno-matrix != '' && fromJSON(needs.changes.outputs.deno-matrix).include[0] }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJSON(needs.changes.outputs.deno-matrix) }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-
-      - name: Install dependencies with Deno
-        working-directory: ${{ matrix.working-directory }}
-        run: deno install
-
-      - name: Run postinstall with Deno
-        if: contains(matrix.working-directory, 'papi')
-        working-directory: ${{ matrix.working-directory }}
-        run: deno run postinstall
-
-      - name: Lint code with Deno
-        working-directory: ${{ matrix.working-directory }}
-        run: deno task lint
-
-      - name: Build project with Deno
-        working-directory: ${{ matrix.working-directory }}
-        run: deno task build
