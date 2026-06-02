@@ -14,7 +14,6 @@ import {
 } from "wagmi";
 import { useWeb3AuthConnect } from "@web3auth/modal/react";
 import { type BaseError } from "viem";
-import type { Tokens } from "./theme";
 import { type NetworkInfo, TESTNET, rpcHost, explorerTxUrl } from "./networks";
 import { CLI } from "./data";
 import { Ic, LiveDot } from "./icons";
@@ -26,11 +25,7 @@ import {
 } from "../../lib/contracts";
 
 interface Props {
-  C: Tokens;
   acc: string;
-  mono: string;
-  body: string;
-  disp: string;
   net: NetworkInfo;
   onSwitch: (chainId: number) => void;
 }
@@ -41,7 +36,9 @@ const STEPS = ["Ready", "Broadcast", "InBlock", "Finalized"];
 const trunc = (a: string) => `${a.slice(0, 8)}…${a.slice(-4)}`;
 const REMARK_MESSAGE = `gm from ${CLI}`;
 
-export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
+const eyebrow = "font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--faint)]";
+
+export function LiveDemo({ acc, net, onSwitch }: Props) {
   const chainReady = useChains().some((c) => c.id === net.chainId);
   const { data: head } = useBlock({
     chainId: chainReady ? net.chainId : undefined,
@@ -127,126 +124,78 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
     }
   };
 
-  const cell: React.CSSProperties = { padding: "26px 30px" };
-  const eyebrow: React.CSSProperties = {
-    fontFamily: mono,
-    fontSize: 11,
-    fontWeight: 600,
-    letterSpacing: "0.12em",
-    color: C.faint,
-  };
-
   const missingContractName = actionKey === "flip" ? "flipper" : "remark";
 
   return (
-    <div
-      style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: `1px solid ${C.line}` }}
-      className="ed-live"
-    >
-      <div className="ed-cell ed-blockcell" style={{ ...cell, borderRight: `1px solid ${C.line}` }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={eyebrow}>NETWORK</span>
+    <div className="grid grid-cols-2 border-b border-[var(--line)] max-[920px]:grid-cols-1">
+      <div className="border-r border-[var(--line)] p-[26px_30px] max-[920px]:border-r-0 max-[920px]:border-b max-[560px]:p-[22px_20px]">
+        <div className="flex items-center justify-between">
+          <span className={eyebrow}>NETWORK</span>
           <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              fontFamily: mono,
-              fontSize: 11.5,
-              color: reconnecting ? C.faint : C.dim,
-            }}
+            className={`inline-flex items-center gap-2 font-mono text-[11.5px] ${reconnecting ? "text-[var(--faint)]" : "text-[var(--dim)]"}`}
           >
-            <LiveDot color={reconnecting ? C.faint : net.color} />
+            <LiveDot color={reconnecting ? "var(--faint)" : net.color} />
             {reconnecting ? "connecting…" : "connected"} · {rpcHost(net.rpc)}
           </span>
         </div>
 
-        <div style={{ marginTop: 18, display: "flex", alignItems: "baseline", gap: 10 }}>
-          <span style={{ fontFamily: mono, fontSize: 15, color: acc, fontWeight: 600 }}>#</span>
-          <span
-            className="ed-bignum"
-            style={{
-              fontFamily: mono,
-              fontSize: "clamp(36px, 5.2vw, 52px)",
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              color: C.ink,
-              lineHeight: 1,
-              fontVariantNumeric: "tabular-nums",
-              display: "inline-block",
-            }}
-          >
+        <div className="mt-[18px] flex items-baseline gap-2.5">
+          <span className="font-mono text-[15px] font-semibold text-[var(--acc)]">#</span>
+          <span className="inline-block font-mono text-[clamp(36px,5.2vw,52px)] leading-none font-semibold tracking-tight text-[var(--ink)] tabular-nums max-[560px]:text-[clamp(34px,11vw,52px)]">
             {block !== null
               ? Number(block)
                   .toLocaleString("en-US")
                   .split("")
                   .map((ch, i) => (
-                    <span key={i + "-" + ch} style={{ display: "inline-block", animation: "blockBump .45s cubic-bezier(.2,.8,.2,1)" }}>
+                    <span key={i + "-" + ch} className="inline-block animate-block-bump">
                       {ch}
                     </span>
                   ))
               : "—"}
           </span>
         </div>
-        <div style={{ fontFamily: mono, fontSize: 12, color: C.faint, marginTop: 8 }}>
+        <div className="mt-2 font-mono text-xs text-[var(--faint)]">
           {hash ? `${hash.slice(0, 10)}…` : "0x…"} · ~3s block time
         </div>
 
-        <div style={{ marginTop: 20, display: "flex", gap: 28, flexWrap: "wrap", rowGap: 14 }}>
+        <div className="mt-5 flex flex-wrap gap-x-7 gap-y-3.5">
           {[
             ["Finalized", finalized !== null ? "#" + Number(finalized).toLocaleString("en-US") : "—"],
             ["Chain", net.chain],
             ["Token", net.token],
           ].map(([k, v]) => (
             <div key={k}>
-              <div style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.1em", color: C.faint }}>{k.toUpperCase()}</div>
-              <div style={{ fontFamily: mono, fontSize: 14, color: C.ink, marginTop: 4 }}>{v}</div>
+              <div className="font-mono text-[10.5px] tracking-widest text-[var(--faint)]">{k.toUpperCase()}</div>
+              <div className="mt-1 font-mono text-sm text-[var(--ink)]">{v}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={cell} className="ed-cell ed-tx">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={eyebrow}>TRY THE WRITE PATH</span>
-          <span style={{ fontFamily: mono, fontSize: 11.5, color: C.faint }}>
+      <div className="p-[26px_30px] max-[560px]:p-[22px_20px]">
+        <div className="flex items-center justify-between">
+          <span className={eyebrow}>TRY THE WRITE PATH</span>
+          <span className="font-mono text-[11.5px] text-[var(--faint)]">
             signer: {isConnected && address ? trunc(address) : "//Alice"}
           </span>
         </div>
 
-        <div
-          style={{
-            marginTop: 14,
-            display: "inline-flex",
-            alignSelf: "flex-start",
-            border: `1px solid ${C.line}`,
-            padding: 2,
-            gap: 2,
-          }}
-        >
+        <div className="mt-3.5 inline-flex gap-0.5 self-start border border-[var(--line)] p-0.5">
           {Object.values(ACTIONS).map((a) => {
             const on = a.key === actionKey;
             return (
               <button
                 key={a.key}
+                type="button"
                 onClick={() => {
                   if (!pending) {
                     setActionKey(a.key);
                     reset();
                   }
                 }}
-                style={{
-                  fontFamily: mono,
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  padding: "6px 12px",
-                  cursor: pending ? "default" : "pointer",
-                  border: "none",
-                  background: on ? acc : "transparent",
-                  color: on ? C.paper : C.dim,
-                  opacity: pending && !on ? 0.5 : 1,
-                  transition: "background .14s,color .14s",
-                }}
+                className={`cursor-pointer border-0 px-3 py-1.5 font-mono text-[11.5px] font-semibold transition-[background,color] duration-150 ${
+                  pending && !on ? "cursor-default opacity-50" : ""
+                } ${on ? "bg-[var(--acc)] text-[var(--paper)]" : "bg-transparent text-[var(--dim)]"}`}
               >
                 {a.tab}
                 {a.key === "flip" ? "()" : ""}
@@ -255,134 +204,91 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
           })}
         </div>
 
-        <div style={{ minHeight: 130 }}>
+        <div className="min-h-[130px]">
           {actionBlocked ? (
-            <div style={{ marginTop: 12, border: `1px dashed ${C.line}`, padding: "14px 16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: C.faint, flex: "0 0 auto" }} />
-                <div style={{ fontFamily: disp, fontSize: 17, fontWeight: 600, letterSpacing: "-0.01em", color: C.ink }}>
+            <div className="mt-3 border border-dashed border-[var(--line)] px-4 py-3.5">
+              <div className="flex items-center gap-2.25">
+                <span className="size-1.75 shrink-0 rounded-full bg-[var(--faint)]" />
+                <div className="text-[17px] font-semibold tracking-tight text-[var(--ink)]">
                   No {missingContractName} contract on {net.chain}
                 </div>
               </div>
-              <p style={{ fontFamily: body, fontSize: 13, lineHeight: 1.5, color: C.dim, margin: "6px 0 0" }}>
-                Run{" "}
-                <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>
-                  npm run deploy:contracts
-                </span>{" "}
-                then set <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>{missingContractName}</span> in{" "}
-                <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>lib/contracts/addresses.ts</span> (testnet).
+              <p className="mt-1.5 mb-0 text-[13px] leading-normal text-[var(--dim)]">
+                Run <span className="font-mono text-xs text-[var(--acc)]">npm run deploy:contracts</span> then set{" "}
+                <span className="font-mono text-xs text-[var(--acc)]">{missingContractName}</span> in{" "}
+                <span className="font-mono text-xs text-[var(--acc)]">lib/contracts/addresses.ts</span> (testnet).
               </p>
               {!isTestnet && (
                 <button
-                  className="ed-res"
+                  type="button"
                   onClick={() => onSwitch(TESTNET.chainId)}
-                  style={{
-                    marginTop: 10,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    fontFamily: mono,
-                    fontSize: 12.5,
-                    fontWeight: 600,
-                    padding: 0,
-                    cursor: "pointer",
-                    border: "none",
-                    background: "transparent",
-                    color: acc,
-                    whiteSpace: "nowrap",
-                  }}
+                  className="group mt-2.5 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-mono text-[12.5px] font-semibold whitespace-nowrap text-[var(--acc)]"
                 >
                   Switch to {TESTNET.chain}
-                  <Ic.arrow className="ed-ar" style={{ fontSize: 14, transition: "transform .14s" }} />
+                  <Ic.arrow className="text-sm transition-transform duration-150 group-hover:translate-x-[3px]" />
                 </button>
               )}
             </div>
           ) : (
             <>
-              <div
-                className="ed-txhead"
-                style={{ marginTop: 14, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20 }}
-              >
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontFamily: disp, fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em", color: C.ink }}>
-                    {action.title}
-                  </div>
-                  <div style={{ fontFamily: mono, fontSize: 12.5, color: C.dim, marginTop: 6 }}>
+              <div className="mt-3.5 flex items-start justify-between gap-5 max-[560px]:flex-col max-[560px]:items-stretch max-[560px]:gap-3.5">
+                <div className="min-w-0">
+                  <div className="text-xl font-semibold tracking-tight text-[var(--ink)]">{action.title}</div>
+                  <div className="mt-1.5 font-mono text-[12.5px] text-[var(--dim)]">
                     {actionKey === "flip" ? (
                       <>
                         flipper.flip() · value:{" "}
-                        <span style={{ color: acc }}>{flipValue === undefined ? "…" : String(flipValue)}</span>
+                        <span className="text-[var(--acc)]">{flipValue === undefined ? "…" : String(flipValue)}</span>
                       </>
                     ) : (
                       <>
-                        system.remark(<span style={{ color: acc }}>&quot;{REMARK_MESSAGE}&quot;</span>)
+                        system.remark(<span className="text-[var(--acc)]">&quot;{REMARK_MESSAGE}&quot;</span>)
                       </>
                     )}
                   </div>
                 </div>
                 <button
-                  className="ed-btn"
+                  type="button"
                   onClick={submit}
                   disabled={pending}
-                  style={{
-                    flex: "0 0 auto",
-                    minWidth: 172,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    fontFamily: mono,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    padding: "11px 18px",
-                    cursor: pending ? "default" : "pointer",
-                    border: `1.5px solid ${acc}`,
-                    background: pending ? "transparent" : acc,
-                    color: pending ? acc : C.paper,
-                    opacity: pending ? 0.7 : 1,
-                    whiteSpace: "nowrap",
-                  }}
+                  className={`inline-flex min-w-[172px] shrink-0 items-center justify-center gap-2 border-[1.5px] border-[var(--acc)] px-[18px] py-[11px] font-mono text-[13px] font-semibold whitespace-nowrap transition-[transform,background,color] duration-150 max-[560px]:w-full ${
+                    pending
+                      ? "cursor-default bg-transparent text-[var(--acc)] opacity-70"
+                      : "cursor-pointer bg-[var(--acc)] text-[var(--paper)] hover:-translate-y-px"
+                  }`}
                 >
                   {pending ? "Submitting…" : stage === 3 ? "Run again" : !isConnected ? "Connect to send" : action.cta}
-                  {!pending && <Ic.arrow style={{ fontSize: 15 }} />}
+                  {!pending && <Ic.arrow className="text-[15px]" />}
                 </button>
               </div>
 
-              <div style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 0 }}>
+              <div className="mt-[18px] flex items-center">
                 {STEPS.map((labelText, i) => {
                   const active = stage >= i;
                   return (
                     <React.Fragment key={labelText}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                      <div className="flex items-center gap-1.75">
                         <span
+                          className="inline-block size-[11px] shrink-0 rounded-full border-[1.5px] transition-all duration-200"
                           style={{
-                            width: 11,
-                            height: 11,
-                            borderRadius: "50%",
-                            display: "inline-block",
-                            flex: "0 0 auto",
                             background: active ? acc : "transparent",
-                            border: `1.5px solid ${active ? acc : C.line}`,
+                            borderColor: active ? acc : "var(--line)",
                             boxShadow:
                               active && i === stage && pending
                                 ? `0 0 0 4px color-mix(in srgb, ${acc} 22%, transparent)`
                                 : "none",
-                            transition: "all .2s",
                           }}
                         />
-                        <span style={{ fontFamily: mono, fontSize: 11.5, color: active ? C.ink : C.faint, transition: "color .2s" }}>
+                        <span
+                          className={`font-mono text-[11.5px] transition-colors duration-200 ${active ? "text-[var(--ink)]" : "text-[var(--faint)]"}`}
+                        >
                           {labelText}
                         </span>
                       </div>
                       {i < STEPS.length - 1 && (
                         <div
-                          style={{
-                            flex: 1,
-                            height: 1.5,
-                            margin: "0 9px",
-                            background: stage > i ? acc : C.line,
-                            transition: "background .2s",
-                          }}
+                          className="mx-2.25 h-[1.5px] flex-1 transition-[background] duration-200"
+                          style={{ background: stage > i ? acc : "var(--line)" }}
                         />
                       )}
                     </React.Fragment>
@@ -390,35 +296,34 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                 })}
               </div>
 
-              <div style={{ marginTop: 14, minHeight: 22, display: "flex", flexDirection: "column", gap: 6 }}>
+              <div className="mt-3.5 flex min-h-[22px] flex-col gap-1.5">
                 {txError ? (
-                  <div style={{ fontFamily: mono, fontSize: 12, color: acc }}>
+                  <div className="font-mono text-xs text-[var(--acc)]">
                     {(txError as BaseError).shortMessage || txError.message}
                   </div>
                 ) : isConfirmed && txHash ? (
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: mono, fontSize: 12 }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: acc, fontWeight: 600 }}>
-                      <Ic.check style={{ fontSize: 13 }} /> Finalized
+                  <div className="flex items-center gap-2.5 font-mono text-xs">
+                    <span className="inline-flex items-center gap-1.25 font-semibold text-[var(--acc)]">
+                      <Ic.check className="text-[13px]" /> Finalized
                     </span>
-                    <span style={{ color: C.faint }}>{actionLabel}</span>
+                    <span className="text-[var(--faint)]">{actionLabel}</span>
                     <a
-                      className="ed-res"
                       href={explorerTxUrl(net, txHash)}
                       target="_blank"
                       rel="noreferrer"
                       title="View transaction on the block explorer"
-                      style={{ color: C.dim, textDecoration: "none" }}
+                      className="text-[var(--dim)] no-underline transition-colors duration-150 hover:text-[var(--acc)]"
                     >
                       {trunc(txHash)}
                     </a>
                     {receipt && (
-                      <span style={{ color: C.faint, marginLeft: "auto" }}>
+                      <span className="ml-auto text-[var(--faint)]">
                         in #{Number(receipt.blockNumber).toLocaleString("en-US")}
                       </span>
                     )}
                   </div>
                 ) : (
-                  <div style={{ fontFamily: mono, fontSize: 12, color: C.faint }}>No extrinsics submitted yet.</div>
+                  <div className="font-mono text-xs text-[var(--faint)]">No extrinsics submitted yet.</div>
                 )}
               </div>
             </>

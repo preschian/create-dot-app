@@ -7,26 +7,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser } from "@web3auth/modal/react";
 import { useConnection, useBalance, useChains } from "wagmi";
 import { formatUnits } from "viem";
-import type { Tokens } from "./theme";
 import { Ic } from "./icons";
 
 interface Props {
-  C: Tokens;
   acc: string;
-  mono: string;
-  body: string;
-  disp: string;
   chainId: number;
 }
 
 const trunc = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
-export function WalletConnect({ C, acc, mono, body, disp, chainId }: Props) {
+export function WalletConnect({ acc, chainId }: Props) {
   const { connect, isConnected, loading: connecting } = useWeb3AuthConnect();
   const { disconnect } = useWeb3AuthDisconnect();
   const { userInfo } = useWeb3AuthUser();
   const { address, connector } = useConnection();
-  // only query once the chain is registered with wagmi (see LiveDemo note)
   const chainReady = useChains().some((c) => c.id === chainId);
   const { data: balance } = useBalance({
     address,
@@ -37,7 +31,6 @@ export function WalletConnect({ C, acc, mono, body, disp, chainId }: Props) {
   const [menu, setMenu] = useState(false);
   const wrapRef = useRef<HTMLSpanElement>(null);
 
-  // close the connected menu on Escape + outside click
   useEffect(() => {
     if (!menu) return;
     const onKey = (e: KeyboardEvent) => {
@@ -68,138 +61,60 @@ export function WalletConnect({ C, acc, mono, body, disp, chainId }: Props) {
     disconnect();
   };
 
-  // ── button ──────────────────────────────────────────────────────────
   const btn = connected ? (
     <button
-      className="ed-btn"
+      type="button"
       onClick={() => setMenu((m) => !m)}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        fontFamily: mono,
-        fontSize: 13,
-        fontWeight: 500,
-        padding: "10px 16px",
-        cursor: "pointer",
-        border: `1.5px solid ${acc}`,
-        background: "transparent",
-        color: C.ink,
-      }}
+      className="inline-flex cursor-pointer items-center gap-2 border-[1.5px] border-[var(--acc)] bg-transparent px-4 py-2.5 font-mono text-[13px] font-medium text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px"
     >
-      <span style={{ width: 9, height: 9, borderRadius: "50%", display: "inline-block", background: acc }} />
+      <span className="inline-block size-2.25 shrink-0 rounded-full bg-[var(--acc)]" />
       {label} · {trunc(address!)}
     </button>
   ) : (
     <button
-      className="ed-btn"
+      type="button"
       onClick={() => connect()}
       disabled={connecting}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        fontFamily: mono,
-        fontSize: 13,
-        fontWeight: 500,
-        padding: "10px 16px",
-        cursor: connecting ? "default" : "pointer",
-        border: `1.5px solid ${C.ink}`,
-        background: "transparent",
-        color: C.ink,
-        opacity: connecting ? 0.7 : 1,
-      }}
+      className="inline-flex cursor-pointer items-center gap-2 border-[1.5px] border-[var(--ink)] bg-transparent px-4 py-2.5 font-mono text-[13px] font-medium text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px disabled:cursor-default disabled:opacity-70"
     >
-      <Ic.wallet style={{ fontSize: 15 }} /> {connecting ? "Connecting…" : "Connect Wallet"}
+      <Ic.wallet className="text-[15px]" /> {connecting ? "Connecting…" : "Connect Wallet"}
     </button>
   );
 
-  // ── connected menu ──────────────────────────────────────────────────
   const menuEl = connected && menu && (
-    <div
-      style={{
-        position: "absolute",
-        top: "calc(100% + 8px)",
-        right: 0,
-        width: 288,
-        zIndex: 30,
-        background: C.card,
-        border: `1px solid ${C.line}`,
-        boxShadow: "0 18px 50px rgba(0,0,0,.18)",
-        animation: "wcRise .14s ease-out",
-      }}
-    >
-      <div style={{ padding: "16px 18px", borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: "50%",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: acc,
-              color: "#fff",
-              fontFamily: mono,
-              fontSize: 13,
-              fontWeight: 600,
-            }}
-          >
+    <div className="absolute top-[calc(100%+8px)] right-0 z-30 w-72 animate-wc-rise border border-[var(--line)] bg-[var(--card)] shadow-[0_18px_50px_rgba(0,0,0,.18)]">
+      <div className="border-b border-[var(--line)] px-[18px] py-4">
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[var(--acc)] font-mono text-[13px] font-semibold text-white">
             {label[0]?.toUpperCase()}
           </span>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontFamily: disp, fontSize: 15, fontWeight: 600, color: C.ink }}>{label}</div>
-            <div style={{ fontFamily: mono, fontSize: 11, color: C.faint }}>via {connector?.name ?? "Web3Auth"}</div>
+          <div className="min-w-0">
+            <div className="text-[15px] font-semibold text-[var(--ink)]">{label}</div>
+            <div className="font-mono text-[11px] text-[var(--faint)]">via {connector?.name ?? "Web3Auth"}</div>
           </div>
         </div>
-        <div style={{ marginTop: 13, display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-          <span style={{ fontFamily: mono, fontSize: 10.5, letterSpacing: "0.1em", color: C.faint }}>BALANCE</span>
-          <span style={{ fontFamily: mono, fontSize: 15, color: C.ink, fontVariantNumeric: "tabular-nums" }}>
-            {balanceText} <span style={{ color: C.dim, fontSize: 12 }}>{balance?.symbol ?? ""}</span>
+        <div className="mt-3.25 flex items-baseline justify-between">
+          <span className="font-mono text-[10.5px] tracking-widest text-[var(--faint)]">BALANCE</span>
+          <span className="font-mono text-[15px] tabular-nums text-[var(--ink)]">
+            {balanceText} <span className="text-xs text-[var(--dim)]">{balance?.symbol ?? ""}</span>
           </span>
         </div>
-        <div style={{ marginTop: 4, fontFamily: mono, fontSize: 11, color: C.dim, wordBreak: "break-all" }}>
-          {trunc(address!)}
-        </div>
+        <div className="mt-1 break-all font-mono text-[11px] text-[var(--dim)]">{trunc(address!)}</div>
       </div>
       <button
-        className="wc-menuitem"
+        type="button"
         onClick={() => {
           setMenu(false);
           connect();
         }}
-        style={{
-          display: "block",
-          width: "100%",
-          textAlign: "left",
-          padding: "12px 18px",
-          border: "none",
-          borderBottom: `1px solid ${C.line}`,
-          background: "transparent",
-          cursor: "pointer",
-          fontFamily: body,
-          fontSize: 13.5,
-          color: C.ink,
-        }}
+        className="block w-full cursor-pointer border-0 border-b border-[var(--line)] bg-transparent px-[18px] py-3 text-left text-[13.5px] text-[var(--ink)] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_8%,transparent)]"
       >
         Switch account
       </button>
       <button
-        className="wc-menuitem"
+        type="button"
         onClick={disconnectAll}
-        style={{
-          display: "block",
-          width: "100%",
-          textAlign: "left",
-          padding: "12px 18px",
-          border: "none",
-          background: "transparent",
-          cursor: "pointer",
-          fontFamily: body,
-          fontSize: 13.5,
-          color: acc,
-        }}
+        className="block w-full cursor-pointer border-0 bg-transparent px-[18px] py-3 text-left text-[13.5px] text-[var(--acc)] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_8%,transparent)]"
       >
         Disconnect
       </button>
@@ -207,7 +122,7 @@ export function WalletConnect({ C, acc, mono, body, disp, chainId }: Props) {
   );
 
   return (
-    <span ref={wrapRef} style={{ position: "relative", display: "inline-flex" }}>
+    <span ref={wrapRef} className="relative inline-flex">
       {btn}
       {menuEl}
     </span>
