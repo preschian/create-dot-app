@@ -14,7 +14,7 @@ import {
 } from "wagmi";
 import { useWeb3AuthConnect } from "@web3auth/modal/react";
 import { type BaseError } from "viem";
-import { type NetworkInfo, TESTNET, rpcHost, explorerTxUrl } from "./networks";
+import { type NetworkInfo, TESTNET, explorerTxUrl } from "./networks";
 import { CLI } from "./data";
 import { Ic, LiveDot } from "./icons";
 import {
@@ -135,7 +135,7 @@ export function LiveDemo({ acc, net, onSwitch }: Props) {
             className={`inline-flex items-center gap-2 font-mono text-[11.5px] ${reconnecting ? "text-[var(--faint)]" : "text-[var(--dim)]"}`}
           >
             <LiveDot color={reconnecting ? "var(--faint)" : net.color} />
-            {reconnecting ? "connecting…" : "connected"} · {rpcHost(net.rpc)}
+            {reconnecting ? "connecting…" : "connected"}
           </span>
         </div>
 
