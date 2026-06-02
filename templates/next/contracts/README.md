@@ -25,9 +25,9 @@ npx hardhat vars set PRIVATE_KEY
 ## Scripts
 
 ```bash
-npm run compile   # compile Solidity and export ABI to ../lib/contracts/
+npm run compile   # compile Solidity and export ABIs to ../lib/contracts/
 npm test          # run tests on the built-in Hardhat network
-npm run deploy    # deploy Flipper via Ignition to Polkadot Hub TestNet
+npm run deploy    # deploy Flipper + Remark via Ignition to Polkadot Hub TestNet
 ```
 
 Deploy requires `PRIVATE_KEY` to be set and the account funded with test PAS.
@@ -38,15 +38,17 @@ After deployment:
 
 ```bash
 npx hardhat verify --network polkadotTestnet <FLIPPER_ADDRESS> false
+npx hardhat verify --network polkadotTestnet <REMARK_ADDRESS>
 ```
 
-Copy the deployed testnet address into [`../lib/contracts/addresses.ts`](../lib/contracts/addresses.ts) (mainnet and Kusama Hub can stay unset).
+Copy the deployed testnet addresses into [`../lib/contracts/addresses.ts`](../lib/contracts/addresses.ts) (mainnet and Kusama Hub can stay unset).
 
 ## Layout
 
 | Path | Purpose |
 | --- | --- |
-| `contracts/Flipper.sol` | Boolean flipper — powers `flipper.flip()` in the welcome demo |
-| `ignition/modules/` | Ignition deployment modules |
+| `contracts/Flipper.sol` | Boolean flipper — `flipper.flip()` in the welcome demo |
+| `contracts/Remark.sol` | On-chain remark — `system.remark()` in the welcome demo |
+| `ignition/modules/DemoModule.ts` | Deploys both contracts |
 | `test/` | Contract tests |
 | `hardhat.config.ts` | Networks, compiler, Blockscout verification |

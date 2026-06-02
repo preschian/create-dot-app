@@ -2,8 +2,8 @@
 
 // Live demo of read + write paths against the selected Polkadot Hub chain.
 //   • Block watcher — new heads via wagmi useBlock
-//   • flipper.flip() — contract call after deploy
-import React, { useEffect } from "react";
+//   • flipper.flip() / system.remark() — contract calls (addresses in lib/contracts/addresses.ts)
+import React, { useEffect, useState } from "react";
 import {
   useBlock,
   useChains,
@@ -16,8 +16,14 @@ import { useWeb3AuthConnect } from "@web3auth/modal/react";
 import { type BaseError } from "viem";
 import type { Tokens } from "./theme";
 import { type NetworkInfo, TESTNET, rpcHost, explorerTxUrl } from "./networks";
+import { CLI } from "./data";
 import { Ic, LiveDot } from "./icons";
-import { flipperAbi, flipperAddressForChain } from "../../lib/contracts";
+import {
+  flipperAbi,
+  flipperAddressForChain,
+  remarkAbi,
+  remarkAddressForChain,
+} from "../../lib/contracts";
 
 interface Props {
   C: Tokens;
@@ -29,8 +35,11 @@ interface Props {
   onSwitch: (chainId: number) => void;
 }
 
+type ActionKey = "flip" | "remark";
+
 const STEPS = ["Ready", "Broadcast", "InBlock", "Finalized"];
 const trunc = (a: string) => `${a.slice(0, 8)}…${a.slice(-4)}`;
+const REMARK_MESSAGE = `gm from ${CLI}`;
 
 export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
   const chainReady = useChains().some((c) => c.id === net.chainId);
@@ -49,6 +58,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
   const { address } = useConnection();
 
   const flipperAddress = flipperAddressForChain(net.chainId);
+  const remarkAddress = remarkAddressForChain(net.chainId);
 
   const { data: flipValue, refetch: refetchFlip } = useReadContract({
     address: flipperAddress,
@@ -63,6 +73,16 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
     hash: txHash,
   });
 
+  const ACTIONS = {
+    flip: { key: "flip" as ActionKey, tab: "flipper.flip", title: "Call the flipper contract", cta: "Call contract" },
+    remark: { key: "remark" as ActionKey, tab: "system.remark", title: "Submit a sample extrinsic", cta: "Send extrinsic" },
+  };
+  const [actionKey, setActionKey] = useState<ActionKey>("remark");
+  const action = ACTIONS[actionKey];
+
+  const contractAddress = actionKey === "flip" ? flipperAddress : remarkAddress;
+  const actionBlocked = !contractAddress;
+  const actionLabel = actionKey === "flip" ? "flipper.flip" : "system.remark";
   const isTestnet = net.chainId === TESTNET.chainId;
 
   useEffect(() => {
@@ -70,27 +90,41 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
   }, [net.chainId, reset]);
 
   useEffect(() => {
-    if (isConfirmed) {
+    if (isConfirmed && actionKey === "flip") {
       void refetchFlip();
     }
-  }, [isConfirmed, refetchFlip]);
+  }, [isConfirmed, actionKey, refetchFlip]);
 
   const stage = isConfirmed ? 3 : txHash ? 2 : isPending ? 1 : -1;
   const pending = isPending || (!!txHash && isConfirming && !isConfirmed);
 
   const submit = () => {
-    if (pending || !flipperAddress) return;
+    if (pending || actionBlocked) return;
     if (!isConnected || !address) {
       connect();
       return;
     }
     reset();
-    writeContract({
-      address: flipperAddress,
-      abi: flipperAbi,
-      functionName: "flip",
-      chainId: net.chainId,
-    });
+
+    if (actionKey === "flip" && flipperAddress) {
+      writeContract({
+        address: flipperAddress,
+        abi: flipperAbi,
+        functionName: "flip",
+        chainId: net.chainId,
+      });
+      return;
+    }
+
+    if (actionKey === "remark" && remarkAddress) {
+      writeContract({
+        address: remarkAddress,
+        abi: remarkAbi,
+        functionName: "remark",
+        args: [REMARK_MESSAGE],
+        chainId: net.chainId,
+      });
+    }
   };
 
   const cell: React.CSSProperties = { padding: "26px 30px" };
@@ -101,6 +135,8 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
     letterSpacing: "0.12em",
     color: C.faint,
   };
+
+  const missingContractName = actionKey === "flip" ? "flipper" : "remark";
 
   return (
     <div
@@ -183,25 +219,49 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
             marginTop: 14,
             display: "inline-flex",
             alignSelf: "flex-start",
-            fontFamily: mono,
-            fontSize: 11.5,
-            fontWeight: 600,
-            padding: "6px 12px",
             border: `1px solid ${C.line}`,
-            color: C.paper,
-            background: acc,
+            padding: 2,
+            gap: 2,
           }}
         >
-          flipper.flip()
+          {Object.values(ACTIONS).map((a) => {
+            const on = a.key === actionKey;
+            return (
+              <button
+                key={a.key}
+                onClick={() => {
+                  if (!pending) {
+                    setActionKey(a.key);
+                    reset();
+                  }
+                }}
+                style={{
+                  fontFamily: mono,
+                  fontSize: 11.5,
+                  fontWeight: 600,
+                  padding: "6px 12px",
+                  cursor: pending ? "default" : "pointer",
+                  border: "none",
+                  background: on ? acc : "transparent",
+                  color: on ? C.paper : C.dim,
+                  opacity: pending && !on ? 0.5 : 1,
+                  transition: "background .14s,color .14s",
+                }}
+              >
+                {a.tab}
+                {a.key === "flip" ? "()" : ""}
+              </button>
+            );
+          })}
         </div>
 
         <div style={{ minHeight: 130 }}>
-          {!flipperAddress ? (
+          {actionBlocked ? (
             <div style={{ marginTop: 12, border: `1px dashed ${C.line}`, padding: "14px 16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                 <span style={{ width: 7, height: 7, borderRadius: "50%", background: C.faint, flex: "0 0 auto" }} />
                 <div style={{ fontFamily: disp, fontSize: 17, fontWeight: 600, letterSpacing: "-0.01em", color: C.ink }}>
-                  No flipper contract on {net.chain}
+                  No {missingContractName} contract on {net.chain}
                 </div>
               </div>
               <p style={{ fontFamily: body, fontSize: 13, lineHeight: 1.5, color: C.dim, margin: "6px 0 0" }}>
@@ -209,8 +269,8 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                 <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>
                   cd contracts && npm run deploy
                 </span>{" "}
-                then paste the address into{" "}
-                <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>lib/contracts/addresses.ts</span> (testnet only).
+                then set <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>{missingContractName}</span> in{" "}
+                <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>lib/contracts/addresses.ts</span> (testnet).
               </p>
               {!isTestnet && (
                 <button
@@ -245,11 +305,19 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
               >
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontFamily: disp, fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em", color: C.ink }}>
-                    Call the flipper contract
+                    {action.title}
                   </div>
                   <div style={{ fontFamily: mono, fontSize: 12.5, color: C.dim, marginTop: 6 }}>
-                    flipper.flip() · value:{" "}
-                    <span style={{ color: acc }}>{flipValue === undefined ? "…" : String(flipValue)}</span>
+                    {actionKey === "flip" ? (
+                      <>
+                        flipper.flip() · value:{" "}
+                        <span style={{ color: acc }}>{flipValue === undefined ? "…" : String(flipValue)}</span>
+                      </>
+                    ) : (
+                      <>
+                        system.remark(<span style={{ color: acc }}>&quot;{REMARK_MESSAGE}&quot;</span>)
+                      </>
+                    )}
                   </div>
                 </div>
                 <button
@@ -275,7 +343,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {pending ? "Submitting…" : stage === 3 ? "Flip again" : !isConnected ? "Connect to flip" : "Call contract"}
+                  {pending ? "Submitting…" : stage === 3 ? "Run again" : !isConnected ? "Connect to send" : action.cta}
                   {!pending && <Ic.arrow style={{ fontSize: 15 }} />}
                 </button>
               </div>
@@ -332,7 +400,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: acc, fontWeight: 600 }}>
                       <Ic.check style={{ fontSize: 13 }} /> Finalized
                     </span>
-                    <span style={{ color: C.faint }}>flipper.flip</span>
+                    <span style={{ color: C.faint }}>{actionLabel}</span>
                     <a
                       className="ed-res"
                       href={explorerTxUrl(net, txHash)}
@@ -350,7 +418,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                     )}
                   </div>
                 ) : (
-                  <div style={{ fontFamily: mono, fontSize: 12, color: C.faint }}>No transactions submitted yet.</div>
+                  <div style={{ fontFamily: mono, fontSize: 12, color: C.faint }}>No extrinsics submitted yet.</div>
                 )}
               </div>
             </>
