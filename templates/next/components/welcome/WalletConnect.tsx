@@ -103,16 +103,6 @@ export function WalletConnect({ acc, chainId }: Props) {
       </div>
       <button
         type="button"
-        onClick={() => {
-          setMenu(false);
-          connect();
-        }}
-        className="block w-full cursor-pointer border-0 border-b border-[var(--line)] bg-transparent px-[18px] py-3 text-left text-[13.5px] text-[var(--ink)] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_8%,transparent)]"
-      >
-        Switch account
-      </button>
-      <button
-        type="button"
         onClick={disconnectAll}
         className="block w-full cursor-pointer border-0 bg-transparent px-[18px] py-3 text-left text-[13.5px] text-[var(--acc)] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_8%,transparent)]"
       >
