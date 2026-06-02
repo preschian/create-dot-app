@@ -12,7 +12,6 @@ export const metadata = {
   description: "Web3Auth NextJS Quick Start",
 };
 
-// eslint-disable-next-line no-undef
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headersList = await headers();
   const web3authInitialState = cookieToWeb3AuthState(headersList.get('cookie'));

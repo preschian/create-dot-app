@@ -21,6 +21,8 @@ export function RestrictPolkadotChains({ onRestricted }: { onRestricted: () => v
       merged.some((chain) => !allowed.has(chain.chainId));
 
     if (hasExtraChains) {
+      // Web3Auth exposes mutable coreOptions; reassignment is required to drop dashboard chains.
+      // eslint-disable-next-line react-hooks/immutability -- intentional SDK config mutation
       web3Auth.coreOptions.chains = [...polkadotChains];
       onRestricted();
     }

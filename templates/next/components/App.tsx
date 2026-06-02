@@ -10,7 +10,7 @@ function App() {
   const { userInfo } = useWeb3AuthUser();
   const { address, connector } = useConnection();
 
-  function uiConsole(...args: any[]): void {
+  function uiConsole(...args: unknown[]): void {
     const el = document.querySelector("#console>p");
     if (el) {
       el.innerHTML = JSON.stringify(args || {}, null, 2);
