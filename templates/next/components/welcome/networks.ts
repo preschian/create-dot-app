@@ -13,6 +13,7 @@ export interface NetworkInfo {
   color: string;
   rpc: string;
   chain: string;
+  explorer: string;
 }
 
 const numericId = (chain: CustomChainConfig) => Number.parseInt(chain.chainId, 16);
@@ -27,6 +28,7 @@ export const NETWORKS: NetworkInfo[] = [
     color: "#56B4D3",
     rpc: polkadotHubTestnet.rpcTarget,
     chain: "Passet Hub",
+    explorer: polkadotHubTestnet.blockExplorerUrl ?? "",
   },
   {
     id: "dot-hub",
@@ -37,6 +39,7 @@ export const NETWORKS: NetworkInfo[] = [
     color: "#E6007A",
     rpc: polkadotHub.rpcTarget,
     chain: "Polkadot Asset Hub",
+    explorer: polkadotHub.blockExplorerUrl ?? "",
   },
   {
     id: "ksm-hub",
@@ -47,6 +50,7 @@ export const NETWORKS: NetworkInfo[] = [
     color: "#7D4DAE",
     rpc: kusamaHub.rpcTarget,
     chain: "Kusama Asset Hub",
+    explorer: kusamaHub.blockExplorerUrl ?? "",
   },
 ];
 
@@ -59,4 +63,10 @@ export function networkByChainId(chainId: number | undefined): NetworkInfo {
 /** Strip the protocol for the compact endpoint label used across the UI. */
 export function rpcHost(rpc: string): string {
   return rpc.replace(/^https?:\/\//, "").replace(/^wss?:\/\//, "").replace(/\/$/, "");
+}
+
+/** Block-explorer URL for a transaction hash, or undefined if the chain has no explorer. */
+export function explorerTxUrl(net: NetworkInfo, hash: string): string | undefined {
+  if (!net.explorer) return undefined;
+  return `${net.explorer.replace(/\/$/, "")}/tx/${hash}`;
 }

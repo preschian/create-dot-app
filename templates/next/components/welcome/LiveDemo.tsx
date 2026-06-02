@@ -9,9 +9,9 @@
 import React, { useEffect, useState } from "react";
 import { useBlock, useChains, useConnection, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
 import { useWeb3AuthConnect } from "@web3auth/modal/react";
-import { toHex, type BaseError } from "viem";
+import { type BaseError } from "viem";
 import type { Tokens } from "./theme";
-import { type NetworkInfo, TESTNET, rpcHost } from "./networks";
+import { type NetworkInfo, TESTNET, rpcHost, explorerTxUrl } from "./networks";
 import { CLI } from "./data";
 import { Ic, LiveDot } from "./icons";
 
@@ -82,7 +82,11 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
       return;
     }
     reset();
-    mutate({ to: address, value: 0n, data: toHex(`gm from ${CLI}`) });
+    // A 0-value self-transfer is the sample write — it proves connect -> sign ->
+    // broadcast -> finalize end to end. (Polkadot Hub's revive EVM rejects calldata
+    // sent to a non-contract address, so an on-chain text "remark" would need a
+    // deployed contract to call — see the flipper deploy story.)
+    mutate({ to: address, value: 0n });
   };
 
   const cell: React.CSSProperties = { padding: "26px 30px" };
@@ -349,7 +353,16 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                       <Ic.check style={{ fontSize: 13 }} /> Finalized
                     </span>
                     <span style={{ color: C.faint }}>system.remark</span>
-                    <span style={{ color: C.dim }}>{trunc(txHash)}</span>
+                    <a
+                      className="ed-res"
+                      href={explorerTxUrl(net, txHash)}
+                      target="_blank"
+                      rel="noreferrer"
+                      title="View transaction on the block explorer"
+                      style={{ color: C.dim, textDecoration: "none" }}
+                    >
+                      {trunc(txHash)}
+                    </a>
                     {receipt && (
                       <span style={{ color: C.faint, marginLeft: "auto" }}>
                         in #{Number(receipt.blockNumber).toLocaleString("en-US")}
