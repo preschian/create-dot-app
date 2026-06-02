@@ -267,7 +267,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
               <p style={{ fontFamily: body, fontSize: 13, lineHeight: 1.5, color: C.dim, margin: "6px 0 0" }}>
                 Run{" "}
                 <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>
-                  cd contracts && npm run deploy
+                  npm run deploy:contracts
                 </span>{" "}
                 then set <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>{missingContractName}</span> in{" "}
                 <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>lib/contracts/addresses.ts</span> (testnet).

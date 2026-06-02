@@ -11,18 +11,29 @@ The default network (`polkadotTestnet`) matches **Polkadot Hub TestNet** used by
 
 ## Setup
 
+From the **project root** (monorepo — `npm install` installs this workspace too):
+
 ```bash
-cd contracts
 npm install
 ```
 
-Store your deployer private key with Hardhat vars (recommended):
+Store your deployer private key with Hardhat vars (recommended). Run from the project root or from `contracts/`:
 
 ```bash
-npx hardhat vars set PRIVATE_KEY
+npm exec -w hardhat hardhat vars set PRIVATE_KEY
 ```
 
 ## Scripts
+
+From the project root:
+
+```bash
+npm run compile:contracts
+npm run test:contracts
+npm run deploy:contracts
+```
+
+Or from this directory (`contracts/`):
 
 ```bash
 npm run compile   # compile Solidity and export ABIs to ../lib/contracts/
@@ -37,8 +48,8 @@ Deploy requires `PRIVATE_KEY` to be set and the account funded with test PAS.
 After deployment:
 
 ```bash
-npx hardhat verify --network polkadotTestnet <FLIPPER_ADDRESS> false
-npx hardhat verify --network polkadotTestnet <REMARK_ADDRESS>
+npm exec -w hardhat hardhat verify --network polkadotTestnet <FLIPPER_ADDRESS> false
+npm exec -w hardhat hardhat verify --network polkadotTestnet <REMARK_ADDRESS>
 ```
 
 Copy the deployed testnet addresses into [`../lib/contracts/addresses.ts`](../lib/contracts/addresses.ts) (mainnet and Kusama Hub can stay unset).

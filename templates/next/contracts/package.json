@@ -1,5 +1,5 @@
 {
-  "name": "next-contracts",
+  "name": "hardhat",
   "version": "0.1.0",
   "private": true,
   "description": "Hardhat workspace for Polkadot Hub smart contracts",
