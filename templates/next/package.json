@@ -1,12 +1,18 @@
 {
-  "name": "nextjs-quick-start",
+  "name": "next-hub",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "contracts"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "compile:contracts": "npm run compile -w hardhat",
+    "test:contracts": "npm run test -w hardhat",
+    "deploy:contracts": "npm run deploy -w hardhat"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.14",

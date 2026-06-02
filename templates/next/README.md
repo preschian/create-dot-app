@@ -21,6 +21,8 @@ Router's server component architecture.
 
 ### 1. Install dependencies
 
+Installs the Next.js app and the Hardhat workspace under `contracts/` (npm workspaces).
+
 ```bash
 npm install
 ```
@@ -72,22 +74,24 @@ Providers and chain config:
 
 ## Smart contracts
 
-The [`contracts/`](contracts/) directory is a [Hardhat](https://docs.polkadot.com/smart-contracts/dev-environments/hardhat/) workspace for Polkadot Hub (same TestNet as the dapp). See [`contracts/README.md`](contracts/README.md).
+The [`contracts/`](contracts/) directory is a [Hardhat](https://docs.polkadot.com/smart-contracts/dev-environments/hardhat/) workspace (`hardhat`) in the same npm monorepo as the app. See [`contracts/README.md`](contracts/README.md).
 
 ```bash
-cd contracts
-npm install
-npm run compile
-npm test
+npm run compile:contracts
+npm run test:contracts
+npm run deploy:contracts   # requires PRIVATE_KEY — see contracts/README.md
 ```
 
 ## Scripts
 
 ```bash
-npm run dev     # start the dev server
-npm run build   # production build
-npm run start   # serve the production build
-npm run lint    # eslint (includes @typescript-eslint/no-deprecated for wagmi/viem APIs)
+npm run dev                # start the dev server
+npm run build              # production build
+npm run start              # serve the production build
+npm run lint               # eslint (includes @typescript-eslint/no-deprecated for wagmi/viem APIs)
+npm run compile:contracts  # compile Solidity and export ABIs to lib/contracts/
+npm run test:contracts     # Hardhat tests
+npm run deploy:contracts   # deploy Flipper + Remark to Polkadot Hub TestNet
 ```
 
 `npm run lint` fails on wagmi symbols marked `@deprecated` in their types (for example `useAccount`, `switchChain`, `writeContract` on hook results). Use `useConnection`, `mutate` from `useSwitchChain` / `useWriteContract`, and similar replacements from the [wagmi migration guide](https://wagmi.sh/react/guides/migrate-from-v2-to-v3).

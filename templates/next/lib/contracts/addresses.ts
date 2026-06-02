@@ -4,7 +4,7 @@ const id = (chain: { chainId: string }) => Number.parseInt(chain.chainId, 16)
 
 /**
  * Deployed demo contracts per Polkadot Hub EVM chain.
- * Set testnet addresses after `cd contracts && npm run deploy`.
+ * Set testnet addresses after `npm run deploy:contracts`.
  * Mainnet and Kusama Hub stay unset until you deploy there.
  */
 export const FLIPPER_ADDRESS_BY_CHAIN_ID: Record<number, `0x${string}` | undefined> = {
