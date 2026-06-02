@@ -102,24 +102,6 @@ npm install
 npm run dev
 ```
 
-## Privacy & Telemetry
-
-This CLI collects anonymous usage data to help improve the tool. The data includes:
-- Selected template type
-- CLI version
-
-**To disable telemetry**, set the environment variable:
-
-```bash
-export DISABLE_TELEMETRY=true
-```
-
-Or run with telemetry disabled:
-
-```bash
-DISABLE_TELEMETRY=true npx create-dot-app@latest
-```
-
 ## Development
 
 ### Building from Source

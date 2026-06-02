@@ -13,7 +13,6 @@ import {
 import fs from 'fs-extra'
 import color from 'picocolors'
 import { downloadTemplate } from './downloader.js'
-import { trackProjectCreated } from './posthog.js'
 import { pickTemplate } from './template-selector.js'
 
 interface CliArgs {
@@ -181,9 +180,6 @@ async function main() {
     }
 
     s.stop('Project created successfully!')
-
-    // Track successful project creation with template
-    await trackProjectCreated(template)
 
     log.info(`${color.green('✓')} Done! Next steps:
     ${color.cyan(`cd ${name}`)}

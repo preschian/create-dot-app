@@ -5,7 +5,6 @@ echo "🧪 Simulating GitHub Actions CLI E2E Tests"
 echo "=========================================="
 
 # Set environment variables like CI would
-export DISABLE_TELEMETRY=true
 export CI=true
 export FORCE_COLOR=0
 

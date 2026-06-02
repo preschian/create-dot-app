@@ -31,7 +31,6 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
     ...process.env,
     FORCE_COLOR: '0',
     CI: '1',
-    DISABLE_TELEMETRY: 'true',
   }
 
   const child = spawn(node, [cliPath, ...args], {
