@@ -59,10 +59,15 @@ function Spark(p: IconProps) {
 
 export const Ic = { copy: Copy, check: Check, arrow: Arrow, ext: Ext, wallet: Wallet, spark: Spark };
 
+const LIVE_DOT_SIZE = {
+  sm: "size-2",
+  md: "size-2.25",
+} as const;
+
 /** A small animated "live" dot for status rows. */
-export function LiveDot({ color }: { color: string }) {
+export function LiveDot({ color, size = "sm" }: { color: string; size?: keyof typeof LIVE_DOT_SIZE }) {
   return (
-    <span className="relative inline-flex size-2">
+    <span className={`relative inline-flex shrink-0 ${LIVE_DOT_SIZE[size]}`}>
       <span
         className="absolute inset-0 animate-dapp-ping rounded-full opacity-45"
         style={{ background: color }}

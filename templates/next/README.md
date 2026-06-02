@@ -63,10 +63,13 @@ welcome root. The pieces it pulls in live in [`components/welcome/`](components/
 | File | Responsibility |
 | --- | --- |
 | `App.tsx` | Top bar, hero, features, side rail; owns theme + selected-network state |
-| `welcome/LiveDemo.tsx` | Live block watcher + sample-transaction pipeline (`useBlock`, `useSendTransaction`) |
+| `welcome/LiveDemo.tsx` | Composes `BlockPanel` + `WritePanel` |
+| `welcome/BlockPanel.tsx` | Live block watcher (`useBlock`) |
+| `welcome/WritePanel.tsx` | Sample contract writes + transaction stepper |
 | `welcome/WalletConnect.tsx` | Connect Wallet button + connected menu (Web3Auth + `useBalance`) |
 | `welcome/NetworkSwitch.tsx` | Network selector (`useSwitchChain`) |
-| `welcome/{theme,networks,data,icons}` | Theme CSS variables (light/dark + accent), chain data, content, icons |
+| `welcome/HeaderControls.tsx` | Accent picker + theme toggle |
+| `welcome/{theme,networks,data,icons,format,useDismissible,PopoverPanel}` | Shared theme, data, UI primitives |
 | `app/globals.css` | Tailwind CSS 4 entry + welcome animations |
 
 Providers and chain config:

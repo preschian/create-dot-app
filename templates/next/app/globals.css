@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
+@custom-variant welcome-md (@media (max-width: 920px));
+@custom-variant welcome-sm (@media (max-width: 560px));
+
 @theme {
   --font-sans: var(--font-grotesk), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 
+  --welcome-header-inset: 1.25rem;
+
   --animate-dapp-ping: dappPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
   --animate-block-bump: blockBump 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-  --animate-ed-rise: edRise 0.14s ease-out;
-  --animate-wc-rise: wcRise 0.14s ease-out;
-  --animate-ns-rise: nsRise 0.14s ease-out;
+  --animate-popover-rise: popoverRise 0.14s ease-out;
   --animate-ns-spin: nsSpin 0.7s linear infinite;
 }
 
@@ -34,29 +37,7 @@
   }
 }
 
-@keyframes edRise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes wcRise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes nsRise {
+@keyframes popoverRise {
   from {
     opacity: 0;
     transform: translateY(8px);

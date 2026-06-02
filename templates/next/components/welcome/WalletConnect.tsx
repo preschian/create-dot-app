@@ -3,20 +3,20 @@
 // Connect Wallet control. The button + connected-state dropdown are styled per
 // the design; the actual connect/disconnect is driven by the real Web3Auth modal
 // and the connected account's balance comes from wagmi.
-import React, { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser } from "@web3auth/modal/react";
 import { useConnection, useBalance, useChains } from "wagmi";
 import { formatUnits } from "viem";
+import { formatAddress } from "./format";
 import { Ic } from "./icons";
+import { useDismissible } from "./useDismissible";
+import { PopoverPanel } from "./PopoverPanel";
 
 interface Props {
-  acc: string;
   chainId: number;
 }
 
-const trunc = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
-
-export function WalletConnect({ acc, chainId }: Props) {
+export function WalletConnect({ chainId }: Props) {
   const { connect, isConnected, loading: connecting } = useWeb3AuthConnect();
   const { disconnect } = useWeb3AuthDisconnect();
   const { userInfo } = useWeb3AuthUser();
@@ -30,22 +30,7 @@ export function WalletConnect({ acc, chainId }: Props) {
 
   const [menu, setMenu] = useState(false);
   const wrapRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (!menu) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenu(false);
-    };
-    const onDown = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setMenu(false);
-    };
-    window.addEventListener("keydown", onKey);
-    window.addEventListener("mousedown", onDown);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("mousedown", onDown);
-    };
-  }, [menu]);
+  useDismissible(menu, () => setMenu(false), wrapRef);
 
   const connected = isConnected && !!address;
   const label = userInfo?.name || userInfo?.email || "Account";
@@ -70,7 +55,7 @@ export function WalletConnect({ acc, chainId }: Props) {
       <span className="inline-block size-2 shrink-0 rounded-full bg-[var(--acc)] sm:size-2.25" />
       <span className="truncate">
         <span className="hidden sm:inline">{label} · </span>
-        {trunc(address!)}
+        {formatAddress(address!)}
       </span>
     </button>
   ) : (
@@ -87,7 +72,7 @@ export function WalletConnect({ acc, chainId }: Props) {
   );
 
   const menuEl = connected && menu && (
-    <div className="absolute top-[calc(100%+8px)] right-0 z-30 w-72 animate-wc-rise border border-[var(--line)] bg-[var(--card)] shadow-[0_18px_50px_rgba(0,0,0,.18)]">
+    <PopoverPanel className="right-0 z-30 w-72 welcome-sm:right-0">
       <div className="border-b border-[var(--line)] px-[18px] py-4">
         <div className="flex items-center gap-2.5">
           <span className="inline-flex size-[30px] shrink-0 items-center justify-center rounded-full bg-[var(--acc)] font-mono text-[13px] font-semibold text-white">
@@ -104,7 +89,7 @@ export function WalletConnect({ acc, chainId }: Props) {
             {balanceText} <span className="text-xs text-[var(--dim)]">{balance?.symbol ?? ""}</span>
           </span>
         </div>
-        <div className="mt-1 break-all font-mono text-[11px] text-[var(--dim)]">{trunc(address!)}</div>
+        <div className="mt-1 break-all font-mono text-[11px] text-[var(--dim)]">{formatAddress(address!)}</div>
       </div>
       <button
         type="button"
@@ -113,7 +98,7 @@ export function WalletConnect({ acc, chainId }: Props) {
       >
         Disconnect
       </button>
-    </div>
+    </PopoverPanel>
   );
 
   return (
