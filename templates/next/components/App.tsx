@@ -88,11 +88,13 @@ export default function App() {
         <LiveDemo net={net} onSwitch={onSwitch} />
 
         <div className="grid welcome-md:grid-cols-1 lg:grid-cols-[1fr_340px]">
-          <div className="grid grid-cols-2 divide-x divide-y divide-[var(--line)] border-r border-[var(--line)] welcome-md:border-r-0 welcome-sm:grid-cols-1">
+          <div className="grid grid-cols-2 border-r border-[var(--line)] welcome-md:border-r-0 welcome-sm:grid-cols-1">
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className="p-6 px-7 transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_5%,transparent)]"
+                className={`p-6 px-7 transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_5%,transparent)] ${
+                  i % 2 === 0 ? "border-r border-[var(--line)] welcome-sm:border-r-0" : ""
+                } ${i < FEATURES.length - 2 ? "border-b border-[var(--line)]" : ""}`}
               >
                 <div className="flex items-baseline gap-2.5">
                   <span className="font-mono text-xs font-semibold text-[var(--acc)]">
