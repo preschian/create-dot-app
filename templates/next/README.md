@@ -37,6 +37,8 @@ Edit `.env.local` and set your Client ID:
 NEXT_PUBLIC_WEB3AUTH_CLIENT_ID=YOUR_CLIENT_ID
 ```
 
+After deploying the flipper on testnet, set its address in [`lib/contracts/addresses.ts`](lib/contracts/addresses.ts).
+
 > `.env.example` ships a demo Sapphire Devnet Client ID for quick local testing.
 > Use **Sapphire Devnet** (the default) for local development — Sapphire Mainnet does
 > not allow localhost.

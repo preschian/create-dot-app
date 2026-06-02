@@ -5,9 +5,9 @@
   "description": "Hardhat workspace for Polkadot Hub smart contracts",
   "license": "MIT",
   "scripts": {
-    "compile": "hardhat compile",
+    "compile": "hardhat compile && node scripts/export-abi.mjs",
     "test": "hardhat test",
-    "deploy": "hardhat ignition deploy ./ignition/modules/LockModule.ts --network polkadotTestnet"
+    "deploy": "hardhat ignition deploy ./ignition/modules/FlipperModule.ts --network polkadotTestnet"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",

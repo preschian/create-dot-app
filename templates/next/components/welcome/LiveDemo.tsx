@@ -1,19 +1,23 @@
 "use client";
 
-// Live, working demo of the dapp's read + write paths against the selected chain.
-//   • Block watcher  — subscribes to new heads (wagmi useBlock), ticks the height.
-//   • Sample extrinsic — sends a real on-chain transaction and runs it through the
-//     Ready -> Broadcast -> InBlock -> Finalized lifecycle from the receipt.
-// The ink! flipper action shows the design's empty state: the starter ships no
-// deployed contract yet, so `npm run deploy` is the next step.
-import React, { useEffect, useState } from "react";
-import { useBlock, useChains, useConnection, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+// Live demo of read + write paths against the selected Polkadot Hub chain.
+//   • Block watcher — new heads via wagmi useBlock
+//   • flipper.flip() — contract call after deploy
+import React, { useEffect } from "react";
+import {
+  useBlock,
+  useChains,
+  useConnection,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { useWeb3AuthConnect } from "@web3auth/modal/react";
 import { type BaseError } from "viem";
 import type { Tokens } from "./theme";
 import { type NetworkInfo, TESTNET, rpcHost, explorerTxUrl } from "./networks";
-import { CLI } from "./data";
 import { Ic, LiveDot } from "./icons";
+import { flipperAbi, flipperAddressForChain } from "../../lib/contracts";
 
 interface Props {
   C: Tokens;
@@ -25,16 +29,10 @@ interface Props {
   onSwitch: (chainId: number) => void;
 }
 
-type ActionKey = "flip" | "remark";
-
 const STEPS = ["Ready", "Broadcast", "InBlock", "Finalized"];
 const trunc = (a: string) => `${a.slice(0, 8)}…${a.slice(-4)}`;
 
 export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
-  // ── block subscription (real new-heads stream) ───────────────────────
-  // Web3Auth registers the wagmi chains asynchronously after init, so gate the
-  // read on whether the selected chain is actually configured yet — otherwise
-  // wagmi throws ChainNotConfiguredError during the pre-init render window.
   const chainReady = useChains().some((c) => c.id === net.chainId);
   const { data: head } = useBlock({
     chainId: chainReady ? net.chainId : undefined,
@@ -46,47 +44,53 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
   const reconnecting = !chainReady || block === null;
   const finalized = block !== null ? block - 3n : null;
 
-  // ── write path ───────────────────────────────────────────────────────
   const { isConnected } = useWeb3AuthConnect();
   const { connect } = useWeb3AuthConnect();
   const { address } = useConnection();
-  const { data: txHash, error: txError, isPending, mutate, reset } = useSendTransaction();
+
+  const flipperAddress = flipperAddressForChain(net.chainId);
+
+  const { data: flipValue, refetch: refetchFlip } = useReadContract({
+    address: flipperAddress,
+    abi: flipperAbi,
+    functionName: "get",
+    chainId: net.chainId,
+    query: { enabled: Boolean(flipperAddress && chainReady) },
+  });
+
+  const { writeContract, data: txHash, error: txError, isPending, reset } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
   });
 
-  const ACTIONS = {
-    flip: { key: "flip" as ActionKey, tab: "flipper.flip", title: "Call the flipper contract", cta: "Call contract" },
-    remark: { key: "remark" as ActionKey, tab: "system.remark", title: "Submit a sample extrinsic", cta: "Send extrinsic" },
-  };
-  const [actionKey, setActionKey] = useState<ActionKey>("remark");
-  const action = ACTIONS[actionKey];
-
-  // No ink! contract ships with the starter yet, so flipper.flip() always shows
-  // the deploy-first empty state. system.remark sends a real transaction.
-  const flipBlocked = actionKey === "flip";
   const isTestnet = net.chainId === TESTNET.chainId;
 
-  // reset the tx lifecycle when the network changes
   useEffect(() => {
     reset();
   }, [net.chainId, reset]);
+
+  useEffect(() => {
+    if (isConfirmed) {
+      void refetchFlip();
+    }
+  }, [isConfirmed, refetchFlip]);
 
   const stage = isConfirmed ? 3 : txHash ? 2 : isPending ? 1 : -1;
   const pending = isPending || (!!txHash && isConfirming && !isConfirmed);
 
   const submit = () => {
-    if (pending) return;
+    if (pending || !flipperAddress) return;
     if (!isConnected || !address) {
       connect();
       return;
     }
     reset();
-    // A 0-value self-transfer is the sample write — it proves connect -> sign ->
-    // broadcast -> finalize end to end. (Polkadot Hub's revive EVM rejects calldata
-    // sent to a non-contract address, so an on-chain text "remark" would need a
-    // deployed contract to call — see the flipper deploy story.)
-    mutate({ to: address, value: 0n });
+    writeContract({
+      address: flipperAddress,
+      abi: flipperAbi,
+      functionName: "flip",
+      chainId: net.chainId,
+    });
   };
 
   const cell: React.CSSProperties = { padding: "26px 30px" };
@@ -103,7 +107,6 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
       style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: `1px solid ${C.line}` }}
       className="ed-live"
     >
-      {/* ── block watcher ── */}
       <div className="ed-cell ed-blockcell" style={{ ...cell, borderRight: `1px solid ${C.line}` }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={eyebrow}>NETWORK</span>
@@ -167,7 +170,6 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
         </div>
       </div>
 
-      {/* ── write path: sample extrinsic OR ink! contract call ── */}
       <div style={cell} className="ed-cell ed-tx">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={eyebrow}>TRY THE WRITE PATH</span>
@@ -176,51 +178,25 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
           </span>
         </div>
 
-        {/* action selector — contract call vs extrinsic */}
         <div
           style={{
             marginTop: 14,
             display: "inline-flex",
             alignSelf: "flex-start",
+            fontFamily: mono,
+            fontSize: 11.5,
+            fontWeight: 600,
+            padding: "6px 12px",
             border: `1px solid ${C.line}`,
-            padding: 2,
-            gap: 2,
+            color: C.paper,
+            background: acc,
           }}
         >
-          {Object.values(ACTIONS).map((a) => {
-            const on = a.key === actionKey;
-            return (
-              <button
-                key={a.key}
-                onClick={() => {
-                  if (!pending) {
-                    setActionKey(a.key);
-                    reset();
-                  }
-                }}
-                style={{
-                  fontFamily: mono,
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  padding: "6px 12px",
-                  cursor: pending ? "default" : "pointer",
-                  border: "none",
-                  background: on ? acc : "transparent",
-                  color: on ? C.paper : C.dim,
-                  opacity: pending && !on ? 0.5 : 1,
-                  transition: "background .14s,color .14s",
-                }}
-              >
-                {a.tab}
-                {a.key === "flip" ? "()" : ""}
-              </button>
-            );
-          })}
+          flipper.flip()
         </div>
 
         <div style={{ minHeight: 130 }}>
-          {flipBlocked ? (
-            /* ── empty state: no flipper deployed in the starter yet ── */
+          {!flipperAddress ? (
             <div style={{ marginTop: 12, border: `1px dashed ${C.line}`, padding: "14px 16px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                 <span style={{ width: 7, height: 7, borderRadius: "50%", background: C.faint, flex: "0 0 auto" }} />
@@ -229,7 +205,12 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                 </div>
               </div>
               <p style={{ fontFamily: body, fontSize: 13, lineHeight: 1.5, color: C.dim, margin: "6px 0 0" }}>
-                Run <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>npm run deploy</span> to publish the flipper here.
+                Run{" "}
+                <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>
+                  cd contracts && npm run deploy
+                </span>{" "}
+                then paste the address into{" "}
+                <span style={{ fontFamily: mono, fontSize: 12, color: acc }}>lib/contracts/addresses.ts</span> (testnet only).
               </p>
               {!isTestnet && (
                 <button
@@ -264,10 +245,11 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
               >
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontFamily: disp, fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em", color: C.ink }}>
-                    {action.title}
+                    Call the flipper contract
                   </div>
                   <div style={{ fontFamily: mono, fontSize: 12.5, color: C.dim, marginTop: 6 }}>
-                    system.remark(<span style={{ color: acc }}>&quot;gm from {CLI}&quot;</span>)
+                    flipper.flip() · value:{" "}
+                    <span style={{ color: acc }}>{flipValue === undefined ? "…" : String(flipValue)}</span>
                   </div>
                 </div>
                 <button
@@ -293,12 +275,11 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {pending ? "Submitting…" : stage === 3 ? "Run again" : !isConnected ? "Connect to send" : action.cta}
+                  {pending ? "Submitting…" : stage === 3 ? "Flip again" : !isConnected ? "Connect to flip" : "Call contract"}
                   {!pending && <Ic.arrow style={{ fontSize: 15 }} />}
                 </button>
               </div>
 
-              {/* status pipeline */}
               <div style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 0 }}>
                 {STEPS.map((labelText, i) => {
                   const active = stage >= i;
@@ -341,7 +322,6 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                 })}
               </div>
 
-              {/* mini log — latest result / error only, keeps the cell compact */}
               <div style={{ marginTop: 14, minHeight: 22, display: "flex", flexDirection: "column", gap: 6 }}>
                 {txError ? (
                   <div style={{ fontFamily: mono, fontSize: 12, color: acc }}>
@@ -352,7 +332,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: acc, fontWeight: 600 }}>
                       <Ic.check style={{ fontSize: 13 }} /> Finalized
                     </span>
-                    <span style={{ color: C.faint }}>system.remark</span>
+                    <span style={{ color: C.faint }}>flipper.flip</span>
                     <a
                       className="ed-res"
                       href={explorerTxUrl(net, txHash)}
@@ -370,7 +350,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
                     )}
                   </div>
                 ) : (
-                  <div style={{ fontFamily: mono, fontSize: 12, color: C.faint }}>No extrinsics submitted yet.</div>
+                  <div style={{ fontFamily: mono, fontSize: 12, color: C.faint }}>No transactions submitted yet.</div>
                 )}
               </div>
             </>
