@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { useSwitchChain } from "wagmi";
 import { tokens, ACCENTS, DEFAULT_ACCENT, themeVars } from "./welcome/theme";
 import { NETWORKS, networkByChainId } from "./welcome/networks";
-import { FEATURES, RESOURCES, PROJECT, HEADLINE } from "./welcome/data";
+import { FEATURES, RESOURCES, PROJECT, HEADLINE, HERO_BLURB } from "./welcome/data";
 import { Ic } from "./welcome/icons";
 import { NetworkSwitch } from "./welcome/NetworkSwitch";
 import { WalletConnect } from "./welcome/WalletConnect";
@@ -115,8 +115,7 @@ export default function App() {
             {HEADLINE}
           </h1>
           <p className="m-0 pb-2.5 text-[16.5px] leading-snug text-[var(--dim)]">
-            <span className="font-medium text-[var(--ink)]">{PROJECT}</span> is a Polkadot-native starter with wallet
-            connection, type-safe pallet & contract hooks and deploy scripts, already wired together.
+            <span className="font-medium text-[var(--ink)]">{PROJECT}</span> {HERO_BLURB}
           </p>
         </section>
 
@@ -144,7 +143,7 @@ export default function App() {
             <div className="border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--acc)_10%,transparent)] p-6 px-7">
               <div className="font-mono text-[11px] font-semibold tracking-widest text-[var(--acc)]">START HERE</div>
               <div className="mt-2 text-[17px] leading-snug font-semibold">
-                Edit <span className="font-mono text-sm font-medium text-[var(--acc)]">src/App.tsx</span> and save. It
+                Edit <span className="font-mono text-sm font-medium text-[var(--acc)]">components/App.tsx</span> and save. It
                 reloads instantly.
               </div>
             </div>
