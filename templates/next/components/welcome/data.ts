@@ -25,8 +25,24 @@ export interface Resource {
 }
 
 export const RESOURCES: Resource[] = [
-  { label: "Documentation", meta: "Guides & API reference", href: "https://docs.polkadot.com/" },
-  { label: "Components", meta: "Wallet & contract UI kit", href: "https://wagmi.sh/" },
-  { label: "Examples", meta: "Mint, swap, governance", href: "https://github.com/Web3Auth/web3auth-examples" },
-  { label: "Discord", meta: "Ask & share with the community", href: "https://web3auth.io/community" },
+  {
+    label: "Documentation",
+    meta: "Smart contracts on Polkadot Hub",
+    href: "https://docs.polkadot.com/develop/smart-contracts/",
+  },
+  {
+    label: "Polkadot Hub",
+    meta: "Overview, assets & connectivity",
+    href: "https://docs.polkadot.com/reference/polkadot-hub/",
+  },
+  {
+    label: "Get started",
+    meta: "Hardhat, faucets & explorers",
+    href: "https://docs.polkadot.com/smart-contracts/get-started/",
+  },
+  {
+    label: "Discord",
+    meta: "Polkadot developer community",
+    href: "https://discord.gg/polkadot",
+  },
 ];
