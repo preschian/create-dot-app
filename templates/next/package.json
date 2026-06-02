@@ -1,0 +1,28 @@
+{
+  "name": "nextjs-quick-start",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.100.14",
+    "@web3auth/modal": "^10.16.0",
+    "next": "16.2.7",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "wagmi": "^3.6.16"
+  },
+  "devDependencies": {
+    "@types/elliptic": "^6.4.18",
+    "@types/node": "25.9.1",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.4.1",
+    "eslint-config-next": "^16.2.7",
+    "typescript": "^6.0.3"
+  }
+}
