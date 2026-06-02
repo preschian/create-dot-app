@@ -33,3 +33,11 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# hardhat (contracts/)
+contracts/node_modules
+contracts/cache
+contracts/artifacts
+contracts/typechain-types
+contracts/coverage
+contracts/ignition/deployments

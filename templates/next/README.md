@@ -68,6 +68,17 @@ Providers and chain config:
 - [`components/provider.tsx`](components/provider.tsx) — Web3Auth + wagmi + React Query
 - [`lib/chains/polkadot.ts`](lib/chains/polkadot.ts) — the three Polkadot Hub chain configs
 
+## Smart contracts
+
+The [`contracts/`](contracts/) directory is a [Hardhat](https://docs.polkadot.com/smart-contracts/dev-environments/hardhat/) workspace for Polkadot Hub (same TestNet as the dapp). See [`contracts/README.md`](contracts/README.md).
+
+```bash
+cd contracts
+npm install
+npm run compile
+npm test
+```
+
 ## Scripts
 
 ```bash
