@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 const node = process.env.NODE ?? 'node'
 const cliPath = path.join(__dirname, '..', 'dist', 'index.mjs')
 
-/** Writer interface for sending input to the CLI (used by onData / handleSelection). */
+/** Writer interface for sending input to the CLI (used by onData). */
 interface CLIWriter {
   write(s: string): void
 }
@@ -90,16 +90,6 @@ async function spawnCLI(testDir: string, options: SpawnOptions): Promise<{ outpu
   })
 }
 
-async function handleSelection(writer: CLIWriter, navigateDown = 0): Promise<void> {
-  await wait(500)
-  for (let i = 0; i < navigateDown; i++) {
-    writer.write('\x1B[B')
-    await wait(200)
-  }
-  writer.write('\r')
-  await wait(300)
-}
-
 describe('cli E2E tests', () => {
   let testDir: string
   let originalCwd: string
@@ -122,22 +112,10 @@ describe('cli E2E tests', () => {
     const projectName = 'test-project-arg'
     const projectPath = path.join(testDir, projectName)
 
-    let categorySelectionHandled = false
-    let templateSelectionHandled = false
-
+    // Only the Next.js template is available, so no template prompt appears.
     const { output } = await spawnCLI(testDir, {
       args: [projectName],
-      timeout: 60000, // Increase timeout
-      onData: (data, cleanOutput, process) => {
-        if (cleanOutput.includes('Choose your project type') && !categorySelectionHandled) {
-          categorySelectionHandled = true
-          handleSelection(process, 0) // Select first category (Pallet Templates)
-        }
-        if (cleanOutput.includes('Pick a template') && !templateSelectionHandled) {
-          templateSelectionHandled = true
-          handleSelection(process, 0) // Use first template (index 0)
-        }
-      },
+      timeout: 60000,
     })
 
     // Verify output contains expected messages
@@ -154,7 +132,7 @@ describe('cli E2E tests', () => {
     expect(packageJson.name).toBe(projectName)
 
     // Verify essential files exist (Next.js App Router structure)
-    const essentialFiles = ['app/page.tsx', 'app/layout.tsx', 'next.config.ts', 'package.json']
+    const essentialFiles = ['app/page.tsx', 'app/layout.tsx', 'next.config.js', 'package.json', 'tsconfig.json']
     for (const file of essentialFiles) {
       const filePath = path.join(projectPath, file)
       const fileExists = await fs.access(filePath).then(() => true).catch(() => false)
@@ -167,29 +145,15 @@ describe('cli E2E tests', () => {
     const projectPath = path.join(testDir, projectName)
 
     let askedForName = false
-    let askedForCategory = false
-    let askedForTemplate = false
 
+    // The only interactive prompt is the project name; the template is auto-selected.
     const { output } = await spawnCLI(testDir, {
       args: [],
       onData: async (_, cleanOutput, process) => {
-        // Respond to project name prompt
         if (cleanOutput.includes('What is your project name?') && !askedForName) {
           askedForName = true
           await wait(100)
           process.write(`${projectName}\r`)
-        }
-
-        // Respond to category selection
-        if (cleanOutput.includes('Choose your project type') && !askedForCategory) {
-          askedForCategory = true
-          await handleSelection(process, 0)
-        }
-
-        // Respond to template selection
-        if (cleanOutput.includes('Pick a template') && !askedForTemplate) {
-          askedForTemplate = true
-          await handleSelection(process, 0)
         }
       },
     })
@@ -218,52 +182,10 @@ describe('cli E2E tests', () => {
     const { output } = await spawnCLI(testDir, {
       args: [projectName],
       expectExitCode: 1,
-      onData: (_, cleanOutput, process) => {
-        // Handle category selection if it appears
-        if (cleanOutput.includes('Choose your project type')) {
-          handleSelection(process, 0)
-        }
-        // Handle template selection if it appears
-        if (cleanOutput.includes('Pick a template')) {
-          handleSelection(process, 0)
-        }
-      },
     })
 
     // Should contain error message about existing directory
     expect(output.toLowerCase()).toContain('already exists')
-  })
-
-  it('can navigate template selection with arrow keys', async () => {
-    const projectName = 'template-nav-test'
-    const projectPath = path.join(testDir, projectName)
-
-    let categorySelectionHandled = false
-    let templateSelectionHandled = false
-
-    await spawnCLI(testDir, {
-      args: [projectName],
-      onData: (_, cleanOutput, process) => {
-        // Handle category selection (Pallet Templates)
-        if (cleanOutput.includes('Choose your project type') && !categorySelectionHandled) {
-          categorySelectionHandled = true
-          handleSelection(process, 0) // Select Pallet Templates
-        }
-        // Handle template selection with navigation to Vue + Dedot (7th option, index 6)
-        if (cleanOutput.includes('Pick a template') && !templateSelectionHandled) {
-          templateSelectionHandled = true
-          handleSelection(process, 6) // Navigate down 6 times to get Vue + Dedot
-        }
-      },
-    })
-
-    // Verify project was created
-    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
-    expect(projectExists).toBe(true)
-
-    // Verify it's a Vue project (should have App.vue instead of App.tsx)
-    const appVueExists = await fs.access(path.join(projectPath, 'src/App.vue')).then(() => true).catch(() => false)
-    expect(appVueExists, 'Should create Vue project with App.vue').toBe(true)
   })
 
   it('creates project with --template parameter', async () => {
@@ -271,14 +193,14 @@ describe('cli E2E tests', () => {
     const projectPath = path.join(testDir, projectName)
 
     const { output } = await spawnCLI(testDir, {
-      args: [projectName, '--template=nuxt-dedot'],
+      args: [projectName, '--template=next'],
       timeout: 60000,
     })
 
     // Verify output contains expected messages
     expect(output).toContain('create-dot-app')
     expect(output).toContain(`Using project name: ${projectName}`)
-    expect(output).toContain('Using template: nuxt-dedot')
+    expect(output).toContain('Using template: next')
     expect(output).toContain('Project created successfully!')
 
     // Verify project directory was created
@@ -290,9 +212,9 @@ describe('cli E2E tests', () => {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
     expect(packageJson.name).toBe(projectName)
 
-    // Verify it's a Nuxt project (should have nuxt.config.ts)
-    const nuxtConfigExists = await fs.access(path.join(projectPath, 'nuxt.config.ts')).then(() => true).catch(() => false)
-    expect(nuxtConfigExists, 'Should create Nuxt project with nuxt.config.ts').toBe(true)
+    // Verify it's a Next.js project
+    const nextConfigExists = await fs.access(path.join(projectPath, 'next.config.js')).then(() => true).catch(() => false)
+    expect(nextConfigExists, 'Should create Next.js project with next.config.js').toBe(true)
   })
 
   it('handles invalid --template parameter correctly', async () => {
@@ -304,13 +226,10 @@ describe('cli E2E tests', () => {
       timeout: 30000,
     })
 
-    // Should contain error message about invalid template
+    // Should contain error message about invalid template, listing the available one
     expect(output).toContain('Invalid template "invalid-template"')
     expect(output).toContain('Available templates:')
-    expect(output).toContain('next-dedot')
-    expect(output).toContain('nuxt-dedot')
-    expect(output).toContain('react-dedot')
-    expect(output).toContain('vue-dedot')
+    expect(output).toContain('next')
   })
 
   it('creates project with --template parameter only (prompts for name)', async () => {
@@ -320,7 +239,7 @@ describe('cli E2E tests', () => {
     let askedForName = false
 
     const { output } = await spawnCLI(testDir, {
-      args: ['--template=react-dedot'],
+      args: ['--template=next'],
       timeout: 60000,
       onData: async (_, cleanOutput, process) => {
         // Respond to project name prompt
@@ -334,7 +253,7 @@ describe('cli E2E tests', () => {
 
     // Verify output contains expected messages
     expect(output).toContain('create-dot-app')
-    expect(output).toContain('Using template: react-dedot')
+    expect(output).toContain('Using template: next')
     expect(output).toContain('Project created successfully!')
 
     // Verify project directory was created
@@ -346,17 +265,17 @@ describe('cli E2E tests', () => {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
     expect(packageJson.name).toBe(projectName)
 
-    // Verify it's a React project (should have App.tsx)
-    const appTsxExists = await fs.access(path.join(projectPath, 'src/App.tsx')).then(() => true).catch(() => false)
-    expect(appTsxExists, 'Should create React project with App.tsx').toBe(true)
+    // Verify it's a Next.js project (App Router)
+    const appPageExists = await fs.access(path.join(projectPath, 'app/page.tsx')).then(() => true).catch(() => false)
+    expect(appPageExists, 'Should create Next.js project with app/page.tsx').toBe(true)
   })
 
   it('creates project with custom name and template (non-interactive)', async () => {
-    const projectName = 'vue-dapp'
+    const projectName = 'next-dapp'
     const projectPath = path.join(testDir, projectName)
 
     const { output } = await spawnCLI(testDir, {
-      args: [projectName, '-t', 'vue-dedot'],
+      args: [projectName, '-t', 'next'],
       timeout: 60000,
     })
 
@@ -373,9 +292,9 @@ describe('cli E2E tests', () => {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
     expect(packageJson.name).toBe(projectName)
 
-    // Verify it's a Vue project (should have App.vue)
-    const appVueExists = await fs.access(path.join(projectPath, 'src/App.vue')).then(() => true).catch(() => false)
-    expect(appVueExists, 'Should create Vue project with App.vue').toBe(true)
+    // Verify it's a Next.js project (App Router)
+    const appPageExists = await fs.access(path.join(projectPath, 'app/page.tsx')).then(() => true).catch(() => false)
+    expect(appPageExists, 'Should create Next.js project with app/page.tsx').toBe(true)
   })
 
   it('displays help with --help flag', async () => {
@@ -434,7 +353,7 @@ describe('cli E2E tests', () => {
     const projectPath = path.join(testDir, projectName)
 
     await spawnCLI(testDir, {
-      args: ['--name', projectName, '-t', 'react-dedot'],
+      args: ['--name', projectName, '-t', 'next'],
       timeout: 60000,
     })
 
@@ -453,7 +372,7 @@ describe('cli E2E tests', () => {
     const projectPath = path.join(testDir, projectName)
 
     await spawnCLI(testDir, {
-      args: [`--name=${projectName}`, '--template=nuxt-papi'],
+      args: [`--name=${projectName}`, '--template=next'],
       timeout: 60000,
     })
 
@@ -466,8 +385,8 @@ describe('cli E2E tests', () => {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
     expect(packageJson.name).toBe(projectName)
 
-    // Verify it's a Nuxt project
-    const nuxtConfigExists = await fs.access(path.join(projectPath, 'nuxt.config.ts')).then(() => true).catch(() => false)
-    expect(nuxtConfigExists, 'Should create Nuxt project with nuxt.config.ts').toBe(true)
+    // Verify it's a Next.js project
+    const nextConfigExists = await fs.access(path.join(projectPath, 'next.config.js')).then(() => true).catch(() => false)
+    expect(nextConfigExists, 'Should create Next.js project with next.config.js').toBe(true)
   })
 })

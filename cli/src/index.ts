@@ -68,13 +68,7 @@ ${color.bold('Options:')}
   -v, --version              Show version number
 
 ${color.bold('Available Templates:')}
-
-${color.cyan('Pallet Templates:')}
-  next-dedot, next-papi, nuxt-dedot, nuxt-papi
-  react-dedot, react-papi, vue-dedot, vue-papi
-
-${color.cyan('Solidity Templates:')}
-  solidity-react, solidity-vue
+  next  ${color.dim('Next.js (Web3Auth + Wagmi)')}
 
 ${color.bold('Examples:')}
   ${color.dim('# Interactive mode')}
@@ -84,10 +78,10 @@ ${color.bold('Examples:')}
   npx create-dot-app@latest my-dapp
 
   ${color.dim('# Specify project name and template')}
-  npx create-dot-app@latest my-dapp --template react-papi
+  npx create-dot-app@latest my-dapp --template next
 
   ${color.dim('# Full non-interactive mode')}
-  npx create-dot-app@latest my-dapp -t react-papi
+  npx create-dot-app@latest my-dapp -t next
 
 ${color.bold('Learn more:')}
   ${color.underline('https://github.com/preschian/create-dot-app')}
@@ -144,16 +138,9 @@ async function main() {
     name = nameInput
   }
 
-  // Get template from command line args or prompt
-  let template: string
-
-  if (args.template) {
-    log.info(`Using template: ${args.template}`)
-    template = await pickTemplate(args.template)
-  }
-  else {
-    template = await pickTemplate()
-  }
+  // Resolve the template (only the Next.js template is currently available)
+  const template = await pickTemplate(args.template)
+  log.info(`Using template: ${template}`)
 
   const s = spinner()
   s.start('Creating your project...')
