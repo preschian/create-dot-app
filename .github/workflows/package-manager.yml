@@ -21,6 +21,8 @@ jobs:
         id: filter
         with:
           filters: |
+            next:
+              - 'templates/next/**'
             next-dedot:
               - 'templates/next-dedot/**'
             next-papi:
