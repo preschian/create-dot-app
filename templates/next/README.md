@@ -87,8 +87,10 @@ npm test
 npm run dev     # start the dev server
 npm run build   # production build
 npm run start   # serve the production build
-npm run lint    # eslint
+npm run lint    # eslint (includes @typescript-eslint/no-deprecated for wagmi/viem APIs)
 ```
+
+`npm run lint` fails on wagmi symbols marked `@deprecated` in their types (for example `useAccount`, `switchChain`, `writeContract` on hook results). Use `useConnection`, `mutate` from `useSwitchChain` / `useWriteContract`, and similar replacements from the [wagmi migration guide](https://wagmi.sh/react/guides/migrate-from-v2-to-v3).
 
 ## Resources
 

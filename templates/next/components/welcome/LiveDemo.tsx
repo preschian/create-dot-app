@@ -68,7 +68,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
     query: { enabled: Boolean(flipperAddress && chainReady) },
   });
 
-  const { writeContract, data: txHash, error: txError, isPending, reset } = useWriteContract();
+  const { mutate, data: txHash, error: txError, isPending, reset } = useWriteContract();
   const { isLoading: isConfirming, isSuccess: isConfirmed, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
   });
@@ -107,7 +107,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
     reset();
 
     if (actionKey === "flip" && flipperAddress) {
-      writeContract({
+      mutate({
         address: flipperAddress,
         abi: flipperAbi,
         functionName: "flip",
@@ -117,7 +117,7 @@ export function LiveDemo({ C, acc, mono, body, disp, net, onSwitch }: Props) {
     }
 
     if (actionKey === "remark" && remarkAddress) {
-      writeContract({
+      mutate({
         address: remarkAddress,
         abi: remarkAbi,
         functionName: "remark",
