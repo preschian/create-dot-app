@@ -176,7 +176,7 @@ export function LiveDemo({ acc, net, onSwitch }: Props) {
         <div className="flex items-center justify-between">
           <span className={eyebrow}>TRY THE WRITE PATH</span>
           <span className="font-mono text-[11.5px] text-[var(--faint)]">
-            signer: {isConnected && address ? trunc(address) : "//Alice"}
+            signer: {isConnected && address ? trunc(address) : "not connected"}
           </span>
         </div>
 
