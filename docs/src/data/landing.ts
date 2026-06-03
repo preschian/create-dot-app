@@ -22,14 +22,6 @@ export const SCAFFOLD_LINES: { t: ScaffoldKind; s: string }[] = [
   { t: 'next', s: '→  cd my-dapp && npm run dev' },
 ];
 
-// Stats strip.
-export const STATS = [
-  { n: '128k', label: 'weekly installs', meta: 'npm' },
-  { n: '9.4k', label: 'GitHub stars', meta: 'github' },
-  { n: '50+', label: 'parachains supported', meta: 'relay + paras' },
-  { n: '~90s', label: 'to first deploy', meta: 'cold start' },
-];
-
 // Quickstart — the four commands.
 export const STEPS = [
   { n: '01', cmd: 'npm create dot-app@latest', note: 'Scaffold a fresh project. Pick chains and a template in the prompt.' },

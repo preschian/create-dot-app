@@ -1,6 +1,9 @@
 ---
-// Stats strip — four headline numbers.
-import { STATS } from '../../data/landing';
+// Stats strip — npm installs + GitHub stars fetched at build time;
+// networks & contracts are real facts about templates/next.
+import { getStats } from '../../data/stats';
+
+const STATS = await getStats();
 ---
 
 <section class="lp-stats">
