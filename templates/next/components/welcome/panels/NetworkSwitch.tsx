@@ -88,7 +88,7 @@ export function NetworkSwitch({ net, onSwitch }: Props) {
                   </span>
                 </span>
                 <span className="inline-flex w-[18px] shrink-0 items-center justify-center">
-                  {active ? <Ic.check className="text-base text-[var(--acc)]" /> : null}
+                  {active ? <Ic.Check className="text-base text-[var(--acc)]" /> : null}
                 </span>
               </button>
             );

@@ -44,12 +44,3 @@ export const kusamaHub: CustomChainConfig = {
 };
 
 export const polkadotChains = [polkadotHubTestnet, polkadotHub, kusamaHub] as const;
-
-/** Wagmi numeric chain IDs — only these appear in the network list */
-export const POLKADOT_WAGMI_CHAIN_IDS: readonly number[] = polkadotChains.map((chain) =>
-  Number.parseInt(chain.chainId, 16),
-);
-
-export function isPolkadotWagmiChain(chainId: number): boolean {
-  return POLKADOT_WAGMI_CHAIN_IDS.includes(chainId);
-}

@@ -7,13 +7,13 @@ const id = (chain: { chainId: string }) => Number.parseInt(chain.chainId, 16)
  * Set testnet addresses after `npm run deploy:contracts`.
  * Mainnet and Kusama Hub stay unset until you deploy there.
  */
-export const FLIPPER_ADDRESS_BY_CHAIN_ID: Record<number, `0x${string}` | undefined> = {
+const FLIPPER_ADDRESS_BY_CHAIN_ID: Record<number, `0x${string}` | undefined> = {
   [id(polkadotHubTestnet)]: '0xC71323A95Eb9a1DCc545b7E3cfb0906cA014eb67',
   [id(polkadotHub)]: undefined,
   [id(kusamaHub)]: undefined,
 }
 
-export const REMARK_ADDRESS_BY_CHAIN_ID: Record<number, `0x${string}` | undefined> = {
+const REMARK_ADDRESS_BY_CHAIN_ID: Record<number, `0x${string}` | undefined> = {
   [id(polkadotHubTestnet)]: '0xF470c52bb35B13a90c0BFc05b164ECc07f405956',
   [id(polkadotHub)]: undefined,
   [id(kusamaHub)]: undefined,

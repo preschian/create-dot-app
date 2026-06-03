@@ -159,7 +159,7 @@ export function WritePanel({ net, onSwitch }: Props) {
                 className="group mt-2.5 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-mono text-[12.5px] font-semibold whitespace-nowrap text-[var(--acc)]"
               >
                 Switch to {TESTNET.chain}
-                <Ic.arrow className="text-sm transition-transform duration-150 group-hover:translate-x-[3px]" />
+                <Ic.Arrow className="text-sm transition-transform duration-150 group-hover:translate-x-[3px]" />
               </button>
             )}
           </div>
@@ -192,7 +192,7 @@ export function WritePanel({ net, onSwitch }: Props) {
                 }`}
               >
                 {pending ? "Submitting…" : stage === 3 ? "Run again" : !isConnected ? "Connect to send" : action.cta}
-                {!pending && <Ic.arrow className="text-[15px]" />}
+                {!pending && <Ic.Arrow className="text-[15px]" />}
               </button>
             </div>
 
@@ -234,7 +234,7 @@ export function WritePanel({ net, onSwitch }: Props) {
               ) : isConfirmed && txHash ? (
                 <div className="flex items-center gap-2.5 font-mono text-xs">
                   <span className="inline-flex items-center gap-1.25 font-semibold text-[var(--acc)]">
-                    <Ic.check className="text-[13px]" /> Finalized
+                    <Ic.Check className="text-[13px]" /> Finalized
                   </span>
                   <span className="text-[var(--faint)]">{actionLabel}</span>
                   <a

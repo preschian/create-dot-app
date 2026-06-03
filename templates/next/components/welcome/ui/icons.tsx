@@ -57,7 +57,7 @@ function Spark(p: IconProps) {
   );
 }
 
-export const Ic = { copy: Copy, check: Check, arrow: Arrow, ext: Ext, wallet: Wallet, spark: Spark };
+export const Ic = { Copy, Check, Arrow, Ext, Wallet, Spark };
 
 const LIVE_DOT_SIZE = {
   sm: "size-2",

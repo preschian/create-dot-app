@@ -8,7 +8,7 @@ import { PopoverPanel } from "@/components/welcome/ui/PopoverPanel";
 const iconBtn =
   "inline-flex size-[39px] shrink-0 cursor-pointer items-center justify-center border border-[var(--line)] bg-transparent transition-[border-color,color] duration-150 hover:border-[var(--acc)] hover:text-[var(--acc)]";
 
-export function AccentPicker({
+function AccentPicker({
   accent,
   onPick,
 }: {
@@ -41,6 +41,7 @@ export function AccentPicker({
                 setOpen(false);
               }}
               title={c}
+              aria-label={`Use accent ${c}`}
               className="size-6 shrink-0 cursor-pointer rounded-full border-0 p-0 transition-transform duration-150 hover:scale-110"
               style={{
                 background: c,
@@ -54,7 +55,7 @@ export function AccentPicker({
   );
 }
 
-export function ThemeToggle({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
+function ThemeToggle({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
   return (
     <button
       type="button"

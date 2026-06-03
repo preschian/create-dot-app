@@ -131,7 +131,7 @@ export default function App() {
                     <span className="block text-[15px] font-medium">{r.label}</span>
                     <span className="mt-px block font-mono text-[11px] text-[var(--faint)]">{r.meta}</span>
                   </span>
-                  <Ic.arrow className="text-[17px] text-[var(--faint)] transition-transform duration-150 group-hover:translate-x-[3px]" />
+                  <Ic.Arrow className="text-[17px] text-[var(--faint)] transition-transform duration-150 group-hover:translate-x-[3px]" />
                 </a>
               ))}
             </div>

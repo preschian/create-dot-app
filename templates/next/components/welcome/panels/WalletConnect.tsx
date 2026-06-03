@@ -65,7 +65,7 @@ export function WalletConnect({ chainId }: Props) {
       disabled={connecting}
       className="inline-flex shrink-0 cursor-pointer items-center gap-2 border-[1.5px] border-[var(--ink)] bg-transparent px-3 py-2 font-mono text-xs font-medium whitespace-nowrap text-[var(--ink)] transition-[transform,background,color] duration-150 hover:-translate-y-px disabled:cursor-default disabled:opacity-70 sm:px-4 sm:py-2.5 sm:text-[13px]"
     >
-      <Ic.wallet className="text-[15px]" />
+      <Ic.Wallet className="text-[15px]" />
       <span className="sm:hidden">{connecting ? "…" : "Connect"}</span>
       <span className="hidden sm:inline">{connecting ? "Connecting…" : "Connect Wallet"}</span>
     </button>
