@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://createdot.app/sitemap-index.xml
+Sitemap: https://www.createdot.app/sitemap-index.xml

@@ -18,7 +18,7 @@ function font(pkg, file) {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://createdot.app',
+  site: 'https://www.createdot.app',
   integrations: [
     sitemap(),
     // Renders the OpenGraph image for every page into dist/<page>.png at build time,
