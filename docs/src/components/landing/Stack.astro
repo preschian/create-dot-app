@@ -1,0 +1,35 @@
+---
+// The stack — five layers, UI down to the chain, with a foundation note.
+import { STACK } from '../../data/landing';
+---
+
+<section class="lp-section">
+  <div class="lp-sec-head">
+    <div class="lp-eyebrow">THE STACK</div>
+    <h2 class="lp-h2" style="max-width:18ch">Five layers, one install.</h2>
+    <p class="lp-sub">From the UI down to the chain: every layer typed, wired to the next, and yours to swap.</p>
+  </div>
+  <div class="lp-stack-layers">
+    {
+      STACK.map((s, i) => (
+        <div class="lp-layer">
+          <span class="lp-layer-n">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <div class="lp-layer-name">{s.layer}</div>
+            <div class="lp-layer-tag">{s.tag}</div>
+          </div>
+          <p class="lp-layer-desc">{s.desc}</p>
+          <div class="lp-layer-path">
+            <code>{s.path}</code>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <div class="lp-foundation">
+    <svg viewBox="0 0 24 24" fill="none" width="1em" height="1em" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span class="lp-foundation-text">settles onto <strong>Polkadot Hub</strong>: Passet testnet, mainnet or Kusama Hub</span>
+  </div>
+</section>

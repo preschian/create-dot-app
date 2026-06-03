@@ -1,0 +1,22 @@
+---
+// Quickstart — the four commands, 01–04.
+import { STEPS } from '../../data/landing';
+---
+
+<section class="lp-section">
+  <div class="lp-sec-head">
+    <div class="lp-eyebrow">FROM ZERO TO DEPLOYED</div>
+    <h2 class="lp-h2" style="max-width:18ch">Four commands. No setup detour.</h2>
+  </div>
+  <div class="lp-steps">
+    {
+      STEPS.map((s) => (
+        <div class="lp-step">
+          <span class="lp-step-n">{s.n}</span>
+          <code class="lp-step-cmd"><span class="lp-install-dollar">$ </span>{s.cmd}</code>
+          <span class="lp-step-note">{s.note}</span>
+        </div>
+      ))
+    }
+  </div>
+</section>

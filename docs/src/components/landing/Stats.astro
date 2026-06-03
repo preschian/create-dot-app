@@ -1,0 +1,19 @@
+---
+// Stats strip — npm installs + GitHub stars fetched at build time;
+// networks & contracts are real facts about templates/next.
+import { getStats } from '../../data/stats';
+
+const STATS = await getStats();
+---
+
+<section class="lp-stats">
+  {
+    STATS.map((s) => (
+      <div>
+        <div class="lp-stat-n">{s.n}</div>
+        <div class="lp-stat-label">{s.label}</div>
+        <div class="lp-stat-meta">{s.meta}</div>
+      </div>
+    ))
+  }
+</section>

@@ -1,0 +1,50 @@
+---
+import '../styles/landing.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'create·app · Ship your dapp today',
+  description = 'Polkadot-native dapp starter. One command scaffolds wallet connection, type-safe contract hooks, network switching and deploy scripts — typed end-to-end.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Apply persisted theme + accent before first paint to avoid a flash. -->
+    <script is:inline>
+      (function () {
+        try {
+          if (localStorage.getItem('lp-theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+          var accent = localStorage.getItem('lp-accent');
+          if (accent) document.documentElement.style.setProperty('--acc', accent);
+        } catch (e) {
+          /* storage unavailable */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
