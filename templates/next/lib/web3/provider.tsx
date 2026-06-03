@@ -9,8 +9,6 @@ import { polkadotChains, polkadotHubTestnet } from "./chains";
 import { RestrictPolkadotChains } from "./restrict-polkadot-chains";
 
 const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID || "";
-
-const queryClient = new QueryClient();
  
 const web3AuthContextConfig: Web3AuthContextConfig = {
     web3AuthOptions: {
@@ -25,6 +23,10 @@ const web3AuthContextConfig: Web3AuthContextConfig = {
 
 export default function Provider({ children, web3authInitialState }: 
   { children: React.ReactNode, web3authInitialState: IWeb3AuthState | undefined }) {
+  // Create the client inside the component (lazy state) so each SSR request
+  // gets its own — a module-level QueryClient is shared across concurrent
+  // server renders and can leak cache between requests.
+  const [queryClient] = useState(() => new QueryClient());
   const [wagmiKey, setWagmiKey] = useState(0);
   const onChainsRestricted = useCallback(() => setWagmiKey((key) => key + 1), []);
 
