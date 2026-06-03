@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-manager: [npm, bun]
+        package-manager: [npm, yarn, pnpm, bun]
         working-directory: ${{ fromJson(needs.generate-matrix.outputs.templates) }}
     
     steps:
@@ -42,6 +42,12 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      - name: Setup pnpm
+        if: matrix.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
       - name: Install dependencies with ${{ matrix.package-manager }}
         working-directory: ${{ matrix.working-directory }}

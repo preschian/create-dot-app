@@ -1,0 +1,26 @@
+# pnpm ignores the package.json "workspaces" field (used by npm/bun/yarn) and
+# reads its workspace layout from here instead. Keep this list in sync with it.
+packages:
+  - contracts
+
+# pnpm gates dependency build scripts (native addons and postinstall steps)
+# behind an allow-list, so a fresh install would otherwise stop and ask before
+# running them. npm, bun, and yarn run these by default; approving them here
+# keeps `pnpm install` non-interactive. `allowBuilds` is the pnpm v11+ form and
+# `onlyBuiltDependencies` is the v10 form, so both are listed to cover either.
+allowBuilds:
+  bufferutil: true
+  keccak: true
+  secp256k1: true
+  sharp: true
+  tiny-secp256k1: true
+  unrs-resolver: true
+  utf-8-validate: true
+onlyBuiltDependencies:
+  - bufferutil
+  - keccak
+  - secp256k1
+  - sharp
+  - tiny-secp256k1
+  - unrs-resolver
+  - utf-8-validate

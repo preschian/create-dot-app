@@ -1,16 +1,15 @@
 import { spawn } from 'node:child_process'
 import process from 'node:process'
 
-// Only npm and bun are offered for now. The template declares its Hardhat
-// setup via the package.json "workspaces" field, which pnpm and yarn don't
-// honor the same way (pnpm needs a pnpm-workspace.yaml), so installs break.
-// Re-add them here once the template supports their workspace configs.
-export const packageManagers = ['npm', 'bun'] as const
+// Package managers offered by the CLI. The Next.js template supports all four:
+// npm, bun, and yarn read the package.json "workspaces" field, while pnpm reads
+// the pnpm-workspace.yaml shipped alongside it.
+export const packageManagers = ['npm', 'yarn', 'pnpm', 'bun'] as const
 export type PackageManager = typeof packageManagers[number]
 
 /**
  * Detects the package manager used to invoke the CLI via npm_config_user_agent.
- * Falls back to 'npm' for anything we don't support (e.g. pnpm, yarn).
+ * Falls back to 'npm' for anything we don't recognize.
  */
 export function detectPackageManager(): PackageManager {
   const userAgent = process.env.npm_config_user_agent ?? ''

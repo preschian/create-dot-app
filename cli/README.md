@@ -11,7 +11,7 @@ A command-line interface (CLI) tool designed to streamline the development proce
 - **Solidity** smart contracts via an integrated Hardhat workspace (Polkadot Hub)
 
 ### 📦 Package Manager Support
-Compatible with npm and bun
+Compatible with npm, yarn, pnpm, and bun
 
 ### 📋 Planned Templates
 
@@ -116,7 +116,7 @@ For more details about testing, see [TESTING.md](./TESTING.md).
 
 The project uses GitHub Actions for continuous integration:
 - **CLI E2E Tests**: Automated tests for all templates and features
-- **Package Manager Tests**: Tests template installations with npm and bun
+- **Package Manager Tests**: Tests template installations with npm, yarn, pnpm, and bun
 - **Automated Releases**: Publishes to npm on version tags
 
 ## Contributing
