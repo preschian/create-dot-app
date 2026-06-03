@@ -1,5 +1,5 @@
 import React from "react";
-import Provider from "../components/provider";
+import Provider from "@/lib/web3/provider";
 import { cookieToWeb3AuthState } from "@web3auth/modal";
 import "./globals.css";
 

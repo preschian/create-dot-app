@@ -1,7 +1,7 @@
 // Display metadata for the three networks the starter ships with, keyed to the
-// real wagmi numeric chain IDs derived from lib/chains/polkadot.ts so the network
+// real wagmi numeric chain IDs derived from lib/web3/chains.ts so the network
 // switch, block watcher, and balance all line up with what wagmi/Web3Auth expose.
-import { polkadotHub, polkadotHubTestnet, kusamaHub } from "../../lib/chains/polkadot";
+import { polkadotHub, polkadotHubTestnet, kusamaHub } from "@/lib/web3/chains";
 import type { CustomChainConfig } from "@web3auth/modal";
 
 export interface NetworkInfo {
