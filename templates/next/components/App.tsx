@@ -36,18 +36,18 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen w-full bg-[var(--paper)] font-sans text-[var(--ink)]"
+      className="min-h-screen w-full bg-(--paper) font-sans text-(--ink)"
       style={themeVars(C, accent)}
     >
-      <div className="mx-auto min-h-screen max-w-[1280px] border-x border-[var(--line)]">
-        <header className="sticky top-0 z-10 overflow-visible border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_82%,transparent)] px-[var(--welcome-header-inset)] py-3.5 backdrop-blur-md sm:px-10 sm:py-5">
+      <div className="mx-auto min-h-screen max-w-[1280px] border-x border-(--line)">
+        <header className="sticky top-0 z-10 overflow-visible border-b border-(--line) bg-(color-mix(in_srgb,var(--paper)_82%,transparent)) px-(--welcome-header-inset) py-3.5 backdrop-blur-md sm:px-10 sm:py-5">
           <div className="flex flex-col gap-3 overflow-visible sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-baseline gap-3">
                 <span className="text-lg font-bold tracking-tight">
-                  create<span className="text-[var(--acc)]">·</span>app
+                  create<span className="text-(--acc)">·</span>app
                 </span>
-                <span className="font-mono text-[11.5px] text-[var(--faint)]">v1.0</span>
+                <span className="font-mono text-[11.5px] text-(--faint)">v1.0</span>
               </div>
               <div className="flex shrink-0 items-center gap-2 sm:hidden">
                 <HeaderUtilities
@@ -76,73 +76,73 @@ export default function App() {
           </div>
         </header>
 
-        <section className="grid items-end gap-12 border-b border-[var(--line)] px-10 pt-16 pb-11 welcome-md:grid-cols-1 welcome-sm:gap-6 welcome-sm:px-5 welcome-sm:py-9 lg:grid-cols-[1fr_320px]">
+        <section className="grid items-end gap-12 border-b border-(--line) px-10 pt-16 pb-11 welcome-md:grid-cols-1 welcome-sm:gap-6 welcome-sm:px-5 welcome-sm:py-9 lg:grid-cols-[1fr_320px]">
           <h1 className="m-0 max-w-[9ch] text-[84px] leading-[0.95] font-bold tracking-[-0.04em] welcome-md:text-[13vw]">
             {HEADLINE}
           </h1>
-          <p className="m-0 pb-2.5 text-[16.5px] leading-snug text-[var(--dim)]">
-            <span className="font-medium text-[var(--ink)]">{PROJECT}</span> {HERO_BLURB}
+          <p className="m-0 pb-2.5 text-[16.5px] leading-snug text-(--dim)">
+            <span className="font-medium text-(--ink)">{PROJECT}</span> {HERO_BLURB}
           </p>
         </section>
 
         <LiveDemo net={net} onSwitch={onSwitch} />
 
         <div className="grid welcome-md:grid-cols-1 lg:grid-cols-[1fr_340px]">
-          <div className="grid grid-cols-2 border-r border-[var(--line)] welcome-md:border-r-0 welcome-sm:grid-cols-1">
+          <div className="grid grid-cols-2 border-r border-(--line) welcome-md:border-r-0 welcome-sm:grid-cols-1">
             {FEATURES.map((f, i) => (
               <div
                 key={f.title}
-                className={`p-6 px-7 transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_5%,transparent)] ${
-                  i % 2 === 0 ? "border-r border-[var(--line)] welcome-sm:border-r-0" : ""
-                } ${i < FEATURES.length - 2 ? "border-b border-[var(--line)]" : ""}`}
+                className={`p-6 px-7 transition-[background] duration-150 hover:bg-(color-mix(in_srgb,var(--acc)_5%,transparent)) ${
+                  i % 2 === 0 ? "border-r border-(--line) welcome-sm:border-r-0" : ""
+                } ${i < FEATURES.length - 2 ? "border-b border-(--line)" : ""}`}
               >
                 <div className="flex items-baseline gap-2.5">
-                  <span className="font-mono text-xs font-semibold text-[var(--acc)]">
+                  <span className="font-mono text-xs font-semibold text-(--acc)">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="text-lg font-semibold tracking-tight">{f.title}</span>
                 </div>
-                <p className="mt-2 mb-0 text-[13.5px] leading-snug text-[var(--dim)]">{f.desc}</p>
+                <p className="mt-2 mb-0 text-[13.5px] leading-snug text-(--dim)">{f.desc}</p>
               </div>
             ))}
           </div>
 
-          <aside className="flex flex-col welcome-md:border-t welcome-md:border-[var(--line)]">
-            <div className="border-b border-[var(--line)] bg-[color-mix(in_srgb,var(--acc)_10%,transparent)] p-6 px-7">
-              <div className="font-mono text-[11px] font-semibold tracking-widest text-[var(--acc)]">START HERE</div>
+          <aside className="flex flex-col welcome-md:border-t welcome-md:border-(--line)">
+            <div className="border-b border-(--line) bg-(color-mix(in_srgb,var(--acc)_10%,transparent)) p-6 px-7">
+              <div className="font-mono text-[11px] font-semibold tracking-widest text-(--acc)">START HERE</div>
               <div className="mt-2 text-[17px] leading-snug font-semibold">
-                Edit <span className="font-mono text-sm font-medium text-[var(--acc)]">components/App.tsx</span> and save. It
+                Edit <span className="font-mono text-sm font-medium text-(--acc)">components/App.tsx</span> and save. It
                 reloads instantly.
               </div>
             </div>
             <div className="flex flex-1 flex-col gap-0.5 p-5 px-7">
-              <div className="mb-2 font-mono text-[11px] font-semibold tracking-widest text-[var(--faint)]">RESOURCES</div>
+              <div className="mb-2 font-mono text-[11px] font-semibold tracking-widest text-(--faint)">RESOURCES</div>
               {RESOURCES.map((r, i) => (
                 <a
                   key={r.label}
                   href={r.href}
                   target="_blank"
                   rel="noreferrer"
-                  className={`group flex items-center justify-between py-3 text-[var(--ink)] no-underline transition-colors duration-150 hover:text-[var(--acc)] ${
-                    i < RESOURCES.length - 1 ? "border-b border-[var(--line)]" : ""
+                  className={`group flex items-center justify-between py-3 text-(--ink) no-underline transition-colors duration-150 hover:text-(--acc) ${
+                    i < RESOURCES.length - 1 ? "border-b border-(--line)" : ""
                   }`}
                 >
                   <span>
                     <span className="block text-[15px] font-medium">{r.label}</span>
-                    <span className="mt-px block font-mono text-[11px] text-[var(--faint)]">{r.meta}</span>
+                    <span className="mt-px block font-mono text-[11px] text-(--faint)">{r.meta}</span>
                   </span>
-                  <Ic.Arrow className="text-[17px] text-[var(--faint)] transition-transform duration-150 group-hover:translate-x-[3px]" />
+                  <Ic.Arrow className="text-[17px] text-(--faint) transition-transform duration-150 group-hover:translate-x-[3px]" />
                 </a>
               ))}
             </div>
           </aside>
         </div>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] px-10 py-[18px] welcome-sm:px-5">
-          <span className="font-mono text-[11.5px] text-[var(--faint)]">
-            generated by <span className="text-[var(--dim)]">npm create dot-app@latest</span>
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-(--line) px-10 py-[18px] welcome-sm:px-5">
+          <span className="font-mono text-[11.5px] text-(--faint)">
+            generated by <span className="text-(--dim)">npm create dot-app@latest</span>
           </span>
-          <span className="font-mono text-[11.5px] text-[var(--faint)]">MIT · Polkadot-native</span>
+          <span className="font-mono text-[11.5px] text-(--faint)">MIT · Polkadot-native</span>
         </footer>
       </div>
     </div>

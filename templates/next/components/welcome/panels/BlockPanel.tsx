@@ -24,12 +24,12 @@ export function BlockPanel({ net }: Props) {
 
   return (
     <div
-      className={`border-r border-[var(--line)] ${LIVE_CELL} welcome-md:border-r-0 welcome-md:border-b`}
+      className={`border-r border-(--line) ${LIVE_CELL} welcome-md:border-r-0 welcome-md:border-b`}
     >
       <div className="flex items-center justify-between">
         <span className={EYEBROW}>NETWORK</span>
         <span
-          className={`inline-flex items-center gap-2 font-mono text-[11.5px] ${reconnecting ? "text-[var(--faint)]" : "text-[var(--dim)]"}`}
+          className={`inline-flex items-center gap-2 font-mono text-[11.5px] ${reconnecting ? "text-(--faint)" : "text-(--dim)"}`}
         >
           <LiveDot color={reconnecting ? "var(--faint)" : net.color} />
           {reconnecting ? "connecting…" : "connected"}
@@ -37,8 +37,8 @@ export function BlockPanel({ net }: Props) {
       </div>
 
       <div className="mt-[18px] flex items-baseline gap-2.5">
-        <span className="font-mono text-[15px] font-semibold text-[var(--acc)]">#</span>
-        <span className="inline-block font-mono text-[clamp(36px,5.2vw,52px)] leading-none font-semibold tracking-tight text-[var(--ink)] tabular-nums welcome-sm:text-[clamp(34px,11vw,52px)]">
+        <span className="font-mono text-[15px] font-semibold text-(--acc)">#</span>
+        <span className="inline-block font-mono text-[clamp(36px,5.2vw,52px)] leading-none font-semibold tracking-tight text-(--ink) tabular-nums welcome-sm:text-[clamp(34px,11vw,52px)]">
           {block !== null
             ? Number(block)
                 .toLocaleString("en-US")
@@ -51,7 +51,7 @@ export function BlockPanel({ net }: Props) {
             : "—"}
         </span>
       </div>
-      <div className="mt-2 font-mono text-xs text-[var(--faint)]">
+      <div className="mt-2 font-mono text-xs text-(--faint)">
         {hash ? `${hash.slice(0, 10)}…` : "0x…"} · ~3s block time
       </div>
 
@@ -62,8 +62,8 @@ export function BlockPanel({ net }: Props) {
           ["Token", net.token],
         ].map(([k, v]) => (
           <div key={k}>
-            <div className="font-mono text-[10.5px] tracking-widest text-[var(--faint)]">{k.toUpperCase()}</div>
-            <div className="mt-1 font-mono text-sm text-[var(--ink)]">{v}</div>
+            <div className="font-mono text-[10.5px] tracking-widest text-(--faint)">{k.toUpperCase()}</div>
+            <div className="mt-1 font-mono text-sm text-(--ink)">{v}</div>
           </div>
         ))}
       </div>
