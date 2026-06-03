@@ -10,9 +10,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "compile:contracts": "npm run compile -w hardhat",
-    "test:contracts": "npm run test -w hardhat",
-    "deploy:contracts": "npm run deploy -w hardhat"
+    "compile:contracts": "cd contracts && npm run compile",
+    "test:contracts": "cd contracts && npm run test",
+    "deploy:contracts": "cd contracts && npm run deploy"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.14",
@@ -20,6 +20,7 @@
     "next": "16.2.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "viem": "^2.52.0",
     "wagmi": "^3.6.16"
   },
   "devDependencies": {

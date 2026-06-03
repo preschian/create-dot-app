@@ -3,7 +3,15 @@
 # dependencies
 /node_modules
 /.pnp
-.pnp.js
+.pnp.*
+
+# yarn berry (node-modules linker still writes these)
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 
 # testing
 /coverage

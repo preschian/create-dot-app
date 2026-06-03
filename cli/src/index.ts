@@ -3,17 +3,20 @@ import path from 'node:path'
 import process from 'node:process'
 import {
   cancel,
+  confirm,
   intro,
   isCancel,
   log,
   outro,
+  select,
   spinner,
   text,
 } from '@clack/prompts'
 import fs from 'fs-extra'
 import color from 'picocolors'
 import { downloadTemplate } from './downloader.js'
-import { pickTemplate } from './template-selector.js'
+import { detectPackageManager, installDependencies, packageManagers } from './package-manager.js'
+import { pickTemplate, templateOptions } from './template-selector.js'
 
 interface CliArgs {
   projectName?: string
@@ -68,7 +71,7 @@ ${color.bold('Options:')}
   -v, --version              Show version number
 
 ${color.bold('Available Templates:')}
-  next  ${color.dim('Next.js (Web3Auth + Wagmi)')}
+${templateOptions.map(option => `  ${option.value}  ${color.dim(option.label)}`).join('\n')}
 
 ${color.bold('Examples:')}
   ${color.dim('# Interactive mode')}
@@ -86,6 +89,10 @@ ${color.bold('Examples:')}
 ${color.bold('Learn more:')}
   ${color.underline('https://github.com/preschian/create-dot-app')}
 `)
+}
+
+function isInteractive(): boolean {
+  return Boolean(process.stdout.isTTY) && !process.env.CI
 }
 
 async function getVersion(): Promise<string> {
@@ -166,13 +173,55 @@ async function main() {
       await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 })
     }
 
+    // Copy .env.example to .env.local so the project works out of the box
+    const envExamplePath = path.join(targetPath, '.env.example')
+    if (await fs.pathExists(envExamplePath)) {
+      await fs.copy(envExamplePath, path.join(targetPath, '.env.local'))
+    }
+
     s.stop('Project created successfully!')
 
-    log.info(`${color.green('✓')} Done! Next steps:
-    ${color.cyan(`cd ${name}`)}
-    ${color.cyan('npm install')} ${color.dim('(or yarn install / pnpm install / bun install / deno install)')}
-    ${color.cyan('npm run dev')} ${color.dim('(or yarn dev / pnpm dev / bun dev / deno task dev)')}
-    `)
+    // Let the developer pick a package manager and optionally install now.
+    // Skip prompting in non-interactive contexts (CI, piped stdin).
+    let pm = detectPackageManager()
+    let installed = false
+
+    if (isInteractive()) {
+      const pmChoice = await select({
+        message: 'Which package manager do you want to use?',
+        options: packageManagers.map(value => ({ value, label: value })),
+        initialValue: pm,
+      })
+
+      if (!isCancel(pmChoice)) {
+        pm = pmChoice
+
+        const shouldInstall = await confirm({
+          message: `Install dependencies with ${color.cyan(pm)} now?`,
+          initialValue: true,
+        })
+
+        if (!isCancel(shouldInstall) && shouldInstall) {
+          try {
+            log.step(`Installing dependencies with ${pm}...`)
+            await installDependencies(pm, targetPath)
+            installed = true
+          }
+          catch (installError) {
+            log.warn(`Could not install dependencies: ${installError}\n    Run "${pm} install" manually once you're in the project.`)
+          }
+        }
+      }
+    }
+
+    // Build the next-steps list, skipping install if we already ran it
+    const steps = [color.cyan(`cd ${name}`)]
+    if (!installed) {
+      steps.push(color.cyan(`${pm} install`))
+    }
+    steps.push(color.cyan(`${pm} run dev`))
+
+    log.info(`${color.green('✓')} Done! Next steps:\n    ${steps.join('\n    ')}\n    `)
 
     outro('Happy coding!')
   }

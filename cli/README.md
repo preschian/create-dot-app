@@ -11,7 +11,7 @@ A command-line interface (CLI) tool designed to streamline the development proce
 - **Solidity** smart contracts via an integrated Hardhat workspace (Polkadot Hub)
 
 ### 📦 Package Manager Support
-Compatible with npm, yarn, pnpm, bun, and deno
+Compatible with npm, yarn, pnpm, and bun
 
 ### 📋 Planned Templates
 
