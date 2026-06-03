@@ -33,7 +33,7 @@ export function NetworkSwitch({ net, onSwitch }: Props) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label="Switch network"
-        className="inline-flex min-w-0 cursor-pointer items-center gap-2 border border-[var(--line)] bg-transparent px-3 py-2 font-mono text-[12.5px] font-medium text-[var(--ink)] transition-[border-color,background] duration-150 hover:border-[var(--acc)] welcome-sm:w-full sm:gap-2.25 sm:py-2.25"
+        className="inline-flex min-w-0 cursor-pointer items-center gap-2 border border-(--line) bg-transparent px-3 py-2 font-mono text-[12.5px] font-medium text-(--ink) transition-[border-color,background] duration-150 hover:border-(--acc) welcome-sm:w-full sm:gap-2.25 sm:py-2.25"
       >
         <LiveDot color={net.color} size="md" />
         <span className="min-w-0 truncate sm:whitespace-nowrap">
@@ -53,8 +53,8 @@ export function NetworkSwitch({ net, onSwitch }: Props) {
 
       {open && (
         <PopoverPanel className="sm:left-auto sm:right-0 sm:w-[308px] sm:max-w-[308px]">
-          <div className="border-b border-[var(--line)] px-[18px] pt-[13px] pb-[11px]">
-            <div className="font-mono text-[10.5px] font-semibold tracking-[0.12em] text-[var(--faint)]">
+          <div className="border-b border-(--line) px-[18px] pt-[13px] pb-[11px]">
+            <div className="font-mono text-[10.5px] font-semibold tracking-[0.12em] text-(--faint)">
               SWITCH NETWORK
             </div>
           </div>
@@ -65,14 +65,14 @@ export function NetworkSwitch({ net, onSwitch }: Props) {
                 key={n.id}
                 type="button"
                 onClick={() => choose(n)}
-                className={`flex w-full cursor-pointer items-center gap-3 px-[18px] py-[13px] text-left transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--acc)_8%,transparent)] ${
-                  active ? "bg-[color-mix(in_srgb,var(--acc)_6%,transparent)]" : "bg-transparent"
-                } ${i < NETWORKS.length - 1 ? "border-b border-[var(--line)]" : ""}`}
+                className={`flex w-full cursor-pointer items-center gap-3 px-[18px] py-[13px] text-left transition-[background] duration-150 hover:bg-(color-mix(in_srgb,var(--acc)_8%,transparent)) ${
+                  active ? "bg-(color-mix(in_srgb,var(--acc)_6%,transparent))" : "bg-transparent"
+                } ${i < NETWORKS.length - 1 ? "border-b border-(--line)" : ""}`}
               >
                 <span className="size-2.5 shrink-0 rounded-full" style={{ background: n.color }} />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2">
-                    <span className="text-[14.5px] font-semibold text-[var(--ink)]">{n.name}</span>
+                    <span className="text-[14.5px] font-semibold text-(--ink)">{n.name}</span>
                     <span
                       className="rounded-[3px] border px-[5px] py-px font-mono text-[9px] font-semibold tracking-[0.08em]"
                       style={{
@@ -83,12 +83,12 @@ export function NetworkSwitch({ net, onSwitch }: Props) {
                       {n.tag}
                     </span>
                   </span>
-                  <span className="mt-[3px] block truncate font-mono text-[11px] text-[var(--faint)]">
+                  <span className="mt-[3px] block truncate font-mono text-[11px] text-(--faint)">
                     {rpcHost(n.rpc)}
                   </span>
                 </span>
                 <span className="inline-flex w-[18px] shrink-0 items-center justify-center">
-                  {active ? <Ic.Check className="text-base text-[var(--acc)]" /> : null}
+                  {active ? <Ic.Check className="text-base text-(--acc)" /> : null}
                 </span>
               </button>
             );

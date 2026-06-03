@@ -22,7 +22,7 @@ export const WRITE_ACTIONS = {
 } as const;
 
 export const EYEBROW =
-  "font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--faint)]";
+  "font-mono text-[11px] font-semibold tracking-[0.12em] text-(--faint)";
 
 export const LIVE_CELL =
   "p-[26px_30px] welcome-sm:p-[22px_20px]";

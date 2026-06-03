@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { waitForTransactionReceipt } from "@wagmi/core";
 import {
   useChains,
+  useConfig,
   useConnection,
   useReadContract,
   useWaitForTransactionReceipt,
@@ -34,6 +36,7 @@ interface Props {
 }
 
 export function WritePanel({ net, onSwitch }: Props) {
+  const config = useConfig();
   const chainReady = useChains().some((c) => c.id === net.chainId);
   const { isConnected, connect } = useWeb3AuthConnect();
   const { address } = useConnection();
@@ -67,12 +70,6 @@ export function WritePanel({ net, onSwitch }: Props) {
     reset();
   }, [net.chainId, reset]);
 
-  useEffect(() => {
-    if (isConfirmed && actionKey === "flip") {
-      void refetchFlip();
-    }
-  }, [isConfirmed, actionKey, refetchFlip]);
-
   const stage = isConfirmed ? 3 : txHash ? 2 : isPending ? 1 : -1;
   const pending = isPending || (!!txHash && isConfirming && !isConfirmed);
 
@@ -85,12 +82,20 @@ export function WritePanel({ net, onSwitch }: Props) {
     reset();
 
     if (actionKey === "flip" && flipperAddress) {
-      mutate({
-        address: flipperAddress,
-        abi: flipperAbi,
-        functionName: "flip",
-        chainId: net.chainId,
-      });
+      mutate(
+        {
+          address: flipperAddress,
+          abi: flipperAbi,
+          functionName: "flip",
+          chainId: net.chainId,
+        },
+        {
+          onSuccess: async (hash) => {
+            await waitForTransactionReceipt(config, { hash, chainId: net.chainId });
+            void refetchFlip();
+          },
+        },
+      );
       return;
     }
 
@@ -109,12 +114,12 @@ export function WritePanel({ net, onSwitch }: Props) {
     <div className={LIVE_CELL}>
       <div className="flex items-center justify-between">
         <span className={EYEBROW}>TRY THE WRITE PATH</span>
-        <span className="font-mono text-[11.5px] text-[var(--faint)]">
+        <span className="font-mono text-[11.5px] text-(--faint)">
           signer: {isConnected && address ? formatAddress(address, 8, 4) : "not connected"}
         </span>
       </div>
 
-      <div className="mt-3.5 inline-flex gap-0.5 self-start border border-[var(--line)] p-0.5">
+      <div className="mt-3.5 inline-flex gap-0.5 self-start border border-(--line) p-0.5">
         {Object.values(WRITE_ACTIONS).map((a) => {
           const on = a.key === actionKey;
           return (
@@ -129,7 +134,7 @@ export function WritePanel({ net, onSwitch }: Props) {
               }}
               className={`cursor-pointer border-0 px-3 py-1.5 font-mono text-[11.5px] font-semibold transition-[background,color] duration-150 ${
                 pending && !on ? "cursor-default opacity-50" : ""
-              } ${on ? "bg-[var(--acc)] text-[var(--paper)]" : "bg-transparent text-[var(--dim)]"}`}
+              } ${on ? "bg-(--acc) text-(--paper)" : "bg-transparent text-(--dim)"}`}
             >
               {a.tab}
               {a.key === "flip" ? "()" : ""}
@@ -140,23 +145,23 @@ export function WritePanel({ net, onSwitch }: Props) {
 
       <div className="min-h-[130px]">
         {actionBlocked ? (
-          <div className="mt-3 border border-dashed border-[var(--line)] px-4 py-3.5">
+          <div className="mt-3 border border-dashed border-(--line) px-4 py-3.5">
             <div className="flex items-center gap-2.25">
-              <span className="size-1.75 shrink-0 rounded-full bg-[var(--faint)]" />
-              <div className="text-[17px] font-semibold tracking-tight text-[var(--ink)]">
+              <span className="size-1.75 shrink-0 rounded-full bg-(--faint)" />
+              <div className="text-[17px] font-semibold tracking-tight text-(--ink)">
                 No {missingContractName} contract on {net.chain}
               </div>
             </div>
-            <p className="mt-1.5 mb-0 text-[13px] leading-normal text-[var(--dim)]">
-              Run <span className="font-mono text-xs text-[var(--acc)]">npm run deploy:contracts</span> then set{" "}
-              <span className="font-mono text-xs text-[var(--acc)]">{missingContractName}</span> in{" "}
-              <span className="font-mono text-xs text-[var(--acc)]">lib/contracts/addresses.ts</span> (testnet).
+            <p className="mt-1.5 mb-0 text-[13px] leading-normal text-(--dim)">
+              Run <span className="font-mono text-xs text-(--acc)">npm run deploy:contracts</span> then set{" "}
+              <span className="font-mono text-xs text-(--acc)">{missingContractName}</span> in{" "}
+              <span className="font-mono text-xs text-(--acc)">lib/contracts/addresses.ts</span> (testnet).
             </p>
             {!isTestnet && (
               <button
                 type="button"
                 onClick={() => onSwitch(TESTNET.chainId)}
-                className="group mt-2.5 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-mono text-[12.5px] font-semibold whitespace-nowrap text-[var(--acc)]"
+                className="group mt-2.5 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-mono text-[12.5px] font-semibold whitespace-nowrap text-(--acc)"
               >
                 Switch to {TESTNET.chain}
                 <Ic.Arrow className="text-sm transition-transform duration-150 group-hover:translate-x-[3px]" />
@@ -167,16 +172,16 @@ export function WritePanel({ net, onSwitch }: Props) {
           <>
             <div className="mt-3.5 flex items-start justify-between gap-5 welcome-sm:flex-col welcome-sm:items-stretch welcome-sm:gap-3.5">
               <div className="min-w-0">
-                <div className="text-xl font-semibold tracking-tight text-[var(--ink)]">{action.title}</div>
-                <div className="mt-1.5 font-mono text-[12.5px] text-[var(--dim)]">
+                <div className="text-xl font-semibold tracking-tight text-(--ink)">{action.title}</div>
+                <div className="mt-1.5 font-mono text-[12.5px] text-(--dim)">
                   {actionKey === "flip" ? (
                     <>
                       flipper.flip() · value:{" "}
-                      <span className="text-[var(--acc)]">{flipValue === undefined ? "…" : String(flipValue)}</span>
+                      <span className="text-(--acc)">{flipValue === undefined ? "…" : String(flipValue)}</span>
                     </>
                   ) : (
                     <>
-                      system.remark(<span className="text-[var(--acc)]">&quot;{REMARK_MESSAGE}&quot;</span>)
+                      system.remark(<span className="text-(--acc)">&quot;{REMARK_MESSAGE}&quot;</span>)
                     </>
                   )}
                 </div>
@@ -185,10 +190,10 @@ export function WritePanel({ net, onSwitch }: Props) {
                 type="button"
                 onClick={submit}
                 disabled={pending}
-                className={`inline-flex min-w-[172px] shrink-0 items-center justify-center gap-2 border-[1.5px] border-[var(--acc)] px-[18px] py-[11px] font-mono text-[13px] font-semibold whitespace-nowrap transition-[transform,background,color] duration-150 welcome-sm:w-full ${
+                className={`inline-flex min-w-[172px] shrink-0 items-center justify-center gap-2 border-[1.5px] border-(--acc) px-[18px] py-[11px] font-mono text-[13px] font-semibold whitespace-nowrap transition-[transform,background,color] duration-150 welcome-sm:w-full ${
                   pending
-                    ? "cursor-default bg-transparent text-[var(--acc)] opacity-70"
-                    : "cursor-pointer bg-[var(--acc)] text-[var(--paper)] hover:-translate-y-px"
+                    ? "cursor-default bg-transparent text-(--acc) opacity-70"
+                    : "cursor-pointer bg-(--acc) text-(--paper) hover:-translate-y-px"
                 }`}
               >
                 {pending ? "Submitting…" : stage === 3 ? "Run again" : !isConnected ? "Connect to send" : action.cta}
@@ -206,19 +211,19 @@ export function WritePanel({ net, onSwitch }: Props) {
                       <span
                         className={`inline-block size-[11px] shrink-0 rounded-full border-[1.5px] transition-all duration-200 ${
                           active
-                            ? "border-[var(--acc)] bg-[var(--acc)]"
-                            : "border-[var(--line)] bg-transparent"
-                        } ${pulsing ? "shadow-[0_0_0_4px_color-mix(in_srgb,var(--acc)_22%,transparent)]" : ""}`}
+                            ? "border-(--acc) bg-(--acc)"
+                            : "border-(--line) bg-transparent"
+                        } ${pulsing ? "shadow-(0_0_0_4px_color-mix(in_srgb,var(--acc)_22%,transparent))" : ""}`}
                       />
                       <span
-                        className={`font-mono text-[11.5px] transition-colors duration-200 ${active ? "text-[var(--ink)]" : "text-[var(--faint)]"}`}
+                        className={`font-mono text-[11.5px] transition-colors duration-200 ${active ? "text-(--ink)" : "text-(--faint)"}`}
                       >
                         {labelText}
                       </span>
                     </div>
                     {i < WRITE_STEPS.length - 1 && (
                       <div
-                        className={`mx-2.25 h-[1.5px] flex-1 transition-[background] duration-200 ${stage > i ? "bg-[var(--acc)]" : "bg-[var(--line)]"}`}
+                        className={`mx-2.25 h-[1.5px] flex-1 transition-[background] duration-200 ${stage > i ? "bg-(--acc)" : "bg-(--line)"}`}
                       />
                     )}
                   </React.Fragment>
@@ -228,32 +233,32 @@ export function WritePanel({ net, onSwitch }: Props) {
 
             <div className="mt-3.5 flex min-h-[22px] flex-col gap-1.5">
               {txError ? (
-                <div className="font-mono text-xs text-[var(--acc)]">
+                <div className="font-mono text-xs text-(--acc)">
                   {(txError as BaseError).shortMessage || txError.message}
                 </div>
               ) : isConfirmed && txHash ? (
                 <div className="flex items-center gap-2.5 font-mono text-xs">
-                  <span className="inline-flex items-center gap-1.25 font-semibold text-[var(--acc)]">
+                  <span className="inline-flex items-center gap-1.25 font-semibold text-(--acc)">
                     <Ic.Check className="text-[13px]" /> Finalized
                   </span>
-                  <span className="text-[var(--faint)]">{actionLabel}</span>
+                  <span className="text-(--faint)">{actionLabel}</span>
                   <a
                     href={explorerTxUrl(net, txHash)}
                     target="_blank"
                     rel="noreferrer"
                     title="View transaction on the block explorer"
-                    className="text-[var(--dim)] no-underline transition-colors duration-150 hover:text-[var(--acc)]"
+                    className="text-(--dim) no-underline transition-colors duration-150 hover:text-(--acc)"
                   >
                     {formatAddress(txHash, 8, 4)}
                   </a>
                   {receipt && (
-                    <span className="ml-auto text-[var(--faint)]">
+                    <span className="ml-auto text-(--faint)">
                       in #{Number(receipt.blockNumber).toLocaleString("en-US")}
                     </span>
                   )}
                 </div>
               ) : (
-                <div className="font-mono text-xs text-[var(--faint)]">No extrinsics submitted yet.</div>
+                <div className="font-mono text-xs text-(--faint)">No extrinsics submitted yet.</div>
               )}
             </div>
           </>

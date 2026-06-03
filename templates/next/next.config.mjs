@@ -1,7 +1,10 @@
+// Side-effect imports so static analysis sees Turbopack alias targets as reachable.
+import "./config/empty-module.js";
+import "./config/metamask-analytics-stub.js";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // swcMinify: true,
   turbopack: {
     resolveAlias: {
       "pino-pretty": "./config/empty-module.js",
@@ -10,4 +13,5 @@ const nextConfig = {
     },
   },
 };
-module.exports = nextConfig
+
+export default nextConfig;

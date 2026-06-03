@@ -3,12 +3,14 @@
 import { useWeb3Auth } from "@web3auth/modal/react";
 import { useLayoutEffect } from "react";
 import { polkadotChains } from "./chains";
+import { useWagmiRemount } from "./wagmi-remount-context";
 
 /**
  * Web3Auth merges dashboard chains with code config. Force coreOptions to only
  * the three Polkadot Hub networks so Wagmi does not list Ethereum or others.
  */
-export function RestrictPolkadotChains({ onRestricted }: { onRestricted: () => void }) {
+export function RestrictPolkadotChains() {
+  const { remountWagmi } = useWagmiRemount();
   const { web3Auth, isInitialized } = useWeb3Auth();
 
   useLayoutEffect(() => {
@@ -24,9 +26,9 @@ export function RestrictPolkadotChains({ onRestricted }: { onRestricted: () => v
       // Web3Auth exposes mutable coreOptions; reassignment is required to drop dashboard chains.
       // eslint-disable-next-line react-hooks/immutability -- intentional SDK config mutation
       web3Auth.coreOptions.chains = [...polkadotChains];
-      onRestricted();
+      remountWagmi();
     }
-  }, [isInitialized, web3Auth, onRestricted]);
+  }, [isInitialized, web3Auth, remountWagmi]);
 
   return null;
 }

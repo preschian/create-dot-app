@@ -6,7 +6,7 @@ import { useDismissible } from "@/components/welcome/useDismissible";
 import { PopoverPanel } from "@/components/welcome/ui/PopoverPanel";
 
 const iconBtn =
-  "inline-flex size-[39px] shrink-0 cursor-pointer items-center justify-center border border-[var(--line)] bg-transparent transition-[border-color,color] duration-150 hover:border-[var(--acc)] hover:text-[var(--acc)]";
+  "inline-flex size-[39px] shrink-0 cursor-pointer items-center justify-center border border-(--line) bg-transparent transition-[border-color,color] duration-150 hover:border-(--acc) hover:text-(--acc)";
 
 function AccentPicker({
   accent,
@@ -62,7 +62,7 @@ function ThemeToggle({ dark, onToggle }: { dark: boolean; onToggle: () => void }
       onClick={onToggle}
       title="Toggle light / dark"
       aria-label="Toggle light or dark mode"
-      className={`${iconBtn} text-[var(--ink)]`}
+      className={`${iconBtn} text-(--ink)`}
     >
       <span className="relative inline-block size-4 overflow-hidden rounded-full border-[1.5px] border-current">
         <span
