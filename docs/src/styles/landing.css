@@ -777,6 +777,78 @@ body {
     border-bottom: 1px solid var(--line);
   }
   .lp-h1 {
-    font-size: 12vw;
+    font-size: clamp(40px, 12vw, 64px);
+  }
+}
+
+/* ── Phone refinements ───────────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  /* Top bar: wordmark + controls only — placeholder nav links hidden. */
+  .lp-topbar {
+    padding: 16px 22px;
+  }
+  .lp-nav {
+    gap: 12px;
+  }
+  .lp-nav a {
+    display: none;
+  }
+
+  /* Tighter, consistent horizontal padding across every section. */
+  .lp-hero-c-copy {
+    padding: 48px 22px 40px;
+  }
+  .lp-sec-head {
+    padding: 32px 22px 22px;
+  }
+  .lp-stats > div,
+  .lp-stats > div:first-child {
+    padding: 24px 22px;
+  }
+  .lp-feat,
+  .lp-feat:nth-child(3n + 1) {
+    padding: 24px 22px;
+  }
+  .lp-step {
+    padding: 20px 22px;
+  }
+  .lp-layer {
+    padding: 20px 22px;
+  }
+  .lp-foundation {
+    padding: 16px 22px;
+  }
+  .lp-cta-main {
+    padding: 40px 22px;
+  }
+  .lp-cta-links-head,
+  .lp-res {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .lp-footer {
+    padding: 18px 22px;
+  }
+
+  /* Install pill: shrink to fit, icon-only copy affordance. */
+  .lp-install {
+    font-size: 13px;
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .lp-install--big {
+    font-size: 14px;
+    padding: 14px 16px;
+  }
+  .lp-install-label {
+    display: none;
+  }
+
+  /* Heading sizes tuned for narrow screens. */
+  .lp-h2 {
+    font-size: 28px;
+  }
+  .lp-cta-h {
+    font-size: 34px;
   }
 }
