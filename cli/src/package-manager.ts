@@ -1,12 +1,16 @@
 import { spawn } from 'node:child_process'
 import process from 'node:process'
 
-export const packageManagers = ['npm', 'yarn', 'pnpm', 'bun'] as const
+// Only npm and bun are offered for now. The template declares its Hardhat
+// setup via the package.json "workspaces" field, which pnpm and yarn don't
+// honor the same way (pnpm needs a pnpm-workspace.yaml), so installs break.
+// Re-add them here once the template supports their workspace configs.
+export const packageManagers = ['npm', 'bun'] as const
 export type PackageManager = typeof packageManagers[number]
 
 /**
  * Detects the package manager used to invoke the CLI via npm_config_user_agent.
- * Falls back to 'npm' when it can't be determined.
+ * Falls back to 'npm' for anything we don't support (e.g. pnpm, yarn).
  */
 export function detectPackageManager(): PackageManager {
   const userAgent = process.env.npm_config_user_agent ?? ''

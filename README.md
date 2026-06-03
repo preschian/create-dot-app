@@ -20,7 +20,7 @@ npx create-dot-app@latest my-dapp --template react-papi
 - 🚀 **Multiple Frameworks** - React, Vue, Next.js, Nuxt
 - 🔗 **Dual SDK Support** - [PAPI](https://papi.how/) and [Dedot](https://docs.dedot.dev/)
 - 🔨 **Smart Contracts** - Substrate Pallets, Solidity
-- 📦 **Package Managers** - npm, yarn, pnpm, bun, deno
+- 📦 **Package Managers** - npm, bun
 
 ## Documentation
 
