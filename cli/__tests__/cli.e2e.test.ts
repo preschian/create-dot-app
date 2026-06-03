@@ -132,7 +132,7 @@ describe('cli E2E tests', () => {
     expect(packageJson.name).toBe(projectName)
 
     // Verify essential files exist (Next.js App Router structure)
-    const essentialFiles = ['app/page.tsx', 'app/layout.tsx', 'next.config.js', 'package.json', 'tsconfig.json']
+    const essentialFiles = ['app/page.tsx', 'app/layout.tsx', 'next.config.mjs', 'package.json', 'tsconfig.json']
     for (const file of essentialFiles) {
       const filePath = path.join(projectPath, file)
       const fileExists = await fs.access(filePath).then(() => true).catch(() => false)
@@ -213,8 +213,8 @@ describe('cli E2E tests', () => {
     expect(packageJson.name).toBe(projectName)
 
     // Verify it's a Next.js project
-    const nextConfigExists = await fs.access(path.join(projectPath, 'next.config.js')).then(() => true).catch(() => false)
-    expect(nextConfigExists, 'Should create Next.js project with next.config.js').toBe(true)
+    const nextConfigExists = await fs.access(path.join(projectPath, 'next.config.mjs')).then(() => true).catch(() => false)
+    expect(nextConfigExists, 'Should create Next.js project with next.config.mjs').toBe(true)
   })
 
   it('handles invalid --template parameter correctly', async () => {
@@ -386,7 +386,7 @@ describe('cli E2E tests', () => {
     expect(packageJson.name).toBe(projectName)
 
     // Verify it's a Next.js project
-    const nextConfigExists = await fs.access(path.join(projectPath, 'next.config.js')).then(() => true).catch(() => false)
-    expect(nextConfigExists, 'Should create Next.js project with next.config.js').toBe(true)
+    const nextConfigExists = await fs.access(path.join(projectPath, 'next.config.mjs')).then(() => true).catch(() => false)
+    expect(nextConfigExists, 'Should create Next.js project with next.config.mjs').toBe(true)
   })
 })
