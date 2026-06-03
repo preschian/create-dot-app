@@ -12,6 +12,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.4.3"
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.3",
+    "astro-takumi": "^1.1.12"
+  },
+  "devDependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
+    "react": "^19.2.7"
   }
 }
