@@ -19,7 +19,7 @@ export const SCAFFOLD_LINES: { t: ScaffoldKind; s: string }[] = [
   { t: 'ok', s: '◇  Scaffolding project' },
   { t: 'dim', s: '   created 38 files · pinned lockfile' },
   { t: 'ok', s: '◇  Done in 4.2s' },
-  { t: 'next', s: '→  cd my-dapp && npm run dev' },
+  { t: 'next', s: '→  cd my-dapp && npm install && npm run dev' },
 ];
 
 // Quickstart — the four commands.
