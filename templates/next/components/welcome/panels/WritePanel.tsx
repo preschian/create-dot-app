@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { waitForTransactionReceipt } from "@wagmi/core";
 import {
   useChains,
+  useConfig,
   useConnection,
   useReadContract,
   useWaitForTransactionReceipt,
@@ -34,6 +36,7 @@ interface Props {
 }
 
 export function WritePanel({ net, onSwitch }: Props) {
+  const config = useConfig();
   const chainReady = useChains().some((c) => c.id === net.chainId);
   const { isConnected, connect } = useWeb3AuthConnect();
   const { address } = useConnection();
@@ -67,12 +70,6 @@ export function WritePanel({ net, onSwitch }: Props) {
     reset();
   }, [net.chainId, reset]);
 
-  useEffect(() => {
-    if (isConfirmed && actionKey === "flip") {
-      void refetchFlip();
-    }
-  }, [isConfirmed, actionKey, refetchFlip]);
-
   const stage = isConfirmed ? 3 : txHash ? 2 : isPending ? 1 : -1;
   const pending = isPending || (!!txHash && isConfirming && !isConfirmed);
 
@@ -85,12 +82,20 @@ export function WritePanel({ net, onSwitch }: Props) {
     reset();
 
     if (actionKey === "flip" && flipperAddress) {
-      mutate({
-        address: flipperAddress,
-        abi: flipperAbi,
-        functionName: "flip",
-        chainId: net.chainId,
-      });
+      mutate(
+        {
+          address: flipperAddress,
+          abi: flipperAbi,
+          functionName: "flip",
+          chainId: net.chainId,
+        },
+        {
+          onSuccess: async (hash) => {
+            await waitForTransactionReceipt(config, { hash, chainId: net.chainId });
+            void refetchFlip();
+          },
+        },
+      );
       return;
     }
 

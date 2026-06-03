@@ -1,0 +1,10 @@
+{
+  "ignore": {
+    "overrides": [
+      {
+        "files": ["contracts/test/**"],
+        "rules": ["deslop/unused-file"]
+      }
+    ]
+  }
+}
