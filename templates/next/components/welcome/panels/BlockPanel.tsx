@@ -1,9 +1,9 @@
 "use client";
 
 import { useBlock, useChains } from "wagmi";
-import type { NetworkInfo } from "./networks";
-import { LiveDot } from "./icons";
-import { EYEBROW, LIVE_CELL } from "./live-demo-shared";
+import type { NetworkInfo } from "@/components/welcome/networks";
+import { LiveDot } from "@/components/welcome/ui/icons";
+import { EYEBROW, LIVE_CELL } from "@/components/welcome/shared";
 
 interface Props {
   net: NetworkInfo;

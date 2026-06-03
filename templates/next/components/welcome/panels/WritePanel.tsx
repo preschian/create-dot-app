@@ -10,15 +10,15 @@ import {
 } from "wagmi";
 import { useWeb3AuthConnect } from "@web3auth/modal/react";
 import { type BaseError } from "viem";
-import { type NetworkInfo, TESTNET, explorerTxUrl } from "./networks";
-import { formatAddress } from "./format";
-import { Ic } from "./icons";
+import { type NetworkInfo, TESTNET, explorerTxUrl } from "@/components/welcome/networks";
+import { formatAddress } from "@/components/welcome/format";
+import { Ic } from "@/components/welcome/ui/icons";
 import {
   flipperAbi,
   flipperAddressForChain,
   remarkAbi,
   remarkAddressForChain,
-} from "../../lib/contracts";
+} from "@/lib/contracts";
 import {
   EYEBROW,
   LIVE_CELL,
@@ -26,7 +26,7 @@ import {
   WRITE_ACTIONS,
   WRITE_STEPS,
   type WriteActionKey,
-} from "./live-demo-shared";
+} from "@/components/welcome/shared";
 
 interface Props {
   net: NetworkInfo;

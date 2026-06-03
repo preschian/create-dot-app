@@ -53,6 +53,26 @@ npm run dev
 
 Visit `http://localhost:3000`.
 
+## Project structure
+
+```text
+app/                    Next.js App Router — routes, root layout, global CSS
+components/
+  App.tsx               ← start here: the screen rendered by app/page.tsx
+  welcome/              first-run welcome demo (replace with your own UI)
+    panels/             block watcher, write path, wallet + network controls
+    ui/                 presentational primitives (icons, popover)
+lib/
+  web3/                 wallet + chain wiring: Web3Auth + wagmi provider, chain configs
+  contracts/            contract ABIs + deployed addresses, typed for wagmi
+config/                 build-time module stubs referenced by next.config.js
+contracts/              Hardhat workspace (npm workspace) — Solidity, tests, deploy
+public/                 static assets
+```
+
+Imports use the `@/*` alias (mapped to the project root in `tsconfig.json`), e.g.
+`import { polkadotChains } from "@/lib/web3/chains"`.
+
 ## Where to start
 
 Edit [`components/App.tsx`](components/App.tsx) — it composes the welcome screen and is
@@ -63,19 +83,21 @@ welcome root. The pieces it pulls in live in [`components/welcome/`](components/
 | File | Responsibility |
 | --- | --- |
 | `App.tsx` | Top bar, hero, features, side rail; owns theme + selected-network state |
-| `welcome/LiveDemo.tsx` | Composes `BlockPanel` + `WritePanel` |
-| `welcome/BlockPanel.tsx` | Live block watcher (`useBlock`) |
-| `welcome/WritePanel.tsx` | Sample contract writes + transaction stepper |
-| `welcome/WalletConnect.tsx` | Connect Wallet button + connected menu (Web3Auth + `useBalance`) |
-| `welcome/NetworkSwitch.tsx` | Network selector (`useSwitchChain`) |
-| `welcome/HeaderControls.tsx` | Accent picker + theme toggle |
-| `welcome/{theme,networks,data,icons,format,useDismissible,PopoverPanel}` | Shared theme, data, UI primitives |
+| `welcome/panels/LiveDemo.tsx` | Composes `BlockPanel` + `WritePanel` |
+| `welcome/panels/BlockPanel.tsx` | Live block watcher (`useBlock`) |
+| `welcome/panels/WritePanel.tsx` | Sample contract writes + transaction stepper |
+| `welcome/panels/WalletConnect.tsx` | Connect Wallet button + connected menu (Web3Auth + `useBalance`) |
+| `welcome/panels/NetworkSwitch.tsx` | Network selector (`useSwitchChain`) |
+| `welcome/panels/HeaderControls.tsx` | Accent picker + theme toggle |
+| `welcome/ui/{PopoverPanel,icons}` | Shared UI primitives (dropdown panel, icon set) |
+| `welcome/{theme,networks,data,shared,format,useDismissible}` | Theme tokens, network metadata, copy, and helpers |
 | `app/globals.css` | Tailwind CSS 4 entry + welcome animations |
 
-Providers and chain config:
+Providers and chain config live under [`lib/web3/`](lib/web3):
 
-- [`components/provider.tsx`](components/provider.tsx) — Web3Auth + wagmi + React Query
-- [`lib/chains/polkadot.ts`](lib/chains/polkadot.ts) — the three Polkadot Hub chain configs
+- [`lib/web3/provider.tsx`](lib/web3/provider.tsx) — Web3Auth + wagmi + React Query
+- [`lib/web3/restrict-polkadot-chains.tsx`](lib/web3/restrict-polkadot-chains.tsx) — keeps wagmi to the three Hub chains
+- [`lib/web3/chains.ts`](lib/web3/chains.ts) — the three Polkadot Hub chain configs
 
 ## Smart contracts
 

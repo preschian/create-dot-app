@@ -1,4 +1,4 @@
-import { kusamaHub, polkadotHub, polkadotHubTestnet } from '../chains/polkadot'
+import { kusamaHub, polkadotHub, polkadotHubTestnet } from '@/lib/web3/chains'
 
 const id = (chain: { chainId: string }) => Number.parseInt(chain.chainId, 16)
 

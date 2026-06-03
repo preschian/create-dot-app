@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ACCENTS } from "./theme";
-import { useDismissible } from "./useDismissible";
-import { PopoverPanel } from "./PopoverPanel";
+import { ACCENTS } from "@/components/welcome/theme";
+import { useDismissible } from "@/components/welcome/useDismissible";
+import { PopoverPanel } from "@/components/welcome/ui/PopoverPanel";
 
 const iconBtn =
   "inline-flex size-[39px] shrink-0 cursor-pointer items-center justify-center border border-[var(--line)] bg-transparent transition-[border-color,color] duration-150 hover:border-[var(--acc)] hover:text-[var(--acc)]";

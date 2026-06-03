@@ -7,10 +7,10 @@ import { useRef, useState } from "react";
 import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser } from "@web3auth/modal/react";
 import { useConnection, useBalance, useChains } from "wagmi";
 import { formatUnits } from "viem";
-import { formatAddress } from "./format";
-import { Ic } from "./icons";
-import { useDismissible } from "./useDismissible";
-import { PopoverPanel } from "./PopoverPanel";
+import { formatAddress } from "@/components/welcome/format";
+import { Ic } from "@/components/welcome/ui/icons";
+import { useDismissible } from "@/components/welcome/useDismissible";
+import { PopoverPanel } from "@/components/welcome/ui/PopoverPanel";
 
 interface Props {
   chainId: number;

@@ -6,14 +6,14 @@
 // real wagmi + Web3Auth hooks.
 import { useState } from "react";
 import { useSwitchChain } from "wagmi";
-import { tokens, DEFAULT_ACCENT, themeVars } from "./welcome/theme";
-import { NETWORKS, networkByChainId } from "./welcome/networks";
-import { FEATURES, RESOURCES, PROJECT, HEADLINE, HERO_BLURB } from "./welcome/data";
-import { Ic } from "./welcome/icons";
-import { HeaderUtilities } from "./welcome/HeaderControls";
-import { NetworkSwitch } from "./welcome/NetworkSwitch";
-import { WalletConnect } from "./welcome/WalletConnect";
-import { LiveDemo } from "./welcome/LiveDemo";
+import { tokens, DEFAULT_ACCENT, themeVars } from "@/components/welcome/theme";
+import { NETWORKS, networkByChainId } from "@/components/welcome/networks";
+import { FEATURES, RESOURCES, PROJECT, HEADLINE, HERO_BLURB } from "@/components/welcome/data";
+import { Ic } from "@/components/welcome/ui/icons";
+import { HeaderUtilities } from "@/components/welcome/panels/HeaderControls";
+import { NetworkSwitch } from "@/components/welcome/panels/NetworkSwitch";
+import { WalletConnect } from "@/components/welcome/panels/WalletConnect";
+import { LiveDemo } from "@/components/welcome/panels/LiveDemo";
 
 export default function App() {
   const [dark, setDark] = useState(false);

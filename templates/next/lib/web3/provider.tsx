@@ -5,7 +5,7 @@ import { IWeb3AuthState, WEB3AUTH_NETWORK } from "@web3auth/modal";
 import { WagmiProvider } from "@web3auth/modal/react/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useCallback, useState } from "react";
-import { polkadotChains, polkadotHubTestnet } from "../lib/chains/polkadot";
+import { polkadotChains, polkadotHubTestnet } from "./chains";
 import { RestrictPolkadotChains } from "./restrict-polkadot-chains";
 
 const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID || "";

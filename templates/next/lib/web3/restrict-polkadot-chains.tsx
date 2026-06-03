@@ -2,7 +2,7 @@
 
 import { useWeb3Auth } from "@web3auth/modal/react";
 import { useLayoutEffect } from "react";
-import { polkadotChains } from "../lib/chains/polkadot";
+import { polkadotChains } from "./chains";
 
 /**
  * Web3Auth merges dashboard chains with code config. Force coreOptions to only

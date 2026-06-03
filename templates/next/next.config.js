@@ -4,9 +4,9 @@ const nextConfig = {
   // swcMinify: true,
   turbopack: {
     resolveAlias: {
-      "pino-pretty": "./lib/empty-module.js",
-      "@react-native-async-storage/async-storage": "./lib/empty-module.js",
-      "@metamask/sdk-analytics": "./lib/metamask-analytics-stub.js",
+      "pino-pretty": "./config/empty-module.js",
+      "@react-native-async-storage/async-storage": "./config/empty-module.js",
+      "@metamask/sdk-analytics": "./config/metamask-analytics-stub.js",
     },
   },
 };

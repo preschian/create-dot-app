@@ -3,10 +3,10 @@
 // Top-bar network selector. Click to open a dropdown of the available chains;
 // selecting one commits immediately via the parent-owned chain id.
 import { useRef, useState } from "react";
-import { NETWORKS, type NetworkInfo, rpcHost } from "./networks";
-import { Ic, LiveDot } from "./icons";
-import { useDismissible } from "./useDismissible";
-import { PopoverPanel } from "./PopoverPanel";
+import { NETWORKS, type NetworkInfo, rpcHost } from "@/components/welcome/networks";
+import { Ic, LiveDot } from "@/components/welcome/ui/icons";
+import { useDismissible } from "@/components/welcome/useDismissible";
+import { PopoverPanel } from "@/components/welcome/ui/PopoverPanel";
 
 interface Props {
   net: NetworkInfo;

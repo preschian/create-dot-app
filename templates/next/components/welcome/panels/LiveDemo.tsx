@@ -1,6 +1,6 @@
 "use client";
 
-import type { NetworkInfo } from "./networks";
+import type { NetworkInfo } from "@/components/welcome/networks";
 import { BlockPanel } from "./BlockPanel";
 import { WritePanel } from "./WritePanel";
 
