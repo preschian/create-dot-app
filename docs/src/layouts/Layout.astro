@@ -1,14 +1,45 @@
 ---
 import '../styles/landing.css';
+import { CLI_VERSION } from '../data/version';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Absolute URL to override the OpenGraph image. Defaults to the per-page Takumi image. */
+  image?: string;
 }
-const {
-  title = 'create·app · Ship your dapp today',
-  description = 'Polkadot-native dapp starter. One command scaffolds wallet connection, type-safe contract hooks, network switching and deploy scripts — typed end-to-end.',
-} = Astro.props;
+
+const SITE_NAME = 'create·app';
+const DEFAULT_TITLE = 'create·app · Ship your dapp today';
+const DEFAULT_DESCRIPTION =
+  'Polkadot-native dapp starter. One command scaffolds wallet connection, type-safe contract hooks, network switching, and deploy scripts. Typed end to end.';
+const OG_ALT = 'create·app, the Polkadot-native dapp starter CLI';
+
+const { title = DEFAULT_TITLE, description = DEFAULT_DESCRIPTION, image } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+// astro-takumi writes <page>.png next to each page's HTML at build; mirror that path
+// here so og:image resolves to the generated file (e.g. "/" -> /index.png).
+const ogPath = Astro.url.pathname.endsWith('/') ? `${Astro.url.pathname}index.png` : `${Astro.url.pathname}.png`;
+const ogImage = image ?? new URL(ogPath.replace(/^\//, ''), Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  'name': SITE_NAME,
+  'alternateName': 'create-dot-app',
+  'description': DEFAULT_DESCRIPTION,
+  'url': Astro.site?.href,
+  'applicationCategory': 'DeveloperApplication',
+  'operatingSystem': 'Cross-platform (Node.js)',
+  'softwareVersion': CLI_VERSION,
+  'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'USD' },
+  'license': 'https://opensource.org/licenses/MIT',
+  'codeRepository': 'https://github.com/preschian/create-dot-app',
+  'author': { '@type': 'Person', 'name': 'Preschian Febryantara' },
+  'image': ogImage,
+};
 ---
 
 <!doctype html>
@@ -19,8 +50,37 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
+
+    <!-- Primary meta -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content="Preschian Febryantara" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#0B0D12" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={OG_ALT} />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={OG_ALT} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
