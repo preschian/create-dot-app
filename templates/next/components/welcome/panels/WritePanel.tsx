@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { waitForTransactionReceipt } from "wagmi/actions";
 import {
   useChains,
   useConfig,
