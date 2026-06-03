@@ -16,7 +16,7 @@ import InstallCommand from './InstallCommand.astro';
     <div class="lp-cta-links-head">KEEP READING</div>
     {
       CTA_LINKS.map((r) => (
-        <a class="lp-res" href="#">
+        <a class="lp-res" href={r.href} target="_blank" rel="noopener noreferrer">
           <span>
             <span class="lp-res-label">{r.label}</span>
             <span class="lp-res-meta">{r.meta}</span>

@@ -38,31 +38,31 @@ export const STEPS = [
   { n: '04', cmd: 'npm run deploy', note: 'Type-checked, env-aware deploy to any configured network.' },
 ];
 
-// Feature grid — six headline features.
+// Feature grid — six headline features. Mirrors templates/next welcome FEATURES.
 export const FEATURES = [
-  { title: 'Polkadot wallet', desc: 'Connect Polkadot.js, Talisman & SubWallet out of the box.' },
-  { title: 'Pallet & ink! hooks', desc: 'Type-safe query & extrinsic hooks, fully typed.' },
-  { title: 'Network switching', desc: 'Detect, prompt and switch relay/parachain RPCs gracefully.' },
-  { title: 'Local testnet', desc: 'Forked node + seed accounts via one command.' },
-  { title: 'Deploy scripts', desc: 'Repeatable, env-aware deployment pipeline.' },
-  { title: 'Typed end-to-end', desc: 'TypeScript, generated types, zero any.' },
+  { title: 'Embedded wallet', desc: 'Connect with Web3Auth (MetaMask embedded wallets), SSR-ready for the App Router.' },
+  { title: 'wagmi on Hub', desc: 'Read contracts, send transactions, and fetch balances on Polkadot Hub EVM.' },
+  { title: 'Hub networks', desc: 'Switch between Passet testnet, Polkadot Hub, and Kusama Hub from the UI.' },
+  { title: 'EVM on Hub', desc: 'Write Solidity, deploy with Hardhat, and interact through wagmi on Polkadot Hub.' },
+  { title: 'Hardhat workspace', desc: 'Sample Flipper & Remark contracts with compile, test, and deploy scripts.' },
+  { title: 'Typed end-to-end', desc: 'TypeScript, viem types, and ABIs exported from the contracts package.' },
 ];
 
-// The stack — layer by layer, UI down to the chain.
+// The stack — layer by layer, UI down to the chain. Mirrors templates/next.
 export const STACK = [
-  { layer: 'Frontend', tag: 'react · vite', desc: 'Typed components, instant HMR, sensible defaults.', path: 'src/' },
-  { layer: 'Wallet', tag: 'pjs · talisman', desc: 'Connect, accounts, balances and graceful network switching.', path: '@app/wallet' },
-  { layer: 'Hooks', tag: 'query · extrinsic', desc: 'Pallet & ink! reads and writes, fully typed.', path: '@app/hooks' },
-  { layer: 'Contracts', tag: 'ink! · pallets', desc: 'Starter contracts with generated TypeScript types.', path: 'contracts/' },
-  { layer: 'Deploy', tag: 'env-aware', desc: 'Repeatable, type-checked deploys to any network.', path: 'scripts/deploy.ts' },
+  { layer: 'Frontend', tag: 'next · tailwind', desc: 'Next.js App Router with Tailwind CSS 4, SSR-ready.', path: 'app/' },
+  { layer: 'Wallet', tag: 'web3auth', desc: 'Embedded MetaMask wallets via Web3Auth.', path: 'lib/web3/' },
+  { layer: 'Hooks', tag: 'wagmi · viem', desc: 'Typed contract reads, writes and balances on Hub EVM.', path: 'lib/contracts/' },
+  { layer: 'Contracts', tag: 'solidity · hardhat', desc: 'Solidity Flipper & Remark, compiled and tested.', path: 'contracts/' },
+  { layer: 'Deploy', tag: 'hardhat ignition', desc: 'Repeatable deploys to Polkadot Hub.', path: 'contracts/ignition' },
 ];
 
-// Closing CTA resources.
+// Closing CTA resources. Mirrors templates/next welcome RESOURCES.
 export const CTA_LINKS = [
-  { label: 'Documentation', meta: 'Guides & full API reference' },
-  { label: 'GitHub', meta: 'Source, issues & roadmap' },
-  { label: 'Examples', meta: 'Mint · swap · governance' },
-  { label: 'Discord', meta: '6k builders, active' },
+  { label: 'Documentation', meta: 'Smart contracts on Polkadot Hub', href: 'https://docs.polkadot.com/develop/smart-contracts/' },
+  { label: 'Polkadot Hub', meta: 'Overview, assets & connectivity', href: 'https://docs.polkadot.com/reference/polkadot-hub/' },
+  { label: 'Get started', meta: 'Hardhat, faucets & explorers', href: 'https://docs.polkadot.com/smart-contracts/get-started/' },
+  { label: 'Discord', meta: 'Polkadot developer community', href: 'https://discord.gg/polkadot' },
 ];
 
 // Accent palette offered in the top-bar accent picker. Default is electric blue.
