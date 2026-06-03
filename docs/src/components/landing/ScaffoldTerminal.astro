@@ -1,0 +1,57 @@
+---
+// Animated "what the command prints" panel — types each line in, then loops.
+import { SCAFFOLD_LINES } from '../../data/landing';
+---
+
+<div class="lp-term" data-term>
+  <div class="lp-term-bar">
+    <span class="lp-term-dot" style="background:#e06c5b"></span>
+    <span class="lp-term-dot" style="background:#e0b13f"></span>
+    <span class="lp-term-dot" style="background:#3fa96b"></span>
+    <span class="lp-term-title">zsh · my-dapp</span>
+  </div>
+  <div class="lp-term-body">
+    {
+      SCAFFOLD_LINES.map((l) => (
+        <div class:list={['lp-term-line', `lp-tl-${l.t}`]}>
+          {l.t === 'cmd' && <span class="lp-term-prompt">$ </span>}
+          {l.s}
+        </div>
+      ))
+    }
+    <span class="lp-term-cursor" data-term-cursor></span>
+  </div>
+</div>
+
+<script>
+  const STEP = 360;
+  const START = 380;
+  const LOOP_PAUSE = 2600;
+
+  function initTerm(term: Element) {
+    const lines = Array.from(term.querySelectorAll('.lp-term-line'));
+    const cursor = term.querySelector<HTMLElement>('[data-term-cursor]');
+    let timers: ReturnType<typeof setTimeout>[] = [];
+
+    function run() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      lines.forEach((l) => l.classList.remove('is-shown'));
+      if (cursor) cursor.style.display = 'inline-block';
+
+      lines.forEach((l, i) => {
+        timers.push(
+          setTimeout(() => {
+            l.classList.add('is-shown');
+            if (i === lines.length - 1 && cursor) cursor.style.display = 'none';
+          }, START + i * STEP),
+        );
+      });
+      timers.push(setTimeout(run, START + lines.length * STEP + LOOP_PAUSE));
+    }
+
+    run();
+  }
+
+  document.querySelectorAll('[data-term]').forEach(initTerm);
+</script>

@@ -1,0 +1,95 @@
+---
+// Sticky top bar: wordmark · nav · accent picker · light/dark toggle.
+import { ACCENTS } from '../../data/landing';
+---
+
+<header class="lp-topbar">
+  <div class="lp-brand">
+    <span class="lp-word">create<span class="lp-dot">·</span>app</span>
+    <span class="lp-ver">v1.0</span>
+  </div>
+  <nav class="lp-nav">
+    <a href="#">Docs</a>
+    <a href="#">Examples</a>
+    <a href="#">GitHub</a>
+    <span class="lp-accent" data-accent-root>
+      <button class="lp-theme" data-accent-toggle type="button" title="Accent color" aria-label="Choose accent color">
+        <span class="lp-accent-dot"></span>
+      </button>
+      <div class="lp-accent-pop" data-accent-pop hidden>
+        {
+          ACCENTS.map((c) => (
+            <button class="lp-sw" data-accent={c} style={`background:${c}`} type="button" title={c} aria-label={`Accent ${c}`} />
+          ))
+        }
+      </div>
+    </span>
+    <button class="lp-theme" data-theme-toggle type="button" title="Toggle light / dark" aria-label="Toggle light or dark mode">
+      <span class="lp-theme-glyph"><span class="lp-theme-fill"></span></span>
+    </button>
+  </nav>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const DEFAULT_ACCENT = '#2f6bff';
+
+  // Light / dark toggle — persisted; applied pre-paint by the inline head script.
+  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) root.removeAttribute('data-theme');
+      else root.setAttribute('data-theme', 'dark');
+      try {
+        localStorage.setItem('lp-theme', isDark ? 'light' : 'dark');
+      } catch {
+        /* storage unavailable */
+      }
+    });
+  });
+
+  // Accent picker.
+  let current = DEFAULT_ACCENT;
+  try {
+    current = localStorage.getItem('lp-accent') ?? DEFAULT_ACCENT;
+  } catch {
+    /* storage unavailable */
+  }
+
+  document.querySelectorAll('[data-accent-root]').forEach((wrap) => {
+    const toggle = wrap.querySelector('[data-accent-toggle]');
+    const pop = wrap.querySelector<HTMLElement>('[data-accent-pop]');
+    const swatches = Array.from(wrap.querySelectorAll('[data-accent]'));
+
+    const syncActive = () => {
+      swatches.forEach((sw) => {
+        const c = sw.getAttribute('data-accent') ?? '';
+        sw.classList.toggle('is-active', c.toLowerCase() === current.toLowerCase());
+      });
+    };
+    syncActive();
+
+    toggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (pop) pop.hidden = !pop.hidden;
+    });
+
+    swatches.forEach((sw) => {
+      sw.addEventListener('click', () => {
+        current = sw.getAttribute('data-accent') ?? DEFAULT_ACCENT;
+        root.style.setProperty('--acc', current);
+        try {
+          localStorage.setItem('lp-accent', current);
+        } catch {
+          /* storage unavailable */
+        }
+        if (pop) pop.hidden = true;
+        syncActive();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (pop && !wrap.contains(e.target as Node)) pop.hidden = true;
+    });
+  });
+</script>

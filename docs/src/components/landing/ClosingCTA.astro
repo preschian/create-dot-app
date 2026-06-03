@@ -1,0 +1,31 @@
+---
+// Closing CTA — big install prompt left, resource links right.
+import { CTA_LINKS } from '../../data/landing';
+import InstallCommand from './InstallCommand.astro';
+---
+
+<section class="lp-cta">
+  <div class="lp-cta-main">
+    <h2 class="lp-cta-h">Start building in the next minute.</h2>
+    <p class="lp-cta-p">
+      One command scaffolds the whole stack. Delete what you do not need; it is your code from the first save.
+    </p>
+    <InstallCommand big />
+  </div>
+  <div class="lp-cta-links">
+    <div class="lp-cta-links-head">KEEP READING</div>
+    {
+      CTA_LINKS.map((r) => (
+        <a class="lp-res" href="#">
+          <span>
+            <span class="lp-res-label">{r.label}</span>
+            <span class="lp-res-meta">{r.meta}</span>
+          </span>
+          <svg class="lp-ar" viewBox="0 0 24 24" fill="none" width="1em" height="1em" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      ))
+    }
+  </div>
+</section>

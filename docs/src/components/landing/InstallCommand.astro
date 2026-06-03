@@ -1,0 +1,53 @@
+---
+// The primary CTA: a copyable `npm create dot-app@latest` pill.
+import { INSTALL } from '../../data/landing';
+
+interface Props {
+  big?: boolean;
+}
+const { big = false } = Astro.props;
+---
+
+<button
+  class:list={['lp-install', { 'lp-install--big': big }]}
+  data-install={INSTALL}
+  type="button"
+  aria-label={`Copy install command: ${INSTALL}`}
+>
+  <span class="lp-install-dollar">$</span>
+  <span class="lp-install-cmd">{INSTALL}</span>
+  <span class="lp-install-copy" data-install-copy>
+    <svg class="lp-ic-copy" viewBox="0 0 24 24" fill="none" width="1em" height="1em" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7"></rect>
+      <path d="M5 15V6a2 2 0 0 1 2-2h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+    </svg>
+    <svg class="lp-ic-check" viewBox="0 0 24 24" fill="none" width="1em" height="1em" aria-hidden="true">
+      <path d="M4 12.5 9.5 18 20 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span class="lp-install-label">copy</span>
+  </span>
+</button>
+
+<script>
+  const RESET_MS = 1400;
+  document.querySelectorAll<HTMLButtonElement>('[data-install]').forEach((btn) => {
+    const copyEl = btn.querySelector('[data-install-copy]');
+    const label = btn.querySelector('.lp-install-label');
+    const text = btn.dataset.install ?? '';
+    let timer: ReturnType<typeof setTimeout>;
+    btn.addEventListener('click', () => {
+      try {
+        navigator.clipboard?.writeText(text);
+      } catch {
+        /* clipboard blocked — still flash the confirmation */
+      }
+      copyEl?.classList.add('is-copied');
+      if (label) label.textContent = 'copied';
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        copyEl?.classList.remove('is-copied');
+        if (label) label.textContent = 'copy';
+      }, RESET_MS);
+    });
+  });
+</script>

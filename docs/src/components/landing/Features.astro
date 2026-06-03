@@ -1,0 +1,23 @@
+---
+// Feature grid — six headline features in a bordered 3×2 grid.
+import { FEATURES } from '../../data/landing';
+---
+
+<section class="lp-section">
+  <div class="lp-sec-head">
+    <div class="lp-eyebrow">FEATURES</div>
+    <h2 class="lp-h2" style="max-width:16ch">Batteries included.</h2>
+    <p class="lp-sub">Six things you would otherwise wire by hand, already typed, tested and ready to ship.</p>
+  </div>
+  <div class="lp-feat-grid">
+    {
+      FEATURES.map((f, i) => (
+        <div class="lp-feat">
+          <div class="lp-feat-n">{String(i + 1).padStart(2, '0')}</div>
+          <div class="lp-feat-title">{f.title}</div>
+          <p class="lp-feat-desc">{f.desc}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>

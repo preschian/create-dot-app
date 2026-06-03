@@ -1,0 +1,19 @@
+---
+// Hero — variant C: copy left, full-bleed scaffold terminal right.
+import { HERO_COPY } from '../../data/landing';
+import InstallCommand from './InstallCommand.astro';
+import ScaffoldTerminal from './ScaffoldTerminal.astro';
+---
+
+<section class="lp-hero-c">
+  <div class="lp-hero-c-copy">
+    <div class="lp-eyebrow-hero">{HERO_COPY.eyebrow}</div>
+    <h1 class="lp-h1">{HERO_COPY.headline}</h1>
+    <div class="lp-hero-c-install">
+      <InstallCommand />
+    </div>
+  </div>
+  <div class="lp-hero-c-term">
+    <ScaffoldTerminal />
+  </div>
+</section>

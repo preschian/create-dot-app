@@ -1,0 +1,16 @@
+---
+// Stats strip — four headline numbers.
+import { STATS } from '../../data/landing';
+---
+
+<section class="lp-stats">
+  {
+    STATS.map((s) => (
+      <div>
+        <div class="lp-stat-n">{s.n}</div>
+        <div class="lp-stat-label">{s.label}</div>
+        <div class="lp-stat-meta">{s.meta}</div>
+      </div>
+    ))
+  }
+</section>
