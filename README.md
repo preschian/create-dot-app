@@ -12,14 +12,14 @@ A CLI tool to quickly bootstrap Polkadot-based decentralized applications with p
 npx create-dot-app@latest
 
 # Non-interactive mode
-npx create-dot-app@latest my-dapp --template react-papi
+npx create-dot-app@latest my-dapp --template next-papi
 ```
 
 ## Features
 
-- 🚀 **Multiple Frameworks** - React, Vue, Next.js, Nuxt
+- ⚡ **Three Next.js stacks** - Solidity (Polkadot Hub EVM), Substrate via PAPI, Substrate via Dedot
 - 🔗 **Dual SDK Support** - [PAPI](https://papi.how/) and [Dedot](https://docs.dedot.dev/)
-- 🔨 **Smart Contracts** - Substrate Pallets, Solidity
+- 🪶 **Light client** - in-browser smoldot connectivity on the Substrate stacks
 - 📦 **Package Managers** - npm, yarn, pnpm, bun
 
 ## Documentation

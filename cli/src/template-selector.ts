@@ -12,8 +12,13 @@ export const templateOptions: SelectOptions<string>['options'] = [
   },
   {
     value: 'next-papi',
-    label: 'Substrate',
+    label: 'Substrate (PAPI)',
     hint: 'Next.js + PAPI light client, Polkadot native',
+  },
+  {
+    value: 'next-dedot',
+    label: 'Substrate (Dedot)',
+    hint: 'Next.js + Dedot light client, Polkadot native',
   },
 ]
 
