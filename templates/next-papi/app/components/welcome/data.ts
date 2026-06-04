@@ -1,7 +1,6 @@
 // Static content for the create-dot-app welcome screen — Polkadot-native (papi).
 
 export const CLI = 'create-dot-app'
-export const PROJECT = 'my-dapp'
 export const HEADLINE = 'Ship your dapp today.'
 
 export interface Feature {

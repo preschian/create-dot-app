@@ -6,7 +6,7 @@
 // template's real polkadot-api + Talisman hooks (light client under the hood).
 import type { Prefix } from '../utils/sdk'
 import { useState } from 'react'
-import { FEATURES, HEADLINE, HERO_BLURB, PROJECT, RESOURCES } from './welcome/data'
+import { CLI, FEATURES, HEADLINE, HERO_BLURB, RESOURCES } from './welcome/data'
 import { DEFAULT_NETWORK, networkByKey } from './welcome/networks'
 import { ConnectModal } from './welcome/panels/ConnectModal'
 import { HeaderUtilities } from './welcome/panels/HeaderControls'
@@ -73,7 +73,7 @@ export default function App() {
             {HEADLINE}
           </h1>
           <p className="m-0 pb-2.5 text-[16.5px] leading-snug text-(--dim)">
-            <span className="font-medium text-(--ink)">{PROJECT}</span>
+            <span className="font-medium text-(--ink)">{CLI}</span>
             {' '}
             {HERO_BLURB}
           </p>
