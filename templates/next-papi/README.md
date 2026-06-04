@@ -1,6 +1,6 @@
 # Next.js PAPI Template
 
-A modern **Next.js 16 + TypeScript + React 19** template for building Polkadot decentralized applications (dApps) using the PAPI SDK.
+A modern **Next.js 16 + TypeScript + React 19** template for building Polkadot decentralized applications (dApps) using the PAPI SDK. The first-run home page is a live welcome screen — a real-time block watcher, a network switcher, Connect Wallet, and a sample `system.remark` extrinsic — all wired up so you can confirm the stack works the moment it boots.
 
 ## 🚀 Features
 
@@ -9,9 +9,8 @@ A modern **Next.js 16 + TypeScript + React 19** template for building Polkadot d
 - **TypeScript** for type safety
 - **PAPI SDK** integration for Polkadot blockchain interaction
 - **Light client** connectivity via smoldot — verifies the chain in-browser instead of trusting a single RPC node
-- **TailwindCSS 4 + DaisyUI** for beautiful UI components
+- **TailwindCSS 4** styling with light/dark theme tokens and an accent picker
 - **Wallet Connection** support via Talisman Connect
-- **Iconify** icons integration
 - Pre-configured for **multiple Polkadot chains**
 
 ## 🔗 SDK Information
@@ -56,13 +55,31 @@ npm run start
 
 ```
 app/
-├── components/     # React components
-├── hooks/          # Custom React hooks
-├── utils/          # Utility functions and SDK setup
-├── globals.css     # Global styles
-├── layout.tsx      # Root layout component
-└── page.tsx        # Main page component
+├── components/
+│   ├── app.tsx     # ← start here: the screen rendered by app/page.tsx
+│   └── welcome/    # first-run welcome UI (panels, theme, icons) — replace with your own
+├── hooks/          # papi data hooks: use-connect, use-current-block, use-transaction
+├── utils/          # sdk.ts (chain setup), sdk-interface.ts (onchain calls), formatters.ts
+├── globals.css     # Tailwind entry + welcome animations
+├── layout.tsx      # Root layout (fonts)
+└── page.tsx        # Renders <App />
 ```
+
+## 🎨 Where to start
+
+Edit [`app/components/app.tsx`](app/components/app.tsx) — it composes the welcome screen and is the natural place to start building your own UI. Styling uses **Tailwind CSS 4** utility classes with theme tokens exposed as CSS variables (`--paper`, `--ink`, `--acc`, …) on the welcome root. The pieces it pulls in live in [`app/components/welcome/`](app/components/welcome):
+
+| File | Responsibility |
+| --- | --- |
+| `welcome/panels/LiveDemo.tsx` | Composes `BlockPanel` + `WritePanel` |
+| `welcome/panels/BlockPanel.tsx` | Live block watcher (`useCurrentBlock`) |
+| `welcome/panels/WritePanel.tsx` | Sample `system.remark` extrinsic + transaction stepper |
+| `welcome/panels/WalletConnect.tsx` | Connect Wallet button + connected menu (balance via the light client) |
+| `welcome/panels/ConnectModal.tsx` | Talisman wallet + account picker |
+| `welcome/panels/NetworkSwitch.tsx` | Network selector across the configured chains |
+| `welcome/panels/HeaderControls.tsx` | Accent picker + theme toggle |
+| `welcome/ui/{PopoverPanel,icons}` | Shared UI primitives (dropdown panel, icon set) |
+| `welcome/{theme,networks,data,shared,format,useDismissible}` | Theme tokens, chain metadata, copy, and helpers |
 
 ## 🔧 Adding Custom Networks
 
@@ -110,6 +127,17 @@ your_parachain: {
 ```
 
 `polkadot-api/chains/*` bundles specs for the well-known relay and system chains. If PAPI does not bundle a spec for your chain, supply your own chain-spec string, or connect over RPC instead with `getWsProvider('wss://your-rpc-endpoint.io')` from `polkadot-api/ws-provider`.
+
+### Step 3: Add it to the UI
+
+The network switch, block watcher, and balance read each chain's display metadata from [`app/components/welcome/networks.ts`](app/components/welcome/networks.ts). Add a matching entry (keyed by the `config` key from `sdk.ts`) so the new chain shows up in the switcher:
+
+```typescript
+export const NETWORKS: NetworkInfo[] = [
+  // ... existing chains
+  { key: 'your_chain', name: 'Your Chain', chain: 'Your Chain', token: 'YRC', tag: 'MAINNET', color: '#E6007A', transport: 'smoldot light client' },
+]
+```
 
 📖 For more details, see the [PAPI Codegen documentation](https://papi.how/codegen).
 

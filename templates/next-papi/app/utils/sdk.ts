@@ -36,7 +36,6 @@ const config = {
 } as const
 
 export type Prefix = keyof typeof config
-export const chainKeys = Object.keys(config) as Prefix[]
 
 type Smoldot = ReturnType<typeof startFromWorker>
 type SmoldotChain = Awaited<ReturnType<Smoldot['addChain']>>

@@ -1,13 +1,18 @@
 import type { PolkadotSigner } from 'polkadot-api'
 import type { Prefix } from '../utils/sdk'
+import { formatValue } from '@polkadot-api/react-components'
 import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
 import { connectedWallet, selectedAccount } from '../hooks/use-connect'
 import sdk from '../utils/sdk'
-import { name } from '../../package.json'
-import { formatValue } from '@polkadot-api/react-components'
 
-export const DAPP_NAME = name
+export interface BlockUpdate {
+  blockHeight: number
+  blockHash: string
+  finalized: number
+  chainName: string
+  tokenSymbol: string
+}
 
 export async function polkadotSigner() {
   const selectedExtension = await connectInjectedExtension(
@@ -18,16 +23,37 @@ export async function polkadotSigner() {
   return account?.polkadotSigner
 }
 
+// Watch the chain head through the light client. `blocks$` emits each new best
+// block and `finalizedBlock$` the latest finalized one; both are folded into a
+// single update so the UI can show the live height alongside the finalized depth.
 export async function subscribeToBlocks(
   networkKey: Prefix,
-  onBlock: (data: { blockHeight: number, chainName: string }) => void,
+  onBlock: (data: BlockUpdate) => void,
 ) {
   const { client } = sdk(networkKey)
-  const chainName = await client.getChainSpecData().then(data => data.name)
+  const chainSpec = await client.getChainSpecData()
+  const chainName = chainSpec.name
+  const tokenSymbol = chainSpec.properties.tokenSymbol
 
-  return client.blocks$.subscribe(async (block) => {
-    onBlock({ blockHeight: block.number, chainName })
+  const state = { blockHeight: 0, blockHash: '', finalized: 0 }
+  const emit = () => onBlock({ ...state, chainName, tokenSymbol })
+
+  const bestSub = client.blocks$.subscribe((block) => {
+    state.blockHeight = block.number
+    state.blockHash = block.hash
+    emit()
   })
+  const finalizedSub = client.finalizedBlock$.subscribe((block) => {
+    state.finalized = block.number
+    emit()
+  })
+
+  return {
+    unsubscribe: () => {
+      bestSub.unsubscribe()
+      finalizedSub.unsubscribe()
+    },
+  }
 }
 
 export async function getBalance(chainPrefix: Prefix, address: string) {
