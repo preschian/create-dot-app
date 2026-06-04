@@ -48,7 +48,7 @@ let smoldot: Smoldot | undefined
 function getSmoldot() {
   if (!smoldot) {
     smoldot = startFromWorker(
-      new Worker(new URL('polkadot-api/smoldot/worker', import.meta.url)),
+      new Worker(new URL('./smoldot-worker.ts', import.meta.url)),
     )
   }
 
