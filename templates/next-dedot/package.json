@@ -9,6 +9,7 @@
     "lint": "eslint --fix ."
   },
   "dependencies": {
+    "@dedot/chain-specs": "^0.10.0",
     "@talismn/connect-wallets": "^1.2.8",
     "@xstate/store": "^4.1.0",
     "@xstate/store-react": "^2.0.0",

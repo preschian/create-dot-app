@@ -32,7 +32,7 @@ export async function polkadotSigner(): Promise<InjectedSigner | undefined> {
   return wallet?.signer
 }
 
-// Watch the chain head over the RPC connection. `block.best()` streams each new
+// Watch the chain head over the light client connection. `block.best()` streams each new
 // best block and `block.finalized()` the latest finalized one; both are folded
 // into a single update so the UI can show the live height alongside the
 // finalized depth.

@@ -8,6 +8,7 @@ A modern **Next.js 16 + TypeScript + React 19** template for building Polkadot d
 - **React 19** for modern UI development
 - **TypeScript** for type safety
 - **Dedot SDK** integration for Polkadot blockchain interaction
+- **Light client** connectivity via smoldot — verifies the chain in-browser instead of trusting a single RPC node
 - **Type-safe chaintypes** via `@dedot/chaintypes` — no code generation step required
 - **TailwindCSS 4** styling with light/dark theme tokens and an accent picker
 - **Wallet Connection** support via Talisman Connect
@@ -21,10 +22,10 @@ This template uses **Dedot** - a lightweight, tree-shakable, type-safe SDK for i
 
 ### Connectivity
 
-Chains connect through a remote RPC node over WebSocket (`WsProvider`). Each chain pulls its types from `@dedot/chaintypes`, so storage queries, constants, and extrinsics are fully typed with no code generation step. Prefer an in-browser light client? dedot also ships a `SmoldotProvider` (from `dedot/smoldot`) you can drop in to verify the chain yourself instead of trusting a single endpoint.
+Chains connect through an in-browser **smoldot light client** (`SmoldotProvider`) rather than a remote RPC node, so the app verifies the chain itself instead of trusting a single endpoint. smoldot runs in a Web Worker, and each chain's spec (from `@dedot/chain-specs`) is loaded on demand via a dynamic import. The first connection to a chain warp-syncs and can take a few seconds; the asset hubs are parachains, so they also sync their relay chain (`dot` / `pas`) under the hood. Each chain pulls its types from `@dedot/chaintypes`, so storage queries, constants, and extrinsics are fully typed with no code generation step.
 
 ### Configuration Files:
-- **`app/utils/sdk.ts`** - Configures which chains to connect to. Each chain points to an RPC endpoint; edit this file to add or remove supported networks (or switch a chain over to the smoldot light client).
+- **`app/utils/sdk.ts`** - Configures which chains to connect to. Each chain runs through the smoldot light client; edit this file to add or remove supported networks (or switch a chain back to a remote RPC endpoint with `WsProvider`).
 - **`app/utils/sdk-interface.ts`** - Provides high-level functions for onchain SDK calls.
 
 ## 🌐 Supported Chains
@@ -74,7 +75,7 @@ Edit [`app/components/app.tsx`](app/components/app.tsx) — it composes the welc
 | `welcome/panels/LiveDemo.tsx` | Composes `BlockPanel` + `WritePanel` |
 | `welcome/panels/BlockPanel.tsx` | Live block watcher (`useCurrentBlock`) |
 | `welcome/panels/WritePanel.tsx` | Sample `system.remark` extrinsic + transaction stepper |
-| `welcome/panels/WalletConnect.tsx` | Connect Wallet button + connected menu (balance via the RPC connection) |
+| `welcome/panels/WalletConnect.tsx` | Connect Wallet button + connected menu (balance via the light client) |
 | `welcome/panels/ConnectModal.tsx` | Talisman wallet + account picker |
 | `welcome/panels/NetworkSwitch.tsx` | Network selector across the configured chains |
 | `welcome/panels/HeaderControls.tsx` | Accent picker + theme toggle |
@@ -85,7 +86,7 @@ Edit [`app/components/app.tsx`](app/components/app.tsx) — it composes the welc
 
 ### Step 1: Configure Your Chain
 
-Dedot reads chain types from `@dedot/chaintypes`, so there is no descriptor generation step. Edit `app/utils/sdk.ts` to add your chain, pointing it at an RPC endpoint and the matching chaintypes interface:
+Dedot reads chain types from `@dedot/chaintypes`, so there is no descriptor generation step. Edit `app/utils/sdk.ts` to add your chain, pointing it at a light-client chain spec (from `@dedot/chain-specs`) and the matching chaintypes interface:
 
 ```typescript
 import type { YourChainApi } from '@dedot/chaintypes'
@@ -93,13 +94,15 @@ import type { YourChainApi } from '@dedot/chaintypes'
 const CONFIG = {
   // ... existing chains
   your_chain: {
-    providers: ['wss://your-rpc-endpoint.io'],
     apiType: {} as YourChainApi,
+    chainSpec: () => import('@dedot/chain-specs/your_chain'),
+    // For a parachain, point `relay` at its relay chain's CONFIG key so it
+    // syncs through the right relay: relay: 'dot',
   },
 }
 ```
 
-If `@dedot/chaintypes` does not yet bundle types for your chain, you can generate them with the dedot CLI (`npx dedot chaintypes -w wss://your-rpc-endpoint.io`) or fall back to the generic `SubstrateApi` type.
+`@dedot/chain-specs` ships specs for the well-known Polkadot, Kusama, Paseo, and Westend chains (relay chains, asset hubs, and more). For any other chain, drop its chain-spec JSON into the project and import that instead, or switch it to a remote RPC endpoint with `new WsProvider('wss://your-rpc-endpoint.io')`. If `@dedot/chaintypes` does not yet bundle types for your chain, generate them with the dedot CLI (`npx dedot chaintypes -w wss://your-rpc-endpoint.io`) or fall back to the generic `SubstrateApi` type.
 
 ### Step 2: Add it to the UI
 
@@ -108,7 +111,7 @@ The network switch, block watcher, and balance read each chain's display metadat
 ```typescript
 export const NETWORKS: NetworkInfo[] = [
   // ... existing chains
-  { key: 'your_chain', name: 'Your Chain', chain: 'Your Chain', token: 'YRC', tag: 'MAINNET', color: '#E6007A', transport: 'your RPC' },
+  { key: 'your_chain', name: 'Your Chain', chain: 'Your Chain', token: 'YRC', tag: 'MAINNET', color: '#E6007A', transport: 'smoldot light client' },
 ]
 ```
 

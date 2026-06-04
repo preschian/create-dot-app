@@ -1,6 +1,6 @@
 // Display metadata for the chains the starter ships with, keyed to the dedot
 // `Prefix` values defined in app/utils/sdk.ts so the network switch, block
-// watcher, and balance all line up with what the RPC connection exposes.
+// watcher, and balance all line up with what the light client exposes.
 // Add an entry here when you add a chain to the `CONFIG` in app/utils/sdk.ts.
 import type { Prefix } from '../../utils/sdk'
 
@@ -22,7 +22,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: 'DOT',
     tag: 'MAINNET',
     color: '#E6007A',
-    transport: 'stakeworld RPC',
+    transport: 'smoldot light client',
   },
   {
     key: 'dot_asset_hub',
@@ -31,7 +31,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: 'DOT',
     tag: 'SYSTEM',
     color: '#7916F3',
-    transport: 'stakeworld RPC',
+    transport: 'smoldot light client',
   },
   {
     key: 'pas',
@@ -40,7 +40,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: 'PAS',
     tag: 'TESTNET',
     color: '#56B4D3',
-    transport: 'stakeworld RPC',
+    transport: 'smoldot light client',
   },
   {
     key: 'pas_asset_hub',
@@ -49,7 +49,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: 'PAS',
     tag: 'TESTNET',
     color: '#18A058',
-    transport: 'stakeworld RPC',
+    transport: 'smoldot light client',
   },
 ]
 
