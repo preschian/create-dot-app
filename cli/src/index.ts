@@ -71,20 +71,20 @@ ${color.bold('Options:')}
   -v, --version              Show version number
 
 ${color.bold('Available Templates:')}
-${templateOptions.map(option => `  ${option.value}  ${color.dim(option.label)}`).join('\n')}
+${templateOptions.map(option => `  ${color.cyan(String(option.value).padEnd(10))} ${option.label}${option.hint ? color.dim(` (${option.hint})`) : ''}`).join('\n')}
 
 ${color.bold('Examples:')}
-  ${color.dim('# Interactive mode')}
+  ${color.dim('# Interactive mode (pick Solidity or Substrate)')}
   npx create-dot-app@latest
 
   ${color.dim('# Specify project name')}
   npx create-dot-app@latest my-dapp
 
-  ${color.dim('# Specify project name and template')}
+  ${color.dim('# Solidity dapp (Polkadot Hub EVM)')}
   npx create-dot-app@latest my-dapp --template next
 
-  ${color.dim('# Full non-interactive mode')}
-  npx create-dot-app@latest my-dapp -t next
+  ${color.dim('# Substrate dapp (Polkadot native)')}
+  npx create-dot-app@latest my-dapp --template next-papi
 
 ${color.bold('Learn more:')}
   ${color.underline('https://github.com/preschian/create-dot-app')}
@@ -145,8 +145,8 @@ async function main() {
     name = nameInput
   }
 
-  // Resolve the template (only the Next.js template is currently available)
-  const template = await pickTemplate(args.template)
+  // Resolve the template: honor --template, otherwise prompt (Solidity vs Substrate)
+  const template = await pickTemplate(args.template, isInteractive())
   log.info(`Using template: ${template}`)
 
   const s = spinner()
