@@ -1,0 +1,19 @@
+# pnpm gates dependency build scripts (native addons and postinstall steps)
+# behind an allow-list. Without this file a fresh `pnpm install` silently skips
+# them, and the next `pnpm run build`/`dev` re-checks dependencies and hard-fails
+# with ERR_PNPM_IGNORED_BUILDS. npm, bun, and yarn run these by default;
+# approving them here keeps pnpm non-interactive and working too. `allowBuilds`
+# is the pnpm v11+ form and `onlyBuiltDependencies` is the v10 form, so both are
+# listed to cover either.
+allowBuilds:
+  bufferutil: true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  utf-8-validate: true
+onlyBuiltDependencies:
+  - bufferutil
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - utf-8-validate

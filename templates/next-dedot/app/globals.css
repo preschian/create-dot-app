@@ -1,36 +1,61 @@
 @import "tailwindcss";
-@plugin "@iconify/tailwind4";
 
-.container {
-  max-width: 1200px;
+@custom-variant welcome-md (@media (max-width: 920px));
+@custom-variant welcome-sm (@media (max-width: 560px));
+
+@theme {
+  --font-sans: var(--font-grotesk), "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  --welcome-header-inset: 1.25rem;
+
+  --animate-dapp-ping: dappPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-block-bump: blockBump 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-popover-rise: popoverRise 0.14s ease-out;
+  --animate-ns-spin: nsSpin 0.7s linear infinite;
 }
 
-@plugin "daisyui" {
-  exclude: properties;
+@keyframes dappPing {
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
-/* to enable dark mode, remove data-theme="light" from html tag */
-@plugin "daisyui/theme" {
-  name: 'light';
-  default: true;
-  --radius-selector: 0rem;
-  --radius-field: 0rem;
-  --radius-box: 0rem;
-  --depth: 0;
-}
-
-@keyframes flash-highlight {
+@keyframes blockBump {
   0% {
-    background-color: rgb(187 247 208);
-    transform: scale(1.05);
+    transform: translateY(-0.2em);
+    color: inherit;
+  }
+  30% {
+    color: var(--acc);
   }
   100% {
-    background-color: transparent;
-    transform: scale(1);
+    transform: translateY(0);
+    color: inherit;
   }
 }
 
-.block-highlight {
-  animation: flash-highlight 1s ease-out;
-  display: inline-block;
+@keyframes popoverRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes nsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
