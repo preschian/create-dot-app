@@ -4,11 +4,19 @@ A command-line interface (CLI) tool designed to streamline the development proce
 
 ## Features
 
-### ⚡ Next.js + Web3Auth Template
+Choose the Polkadot stack you want to build with:
+
+### ⚡ Solidity — `next`
 - **Next.js** (App Router) with React 19 and Tailwind CSS
 - **[Web3Auth](https://web3auth.io/)** social/embedded wallet login
 - **[Wagmi](https://wagmi.sh/)** for EVM wallet and contract interactions
-- **Solidity** smart contracts via an integrated Hardhat workspace (Polkadot Hub)
+- **Solidity** smart contracts on Polkadot Hub (EVM)
+
+### 🟣 Substrate — `next-papi`
+- **Next.js** (App Router) with React 19 and Tailwind CSS
+- **[PAPI](https://papi.how/)** (polkadot-api) for native Polkadot interaction
+- **[smoldot](https://github.com/smol-dot/smoldot)** light client transport
+- Connect Wallet plus a sample `system.remark` extrinsic, wired out of the box
 
 ### 📦 Package Manager Support
 Compatible with npm, yarn, pnpm, and bun
@@ -30,21 +38,21 @@ Create a new Polkadot dApp project with interactive prompts:
 npx create-dot-app@latest
 ```
 
-Enter your project name when prompted. The Next.js template is currently selected automatically.
+Enter your project name when prompted, then pick a stack: **Solidity** (`next`) or **Substrate** (`next-papi`).
 
 ### Non-Interactive Mode
 
 Skip the prompts by providing options via CLI flags:
 
 ```bash
-# Specify project name only
+# Specify project name only (defaults to the next template)
 npx create-dot-app@latest my-dapp
 
-# Specify project name and template
+# Solidity dapp (Polkadot Hub EVM)
 npx create-dot-app@latest my-dapp --template next
 
-# Full non-interactive mode
-npx create-dot-app@latest my-dapp -t next
+# Substrate dapp (Polkadot native)
+npx create-dot-app@latest my-dapp --template next-papi
 ```
 
 ### CLI Options
@@ -58,16 +66,18 @@ npx create-dot-app@latest my-dapp -t next
 
 #### Available Templates
 
-- `next` - Next.js (Web3Auth + Wagmi)
+- `next` - Solidity (Next.js + Web3Auth + Wagmi, Polkadot Hub EVM)
+- `next-papi` - Substrate (Next.js + PAPI light client, Polkadot native)
 
 ## Quick Start
 
 ```bash
-# Interactive mode
+# Interactive mode (pick Solidity or Substrate)
 npx create-dot-app@latest
 
-# Non-interactive with specific template
-npx create-dot-app@latest my-dapp --template next
+# Non-interactive with a specific template
+npx create-dot-app@latest my-dapp --template next        # Solidity
+npx create-dot-app@latest my-dapp --template next-papi   # Substrate
 
 # Navigate to project directory
 cd my-dapp

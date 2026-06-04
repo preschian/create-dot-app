@@ -14,19 +14,18 @@ export type ScaffoldKind = 'cmd' | 'q' | 'ok' | 'dim' | 'next';
 export const SCAFFOLD_LINES: { t: ScaffoldKind; s: string }[] = [
   { t: 'cmd', s: 'npm create dot-app@latest' },
   { t: 'q', s: '◇  Project name … my-dapp' },
-  { t: 'q', s: '◇  Network … Polkadot, Kusama, Paseo' },
-  { t: 'q', s: '◇  Template … Wallet + Contracts' },
+  { t: 'q', s: '◇  Stack … Solidity · Substrate' },
+  { t: 'q', s: '◇  Package manager … npm' },
   { t: 'ok', s: '◇  Scaffolding project' },
   { t: 'dim', s: '   created 38 files · pinned lockfile' },
   { t: 'ok', s: '◇  Done in 4.2s' },
   { t: 'next', s: '→  cd my-dapp' },
-  { t: 'next', s: '→  npm install' },
   { t: 'next', s: '→  npm run dev' },
 ];
 
 // Quickstart — the four commands.
 export const STEPS = [
-  { n: '01', cmd: 'npm create dot-app@latest', note: 'Scaffold a fresh project. Pick chains and a template in the prompt.' },
+  { n: '01', cmd: 'npm create dot-app@latest', note: 'Scaffold a fresh project. Pick your stack, Solidity or Substrate, in the prompt.' },
   { n: '02', cmd: 'cd my-dapp && npm i', note: 'Install dependencies. Lockfile pinned, zero post-install scripts.' },
   { n: '03', cmd: 'npm run dev', note: 'Boots a forked local node, seeds accounts, opens the app on :5173.' },
   { n: '04', cmd: 'npm run deploy', note: 'Type-checked, env-aware deploy to any configured network.' },

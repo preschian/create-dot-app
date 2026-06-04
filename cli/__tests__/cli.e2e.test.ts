@@ -112,7 +112,8 @@ describe('cli E2E tests', () => {
     const projectName = 'test-project-arg'
     const projectPath = path.join(testDir, projectName)
 
-    // Only the Next.js template is available, so no template prompt appears.
+    // spawnCLI sets CI=1, so the run is non-interactive: no template prompt
+    // appears and the default (next) template is used.
     const { output } = await spawnCLI(testDir, {
       args: [projectName],
       timeout: 60000,
@@ -146,7 +147,7 @@ describe('cli E2E tests', () => {
 
     let askedForName = false
 
-    // The only interactive prompt is the project name; the template is auto-selected.
+    // Under CI=1 the only prompt is the project name; the template defaults to next.
     const { output } = await spawnCLI(testDir, {
       args: [],
       onData: async (_, cleanOutput, process) => {
@@ -217,6 +218,40 @@ describe('cli E2E tests', () => {
     expect(nextConfigExists, 'Should create Next.js project with next.config.mjs').toBe(true)
   })
 
+  it('creates Substrate project with --template=next-papi', async () => {
+    const projectName = 'substrate-param-test'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: [projectName, '--template=next-papi'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain(`Using project name: ${projectName}`)
+    expect(output).toContain('Using template: next-papi')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+
+    // Verify it's the PAPI (Substrate) template: ships next.config.ts and PAPI descriptors,
+    // which distinguish it from the Solidity `next` template (next.config.mjs, no .papi)
+    const papiMarkers = ['app/page.tsx', 'next.config.ts', '.papi']
+    for (const file of papiMarkers) {
+      const filePath = path.join(projectPath, file)
+      const fileExists = await fs.access(filePath).then(() => true).catch(() => false)
+      expect(fileExists, `File ${file} should exist`).toBe(true)
+    }
+  })
+
   it('handles invalid --template parameter correctly', async () => {
     const projectName = 'invalid-template-test'
 
@@ -226,10 +261,11 @@ describe('cli E2E tests', () => {
       timeout: 30000,
     })
 
-    // Should contain error message about invalid template, listing the available one
+    // Should contain error message about invalid template, listing the available ones
     expect(output).toContain('Invalid template "invalid-template"')
     expect(output).toContain('Available templates:')
     expect(output).toContain('next')
+    expect(output).toContain('next-papi')
   })
 
   it('creates project with --template parameter only (prompts for name)', async () => {
