@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useSwitchChain } from "wagmi";
 import { tokens, DEFAULT_ACCENT, themeVars } from "@/components/welcome/theme";
 import { NETWORKS, networkByChainId } from "@/components/welcome/networks";
-import { FEATURES, RESOURCES, PROJECT, HEADLINE, HERO_BLURB } from "@/components/welcome/data";
+import { FEATURES, RESOURCES, CLI, HEADLINE, HERO_BLURB } from "@/components/welcome/data";
 import { Ic } from "@/components/welcome/ui/icons";
 import { HeaderUtilities } from "@/components/welcome/panels/HeaderControls";
 import { NetworkSwitch } from "@/components/welcome/panels/NetworkSwitch";
@@ -81,7 +81,7 @@ export default function App() {
             {HEADLINE}
           </h1>
           <p className="m-0 pb-2.5 text-[16.5px] leading-snug text-(--dim)">
-            <span className="font-medium text-(--ink)">{PROJECT}</span> {HERO_BLURB}
+            <span className="font-medium text-(--ink)">{CLI}</span> {HERO_BLURB}
           </p>
         </section>
 
