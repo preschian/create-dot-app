@@ -14,17 +14,6 @@ export function unifyAddress(address: string) {
   return codec.dec(publicKey)
 }
 
-export function stripAddress(address: string): string {
-  return `${address.slice(0, 4)}...${address.slice(-4)}`
-}
-
-export function explorerAccount(chain: Prefix, address?: string): string {
-  const url = new URL(subscan[chain])
-  url.pathname = `/account/${address || ''}`
-
-  return url.toString()
-}
-
 export function explorerDetail(chain: Prefix, hash: string): string {
   const url = new URL(subscan[chain])
   url.pathname = `/extrinsic/${hash}`

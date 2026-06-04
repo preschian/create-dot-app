@@ -3,11 +3,8 @@ import type { Prefix } from '../utils/sdk'
 import { formatValue } from '@polkadot-api/react-components'
 import { Binary } from 'polkadot-api'
 import { connectInjectedExtension } from 'polkadot-api/pjs-signer'
-import { name } from '../../package.json'
 import { connectedWallet, selectedAccount } from '../hooks/use-connect'
 import sdk from '../utils/sdk'
-
-export const DAPP_NAME = name
 
 export interface BlockUpdate {
   blockHeight: number
