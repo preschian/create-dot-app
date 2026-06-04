@@ -18,7 +18,7 @@ export const templateOptions: SelectOptions<string>['options'] = [
   {
     value: 'next-dedot',
     label: 'Substrate (Dedot)',
-    hint: 'Next.js + Dedot SDK, Polkadot native',
+    hint: 'Next.js + Dedot light client, Polkadot native',
   },
 ]
 

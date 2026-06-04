@@ -77,7 +77,7 @@ npx create-dot-app@latest my-dapp --template next-dedot
 
 - `next` - Solidity (Next.js + Web3Auth + Wagmi, Polkadot Hub EVM)
 - `next-papi` - Substrate (Next.js + PAPI light client, Polkadot native)
-- `next-dedot` - Substrate (Next.js + Dedot SDK, Polkadot native)
+- `next-dedot` - Substrate (Next.js + Dedot light client, Polkadot native)
 
 ## Quick Start
 
