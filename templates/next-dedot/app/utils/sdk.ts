@@ -51,7 +51,7 @@ let smoldot: Smoldot | undefined
 function getSmoldot() {
   if (!smoldot) {
     smoldot = startWithWorker(
-      new Worker(new URL('dedot/smoldot/worker', import.meta.url), { type: 'module' }),
+      new Worker(new URL('./smoldot-worker.ts', import.meta.url), { type: 'module' }),
     )
   }
 
