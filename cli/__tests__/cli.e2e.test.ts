@@ -252,6 +252,41 @@ describe('cli E2E tests', () => {
     }
   })
 
+  it('creates Substrate project with --template=next-dedot', async () => {
+    const projectName = 'dedot-param-test'
+    const projectPath = path.join(testDir, projectName)
+
+    const { output } = await spawnCLI(testDir, {
+      args: [projectName, '--template=next-dedot'],
+      timeout: 60000,
+    })
+
+    // Verify output contains expected messages
+    expect(output).toContain('create-dot-app')
+    expect(output).toContain(`Using project name: ${projectName}`)
+    expect(output).toContain('Using template: next-dedot')
+    expect(output).toContain('Project created successfully!')
+
+    // Verify project directory was created
+    const projectExists = await fs.access(projectPath).then(() => true).catch(() => false)
+    expect(projectExists).toBe(true)
+
+    // Verify package.json has correct name and ships the Dedot SDK, which is what
+    // distinguishes this Substrate stack from the PAPI one (next-papi)
+    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
+    expect(packageJson.name).toBe(projectName)
+    expect(packageJson.dependencies?.dedot).toBeDefined()
+
+    // Verify it's the Dedot template: ships next.config.ts but no PAPI descriptors (.papi)
+    const appPageExists = await fs.access(path.join(projectPath, 'app/page.tsx')).then(() => true).catch(() => false)
+    expect(appPageExists, 'File app/page.tsx should exist').toBe(true)
+    const nextConfigTsExists = await fs.access(path.join(projectPath, 'next.config.ts')).then(() => true).catch(() => false)
+    expect(nextConfigTsExists, 'File next.config.ts should exist').toBe(true)
+    const papiExists = await fs.access(path.join(projectPath, '.papi')).then(() => true).catch(() => false)
+    expect(papiExists, 'Dedot template should not ship a .papi directory').toBe(false)
+  })
+
   it('handles invalid --template parameter correctly', async () => {
     const projectName = 'invalid-template-test'
 
@@ -266,6 +301,7 @@ describe('cli E2E tests', () => {
     expect(output).toContain('Available templates:')
     expect(output).toContain('next')
     expect(output).toContain('next-papi')
+    expect(output).toContain('next-dedot')
   })
 
   it('creates project with --template parameter only (prompts for name)', async () => {

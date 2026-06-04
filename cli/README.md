@@ -12,11 +12,17 @@ Choose the Polkadot stack you want to build with:
 - **[Wagmi](https://wagmi.sh/)** for EVM wallet and contract interactions
 - **Solidity** smart contracts on Polkadot Hub (EVM)
 
-### 🟣 Substrate — `next-papi`
+### 🟣 Substrate (PAPI) — `next-papi`
 - **Next.js** (App Router) with React 19 and Tailwind CSS
 - **[PAPI](https://papi.how/)** (polkadot-api) for native Polkadot interaction
 - **[smoldot](https://github.com/smol-dot/smoldot)** light client transport
 - Connect Wallet plus a sample `system.remark` extrinsic, wired out of the box
+
+### 🟣 Substrate (Dedot) — `next-dedot`
+- **Next.js** (App Router) with React 19 and Tailwind CSS
+- **[Dedot](https://dedot.dev/)** SDK for native Polkadot interaction
+- Live block watcher, network switcher, Connect Wallet, and a sample `system.remark` extrinsic out of the box
+- Light client transport opt-in (swap `WsProvider` for Dedot's `SmoldotProvider`)
 
 ### 📦 Package Manager Support
 Compatible with npm, yarn, pnpm, and bun
@@ -38,7 +44,7 @@ Create a new Polkadot dApp project with interactive prompts:
 npx create-dot-app@latest
 ```
 
-Enter your project name when prompted, then pick a stack: **Solidity** (`next`) or **Substrate** (`next-papi`).
+Enter your project name when prompted, then pick a stack: **Solidity** (`next`), **Substrate (PAPI)** (`next-papi`), or **Substrate (Dedot)** (`next-dedot`).
 
 ### Non-Interactive Mode
 
@@ -51,8 +57,11 @@ npx create-dot-app@latest my-dapp
 # Solidity dapp (Polkadot Hub EVM)
 npx create-dot-app@latest my-dapp --template next
 
-# Substrate dapp (Polkadot native)
+# Substrate dapp, PAPI SDK (Polkadot native)
 npx create-dot-app@latest my-dapp --template next-papi
+
+# Substrate dapp, Dedot SDK (Polkadot native)
+npx create-dot-app@latest my-dapp --template next-dedot
 ```
 
 ### CLI Options
@@ -68,6 +77,7 @@ npx create-dot-app@latest my-dapp --template next-papi
 
 - `next` - Solidity (Next.js + Web3Auth + Wagmi, Polkadot Hub EVM)
 - `next-papi` - Substrate (Next.js + PAPI light client, Polkadot native)
+- `next-dedot` - Substrate (Next.js + Dedot SDK, Polkadot native)
 
 ## Quick Start
 
@@ -76,8 +86,9 @@ npx create-dot-app@latest my-dapp --template next-papi
 npx create-dot-app@latest
 
 # Non-interactive with a specific template
-npx create-dot-app@latest my-dapp --template next        # Solidity
-npx create-dot-app@latest my-dapp --template next-papi   # Substrate
+npx create-dot-app@latest my-dapp --template next         # Solidity
+npx create-dot-app@latest my-dapp --template next-papi    # Substrate (PAPI)
+npx create-dot-app@latest my-dapp --template next-dedot   # Substrate (Dedot)
 
 # Navigate to project directory
 cd my-dapp
