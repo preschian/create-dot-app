@@ -40,12 +40,41 @@ export type DedotApiFor<T extends Prefix> = Promise<DedotClient<ApiTypeFor<T>>>
 // event handlers.
 const clients = createAtom<Partial<Record<Prefix, Promise<DedotClient<ApiTypeFor<Prefix>>>>>>({})
 
+// `api.registry` throws until the client has connected and fetched metadata, so
+// probing it tells us whether storage reads and extrinsics are safe to issue.
+function hasMetadata(api: DedotClient<ApiTypeFor<Prefix>>): boolean {
+  try {
+    return Boolean(api.registry)
+  }
+  catch {
+    return false
+  }
+}
+
+// A dropped socket — or dedot's staling watchdog forcing a reconnect — clears
+// the client's metadata registry until it reconnects and re-syncs. `api.query`
+// and `api.tx` read that registry synchronously, so touching them mid-reconnect
+// throws "call `.connect()` first". Hand back the client only once it's ready.
+async function whenReady(api: DedotClient<ApiTypeFor<Prefix>>): Promise<DedotClient<ApiTypeFor<Prefix>>> {
+  if (hasMetadata(api)) {
+    return api
+  }
+
+  await new Promise<void>((resolve) => {
+    api.once('ready', () => resolve())
+  })
+
+  return api
+}
+
 export default function sdk<T extends Prefix>(chain: T): { api: DedotApiFor<T> } {
   if (!clients.get()[chain]) {
     clients.set({ ...clients.get(), [chain]: DedotClient.new(new WsProvider([...CONFIG[chain].providers])) })
   }
 
+  // Re-check readiness on every call rather than only at creation: the cached
+  // client is long-lived and may be mid-reconnect by the time a consumer awaits.
   return {
-    api: clients.get()[chain]! as DedotApiFor<T>,
+    api: clients.get()[chain]!.then(whenReady) as DedotApiFor<T>,
   }
 }
