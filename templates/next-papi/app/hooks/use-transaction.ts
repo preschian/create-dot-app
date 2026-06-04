@@ -1,26 +1,34 @@
 'use client'
 
 import type { Prefix } from '../utils/sdk'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { createRemarkTransaction, polkadotSigner } from '../utils/sdk-interface'
 import { useConnect } from './use-connect'
+
+export type TxStage = 'idle' | 'broadcasting' | 'inBlock' | 'finalized'
 
 export function useTransaction() {
   const { selectedAccount } = useConnect()
 
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [result, setResult] = useState('')
+  const [stage, setStage] = useState<TxStage>('idle')
   const [txHash, setTxHash] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
-  const signRemarkTransaction = async (chainPrefix: Prefix, message: string) => {
+  const reset = useCallback(() => {
+    setStage('idle')
+    setTxHash('')
+    setError(null)
+  }, [])
+
+  const signRemark = useCallback(async (chainPrefix: Prefix, message: string) => {
     if (!selectedAccount) {
-      setResult('Error: No account selected')
+      setError('No account selected')
       return
     }
 
-    setIsProcessing(true)
-    setResult('')
+    setError(null)
     setTxHash('')
+    setStage('broadcasting')
 
     try {
       const signer = await polkadotSigner()
@@ -32,27 +40,31 @@ export function useTransaction() {
       createRemarkTransaction(chainPrefix, message, selectedAccount.address, signer, {
         onTxHash: (hash) => {
           setTxHash(hash)
+          setStage('inBlock')
         },
         onFinalized: () => {
-          setResult('Transaction successful!')
-          setIsProcessing(false)
+          setStage('finalized')
         },
-        onError: (error) => {
-          setResult(`Error: ${error}`)
-          setIsProcessing(false)
+        onError: (err) => {
+          setError(`Error: ${err}`)
+          setStage('idle')
         },
       })
     }
     catch (err) {
-      setResult(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`)
-      setIsProcessing(false)
+      setError(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      setStage('idle')
     }
-  }
+  }, [selectedAccount])
+
+  const pending = stage === 'broadcasting' || stage === 'inBlock'
 
   return {
-    isProcessing,
-    result,
+    stage,
     txHash,
-    signRemarkTransaction,
+    error,
+    pending,
+    reset,
+    signRemark,
   }
 }

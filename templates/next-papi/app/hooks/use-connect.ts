@@ -35,6 +35,18 @@ export const connectedWallet: Atom<Wallet | null> = createAtom(null)
 const listAccounts: Atom<WalletAccount[]> = createAtom([])
 const isConnecting: Atom<string | null> = createAtom(null)
 
+// Shared connect-modal visibility so any control (header button, write panel) can
+// prompt the user to connect without threading callbacks through the tree.
+const connectModalOpen: Atom<boolean> = createAtom(false)
+
+export function openConnectModal() {
+  connectModalOpen.set(true)
+}
+
+export function closeConnectModal() {
+  connectModalOpen.set(false)
+}
+
 export function useConnect() {
   const [mounted, setMounted] = useState(false)
 
@@ -108,6 +120,7 @@ export function useConnect() {
     selectedAccount: useSelector(selectedAccount),
     connectedWallet: useSelector(connectedWallet),
     isConnecting: useSelector(isConnecting),
+    connectModalOpen: useSelector(connectModalOpen),
     wallets,
     installedWallets,
     availableWallets,
@@ -116,5 +129,7 @@ export function useConnect() {
     connect,
     disconnect,
     selectAccount,
+    openConnectModal,
+    closeConnectModal,
   }
 }
