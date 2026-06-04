@@ -1,20 +1,24 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const grotesk = Space_Grotesk({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-grotesk',
+  display: 'swap',
 })
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const mono = JetBrains_Mono({
   subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'Dapp Name',
-  description: 'Next.js app with Polkadot integration using Dedot',
+  title: 'create-dot-app · Welcome',
+  description:
+    'Polkadot-native dapp starter with a light client, type-safe API, and wallet connection, already wired together.',
 }
 
 export default function RootLayout({
@@ -23,10 +27,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" data-theme="light">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en">
+      <body className={`${grotesk.variable} ${mono.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
