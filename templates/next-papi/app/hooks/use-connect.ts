@@ -77,7 +77,9 @@ export function useConnect() {
 
   async function connect(wallet: Wallet) {
     try {
-      isConnecting.set(wallet.extensionName)
+      // Track the in-progress connection by title so the spinner shows on the
+      // exact wallet picked — distinct wallets can share an extensionName.
+      isConnecting.set(wallet.title)
       listAccounts.set([])
 
       // set the connected wallet

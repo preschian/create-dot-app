@@ -41,7 +41,10 @@ export function ConnectModal() {
   if (!connectModalOpen)
     return null
 
-  const isWalletActive = (w: Wallet) => connectedWallet?.extensionName === w.extensionName
+  // Compare by title, not extensionName: distinct wallets (e.g. Nova Wallet and
+  // Polkadot.js) can share an extensionName, so only the one actually picked
+  // should read as connected.
+  const isWalletActive = (w: Wallet) => connectedWallet?.title === w.title
   const isAccountActive = (a: WalletAccount) => selectedAccount?.address === a.address
 
   const chooseAccount = (a: WalletAccount) => {
@@ -109,10 +112,10 @@ export function ConnectModal() {
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                     {installedWallets.map((w) => {
                       const active = isWalletActive(w)
-                      const connectingThis = isConnecting === w.extensionName
+                      const connectingThis = isConnecting === w.title
                       return (
                         <button
-                          key={w.extensionName}
+                          key={`${w.extensionName}-${w.title}`}
                           type="button"
                           onClick={() => connect(w)}
                           disabled={connectingThis}
@@ -153,7 +156,7 @@ export function ConnectModal() {
                 <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {availableWallets.map(w => (
                     <a
-                      key={w.extensionName}
+                      key={`${w.extensionName}-${w.title}`}
                       href={w.installUrl}
                       target="_blank"
                       rel="noopener noreferrer"
