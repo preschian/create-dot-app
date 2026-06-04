@@ -4,7 +4,7 @@ import type { Wallet, WalletAccount } from '@talismn/connect-wallets'
 import type { Atom } from '@xstate/store'
 import { getWallets } from '@talismn/connect-wallets'
 import { createAtom } from '@xstate/store'
-import { useAtom } from '@xstate/store/react'
+import { useSelector } from '@xstate/store-react'
 import { useEffect, useState } from 'react'
 import { DAPP_NAME } from '../utils/sdk-interface'
 
@@ -104,10 +104,10 @@ export function useConnect() {
 
   return {
     // State
-    listAccounts: useAtom(listAccounts),
-    selectedAccount: useAtom(selectedAccount),
-    connectedWallet: useAtom(connectedWallet),
-    isConnecting: useAtom(isConnecting),
+    listAccounts: useSelector(listAccounts),
+    selectedAccount: useSelector(selectedAccount),
+    connectedWallet: useSelector(connectedWallet),
+    isConnecting: useSelector(isConnecting),
     wallets,
     installedWallets,
     availableWallets,

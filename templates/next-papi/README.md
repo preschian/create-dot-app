@@ -1,13 +1,14 @@
 # Next.js PAPI Template
 
-A modern **Next.js 15 + TypeScript + React 19** template for building Polkadot decentralized applications (dApps) using the PAPI SDK.
+A modern **Next.js 16 + TypeScript + React 19** template for building Polkadot decentralized applications (dApps) using the PAPI SDK.
 
 ## 🚀 Features
 
-- **Next.js 15** with App Router and Turbopack
+- **Next.js 16** with App Router and Turbopack
 - **React 19** for modern UI development
 - **TypeScript** for type safety
 - **PAPI SDK** integration for Polkadot blockchain interaction
+- **Light client** connectivity via smoldot — verifies the chain in-browser instead of trusting a single RPC node
 - **TailwindCSS 4 + DaisyUI** for beautiful UI components
 - **Wallet Connection** support via Talisman Connect
 - **Iconify** icons integration
@@ -19,8 +20,12 @@ This template uses **PAPI (Polkadot API)** - a modern, type-safe SDK for interac
 
 📚 **PAPI Documentation**: https://papi.how/
 
+### Connectivity
+
+Chains connect through an in-browser **smoldot light client** (`getSmProvider`) rather than a remote RPC node, so the app verifies blocks itself instead of trusting a single endpoint. smoldot runs in a Web Worker, and each chain's spec is loaded on demand via a dynamic import. The first connection to a chain warp-syncs and can take a few seconds; the asset hubs are parachains, so they also sync their relay chain (`dot` / `pas`) under the hood.
+
 ### Configuration Files:
-- **`app/utils/sdk.ts`** - Configures which chains to connect to and manages chain endpoints. You can modify supported networks and RPC providers here.
+- **`app/utils/sdk.ts`** - Configures which chains to connect to. Each chain runs through the smoldot light client; edit this file to add or remove supported networks (or switch a chain back to a remote RPC endpoint).
 - **`app/utils/sdk-interface.ts`** - Provides high-level functions for onchain SDK calls.
 
 ## 🌐 Supported Chains
@@ -76,37 +81,35 @@ npx papi add kusama -n ksmcc3
 npx papi
 ```
 
-This creates type-safe descriptors in `@polkadot-api/descriptors` that you can import.
+This generates type-safe descriptors into the local `app/descriptors` folder (the template sets `noDescriptorsPackage` in `.papi/polkadot-api.json`), which you import via `../descriptors` (see `app/utils/sdk.ts`).
 
 ### Step 2: Configure Your Chain
 
-Edit `app/utils/sdk.ts` to add your chain configuration:
+Edit `app/utils/sdk.ts` to add your chain configuration. Each chain points to a light-client chain spec, loaded lazily with a dynamic import:
 
 ```typescript
-import { yourChain } from '@polkadot-api/descriptors'
+import { yourChain } from '../descriptors'
 
-const CONFIG = {
+const config = {
   // ... existing chains
   your_chain: {
     descriptor: yourChain,
-    providers: ['wss://your-rpc-endpoint.io'],
+    chainSpec: () => import('polkadot-api/chains/your_chain'),
   },
 }
 ```
 
-You can add multiple RPC endpoints for fallback support:
+For a **parachain**, add the relay it syncs against (a relay-chain key already defined in `config`):
 
 ```typescript
-const CONFIG = {
-  dot: {
-    descriptor: polkadot,
-    providers: [
-      'wss://rpc.polkadot.io',
-      'wss://polkadot-rpc.dwellir.com'
-    ],
-  },
-}
+your_parachain: {
+  descriptor: yourParachain,
+  chainSpec: () => import('polkadot-api/chains/your_parachain'),
+  relay: 'dot',
+},
 ```
+
+`polkadot-api/chains/*` bundles specs for the well-known relay and system chains. If PAPI does not bundle a spec for your chain, supply your own chain-spec string, or connect over RPC instead with `getWsProvider('wss://your-rpc-endpoint.io')` from `polkadot-api/ws-provider`.
 
 📖 For more details, see the [PAPI Codegen documentation](https://papi.how/codegen).
 
