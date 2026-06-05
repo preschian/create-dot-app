@@ -1,5 +1,31 @@
 # create-dot-app
 
+## 3.0.0
+
+### Major Changes
+
+- [#301](https://github.com/preschian/create-dot-app/pull/301) [`d771853`](https://github.com/preschian/create-dot-app/commit/d771853a03dec0da8f4d60673c78c3a1284aacc1) Thanks [@preschian](https://github.com/preschian)! - refactor: remove all templates except the `next` (Solidity) and `next-papi` (Substrate/PAPI) Next.js stacks
+
+### Minor Changes
+
+- [#278](https://github.com/preschian/create-dot-app/pull/278) [`248bb9d`](https://github.com/preschian/create-dot-app/commit/248bb9df13d6b20bec5dcbe5eb937ba9741a2221) Thanks [@preschian](https://github.com/preschian)! - refactor: remove ink templates
+
+- [#311](https://github.com/preschian/create-dot-app/pull/311) [`9c05614`](https://github.com/preschian/create-dot-app/commit/9c056143b11d54d192bba0c28e59fbcaa444e897) Thanks [@preschian](https://github.com/preschian)! - feat(cli): let users choose Solidity (next) or Substrate (next-papi) when scaffolding
+
+- [#310](https://github.com/preschian/create-dot-app/pull/310) [`9ce9543`](https://github.com/preschian/create-dot-app/commit/9ce9543d27c580931430905f0101a5624443bf10) Thanks [@preschian](https://github.com/preschian)! - feat(next-papi): redesign to match the next template's editorial welcome screen, wired to polkadot-api + Talisman over the smoldot light client
+
+- [#297](https://github.com/preschian/create-dot-app/pull/297) [`b09c10a`](https://github.com/preschian/create-dot-app/commit/b09c10afd44ecfb24834347284aac6fd43ca89cd) Thanks [@preschian](https://github.com/preschian)! - feat(next): replace the quick-start demo with an editorial welcome screen wired to wagmi + Web3Auth
+
+- [#301](https://github.com/preschian/create-dot-app/pull/301) [`d771853`](https://github.com/preschian/create-dot-app/commit/d771853a03dec0da8f4d60673c78c3a1284aacc1) Thanks [@preschian](https://github.com/preschian)! - chore: remove posthog-node telemetry
+
+### Patch Changes
+
+- [#318](https://github.com/preschian/create-dot-app/pull/318) [`86694d5`](https://github.com/preschian/create-dot-app/commit/86694d58f0aa56a92683768923004d6486f65afa) Thanks [@preschian](https://github.com/preschian)! - fix(next-papi): add `esbuild` as an explicit devDependency so the `papi` postinstall works under Yarn Classic v1. Yarn v1 does not auto-install peer dependencies (npm/pnpm/bun do), so `rollup-plugin-esbuild` — pulled in by the polkadot-api CLI — could not resolve its `esbuild` peer, failing the package-managers CI with `ERR_MODULE_NOT_FOUND: Cannot find package 'esbuild'` before lint/build even ran.
+
+- [#315](https://github.com/preschian/create-dot-app/pull/315) [`9e1fbfa`](https://github.com/preschian/create-dot-app/commit/9e1fbfa5a78d3bf9095e2aaf0e0b2cdfa55f3a49) Thanks [@preschian](https://github.com/preschian)! - fix(next-papi): load the smoldot Web Worker from a local file so it works under Next.js Turbopack. The worker was created from a bare package specifier, which Turbopack cannot resolve at runtime ("request.indexOf is not a function"), so the light client never connected. The worker now loads from a local `app/utils/smoldot-worker.ts` that dynamically imports the SDK worker (dynamic so it survives the production build's tree-shaking, since the SDK ships `sideEffects: false`).
+
+- [#275](https://github.com/preschian/create-dot-app/pull/275) [`c9d9ec0`](https://github.com/preschian/create-dot-app/commit/c9d9ec01973dcb5b5a12baae1325338220989229) Thanks [@preschian](https://github.com/preschian)! - chore: upgrade CLI dependencies
+
 ## 2.0.2
 
 ### Patch Changes
