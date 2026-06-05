@@ -22,11 +22,10 @@ describe('template selector', () => {
     isCancelMock.mockReturnValue(false)
   })
 
-  it('offers Solidity (next) and both Substrate stacks (next-papi, next-dedot)', () => {
+  it('offers Solidity (next) and the Substrate stack (next-papi)', () => {
     const byValue = Object.fromEntries(templateOptions.map(o => [o.value, o.label]))
     expect(byValue.next).toBe('Solidity')
     expect(byValue['next-papi']).toBe('Substrate (PAPI)')
-    expect(byValue['next-dedot']).toBe('Substrate (Dedot)')
   })
 
   it('returns the chosen template in interactive mode', async () => {
@@ -50,7 +49,6 @@ describe('template selector', () => {
 
   it('honors a valid provided template without prompting', async () => {
     expect(await pickTemplate('next-papi')).toBe('next-papi')
-    expect(await pickTemplate('next-dedot')).toBe('next-dedot')
     expect(await pickTemplate('next')).toBe('next')
     expect(selectMock).not.toHaveBeenCalled()
   })
