@@ -15,11 +15,6 @@ export const templateOptions: SelectOptions<string>['options'] = [
     label: 'Substrate (PAPI)',
     hint: 'Next.js + PAPI light client, Polkadot native',
   },
-  {
-    value: 'next-dedot',
-    label: 'Substrate (Dedot)',
-    hint: 'Next.js + Dedot light client, Polkadot native',
-  },
 ]
 
 export async function pickTemplate(providedTemplate?: string, interactive = true): Promise<string> {

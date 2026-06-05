@@ -25,7 +25,6 @@ updates:
   - package-ecosystem: npm
     directories:
       - "/templates/*"
-      - "/templates/solidity-hardhat-wagmi/*"
     schedule:
       interval: "weekly"
     cooldown:

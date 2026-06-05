@@ -86,9 +86,6 @@ ${color.bold('Examples:')}
   ${color.dim('# Substrate dapp, PAPI SDK (Polkadot native)')}
   npx create-dot-app@latest my-dapp --template next-papi
 
-  ${color.dim('# Substrate dapp, Dedot SDK (Polkadot native)')}
-  npx create-dot-app@latest my-dapp --template next-dedot
-
 ${color.bold('Learn more:')}
   ${color.underline('https://github.com/preschian/create-dot-app')}
 `)

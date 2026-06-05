@@ -2,4 +2,4 @@
 "create-dot-app": major
 ---
 
-refactor: deprecate all templates except the Next.js template
+refactor: remove all templates except the `next` (Solidity) and `next-papi` (Substrate/PAPI) Next.js stacks

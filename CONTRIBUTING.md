@@ -53,12 +53,8 @@ create-dot-app/
 │   ├── __tests__/         # E2E tests
 │   └── package.json       # CLI package config
 ├── templates/             # Project templates
-│   ├── react-papi/       # React + PAPI template
-│   ├── react-dedot/      # React + Dedot template
-│   ├── vue-papi/         # Vue + PAPI template
-│   ├── vue-dedot/        # Vue + Dedot template
-│   ├── nuxt-papi/        # Nuxt + PAPI template
-│   └── nuxt-dedot/       # Nuxt + Dedot template
+│   ├── next/             # Solidity (Next.js + Wagmi, Polkadot Hub EVM)
+│   └── next-papi/        # Substrate (Next.js + PAPI light client)
 ├── docs/                  # Documentation site
 └── package.json          # Root package config
 ```

@@ -17,9 +17,9 @@ npx create-dot-app@latest my-dapp --template next-papi
 
 ## Features
 
-- ⚡ **Three Next.js stacks** - Solidity (Polkadot Hub EVM), Substrate via PAPI, Substrate via Dedot
-- 🔗 **Dual SDK Support** - [PAPI](https://papi.how/) and [Dedot](https://docs.dedot.dev/)
-- 🪶 **Light client** - in-browser smoldot connectivity on the Substrate stacks
+- ⚡ **Two Next.js stacks** - Solidity (Polkadot Hub EVM) and Substrate via PAPI
+- 🔗 **Native Polkadot** - [PAPI](https://papi.how/) (polkadot-api) for Substrate interaction
+- 🪶 **Light client** - in-browser smoldot connectivity on the Substrate (PAPI) stack
 - 📦 **Package Managers** - npm, yarn, pnpm, bun
 
 ## Documentation
