@@ -35,7 +35,7 @@
     "@avalix/chroma": "^1.0.1",
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
-    "@playwright/test": "1.59.0",
+    "@playwright/test": "1.60.0",
     "@types/node": "^25.9.2"
   },
   "workspaces": [
