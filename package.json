@@ -29,7 +29,7 @@
     "build": "bun --cwd cli run build",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:prepare": "rm -rf .chroma && npx @avalix/chroma download-extensions"
+    "test:prepare": "bun node_modules/@avalix/chroma/scripts/download-extensions.ts"
   },
   "devDependencies": {
     "@avalix/chroma": "^1.0.1",
