@@ -34,9 +34,9 @@
   "devDependencies": {
     "@avalix/chroma": "^1.0.1",
     "@changesets/changelog-github": "^0.7.0",
-    "@changesets/cli": "^2.27.1",
-    "@playwright/test": "^1.57.0",
-    "@types/node": "^24.4.0"
+    "@changesets/cli": "^2.31.0",
+    "@playwright/test": "1.59.0",
+    "@types/node": "^25.9.2"
   },
   "workspaces": [
     "cli",
